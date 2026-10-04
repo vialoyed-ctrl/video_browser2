@@ -8,6 +8,8 @@ import '../modules/root/root_binding.dart';
 import '../modules/root/root_view.dart';
 import '../modules/search/search_binding.dart';
 import '../modules/search/search_view.dart';
+import '../modules/search/site91md_search_view.dart';
+import '../data/sources/video_source.dart';
 import 'app_routes.dart';
 
 abstract class AppPages {
@@ -27,7 +29,14 @@ abstract class AppPages {
     ),
     GetPage<dynamic>(
       name: AppRoutes.search,
-      page: SearchView.new,
+      page: () => SourceRegistry.defaultSource.id == 'site91md'
+          ? Site91MdSearchView(
+              source: SourceRegistry.defaultSource,
+              initialKeyword: Get.arguments is String
+                  ? Get.arguments as String
+                  : '',
+            )
+          : const SearchView(),
       binding: SearchBinding(),
     ),
   ];

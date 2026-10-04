@@ -18,7 +18,12 @@ import 'app_toast.dart';
 ///
 /// 匿名与聚合占位作者（`匿名` / `官方精选`）没有可检索的主页，直接忽略。
 void _searchAuthor(String author) {
-  if (author.isEmpty || author == '匿名' || author == '官方精选') return;
+  if (author.isEmpty ||
+      author == '匿名' ||
+      author == '官方精选' ||
+      author == '91麻豆') {
+    return;
+  }
   AppNavigator.toAuthor(author);
 }
 
@@ -328,7 +333,12 @@ class BiliVideoCardV extends StatelessWidget {
   }
 
   static void _showAuthorSheet(BuildContext context, String author) {
-    if (author.isEmpty || author == '匿名' || author == '官方精选') return;
+    if (author.isEmpty ||
+        author == '匿名' ||
+        author == '官方精选' ||
+        author == '91麻豆') {
+      return;
+    }
     final theme = Theme.of(context);
     final userSvc = Get.find<UserService>();
 

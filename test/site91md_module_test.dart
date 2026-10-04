@@ -5,9 +5,6 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart' hide SearchController;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
-import 'package:video_browser/app/modules/search/search_binding.dart';
-import 'package:video_browser/app/modules/search/search_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_browser/app/data/models/video_item.dart';
 import 'package:video_browser/app/data/sources/site91md_source.dart';
@@ -100,40 +97,33 @@ void main() {
     );
     expect(detail!.relatedVideos.map((v) => v.title), ['Sample 2', 'Sample 3']);
   });
-  test('website search uses encoded keyword and path pagination', () async {
+  test('search uses fresh official query, scoped pagination and exact card order', () async {
     final adapter = _Pages();
-    adapter.pages['/index.php/vod/search/page/1/wd/传媒.html'] =
-        '${cards([1])}<div class="nextPage"><a href="/index.php/vod/search/page/2/wd/test.html">2</a></div>';
+    adapter.pages['/index.php/vod/search.html'] =
+        '${cards([2, 1, 2])}<ul class="nextPage"><a href="/index.php/vod/search/page/2/wd/test.html">2</a></ul><a href="/index.php/vod/type/id/1/page/999.html">unrelated</a>';
     final source = Site91MdSource(
       baseUrl: 'https://md.example.test',
       dio: Dio()..httpClientAdapter = adapter,
     );
-    final page = await source.search(
-      query: const SearchQuery(keyword: '传媒'),
+    final first = await source.search(
+      query: const SearchQuery(keyword: '传媒 / a&b'),
       page: 1,
     );
-    expect(
-      Uri.decodeComponent(adapter.urls.last.path),
-      contains('/page/1/wd/传媒.html'),
+    expect(adapter.urls.last.queryParameters, {'wd': '传媒 / a&b', 'page': '1'});
+    expect(first.items.map((v) => v.title), [
+      'Sample 2',
+      'Sample 1',
+      'Sample 2',
+    ]);
+    expect(first.totalPages, 2);
+    adapter.pages['/index.php/vod/search.html'] = cards([3]);
+    final updated = await source.search(
+      query: const SearchQuery(keyword: '传媒 / a&b'),
+      page: 1,
     );
-    expect(page.hasMore, isTrue);
+    expect(updated.items.single.title, 'Sample 3');
+    expect(updated.hasMore, isFalse);
   });
-  test(
-    'search route replaces stale controller after changing platform',
-    () async {
-      final previous = SearchController(_ControllerSource());
-      Get.put<SearchController>(previous);
-      final selected = _ControllerSource();
-      SourceRegistry.register(selected);
-
-      SourceRegistry.setActiveSource(selected);
-      SearchBinding().dependencies();
-      final current = Get.find<SearchController>();
-      expect(identical(previous, current), isFalse);
-      expect(current.isSite91Md, isTrue);
-      Get.reset();
-    },
-  );
   test('website sidebar order, current cards and last-page boundary', () async {
     final adapter = _Pages();
     adapter.pages['/'] = '$nav${cards([1, 2])}';

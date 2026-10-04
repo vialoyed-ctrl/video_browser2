@@ -220,8 +220,6 @@ class SearchController extends GetxController {
 
   /// 当前内容源是否为 Hanime1（决定用哪套筛选维度）。
   bool get isHanime1 => _source.id == 'hanime1';
-  bool get isSite91Md => _source.id == 'site91md';
-
   bool get isSite91 => _source.id == 'site91';
 
   List<(String, String)> get activeSortOptions =>
@@ -638,12 +636,7 @@ class SearchController extends GetxController {
         pageSize: pageSize,
       );
       if (currentRequestId != _searchRequestId) return;
-      if (isSite91Md && page == currentPage.value + 1) {
-        final existing = results.map((item) => item.id).toSet();
-        results.addAll(result.items.where((item) => existing.add(item.id)));
-      } else {
-        results.assignAll(result.items);
-      }
+      results.assignAll(result.items);
       _preloadResults(result.items);
       if (selectedAuthor.value == null && result.users.isNotEmpty) {
         searchedUsers.assignAll(result.users);
@@ -661,7 +654,7 @@ class SearchController extends GetxController {
       jumpPageInput.text = '$page';
       hasMore.value = page < totalPages.value;
 
-      if (!isSite91Md && scroll.hasClients) {
+      if (scroll.hasClients) {
         scroll.animateTo(
           0,
           duration: const Duration(milliseconds: 300),

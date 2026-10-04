@@ -1384,34 +1384,73 @@ class _PlayerViewState extends State<PlayerView> {
             ],
           ),
           const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
+          Row(
             children: [
-              FilledButton.tonalIcon(
-                onPressed: () => _enqueueDownload(video: video),
-                icon: const Icon(Icons.download_rounded),
-                label: const Text('下载'),
-                style: FilledButton.styleFrom(minimumSize: const Size(110, 44)),
+              Expanded(
+                child: _buildSite91MdAction(
+                  icon: Icons.download_rounded,
+                  label: '下载',
+                  onPressed: () => _enqueueDownload(video: video),
+                ),
               ),
-              Obx(() {
-                final saved = Get.find<UserService>().isVideoInAnyFolder(
-                  video.id,
-                );
-                return OutlinedButton.icon(
-                  onPressed: () => _showFavoriteBottomSheet(context, video),
-                  icon: Icon(
-                    saved
+              const SizedBox(width: 8),
+              Expanded(
+                child: Obx(() {
+                  final saved = Get.find<UserService>().isVideoInAnyFolder(
+                    video.id,
+                  );
+                  return _buildSite91MdAction(
+                    icon: saved
                         ? Icons.bookmark_rounded
                         : Icons.bookmark_border_rounded,
-                  ),
-                  label: Text(saved ? '已收藏' : '收藏'),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(110, 44),
-                  ),
-                );
-              }),
+                    label: saved ? '已收藏' : '收藏',
+                    onPressed: () => _showFavoriteBottomSheet(context, video),
+                  );
+                }),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildSite91MdAction(
+                  icon: Icons.share_outlined,
+                  label: '分享',
+                  onPressed: () async {
+                    final url = video.detailUrl ?? video.id;
+                    final uri = Uri.tryParse(url);
+                    if (uri == null ||
+                        !uri.hasAuthority ||
+                        !['http', 'https'].contains(uri.scheme)) {
+                      AppToast.show('暂无视频网页链接');
+                      return;
+                    }
+                    await Clipboard.setData(ClipboardData(text: url));
+                    if (mounted) AppToast.show('已复制视频网页链接');
+                  },
+                ),
+              ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSite91MdAction({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return FilledButton.tonal(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(0, 64),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 13)),
         ],
       ),
     );

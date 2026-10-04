@@ -812,16 +812,22 @@ class Site91MdSource implements VideoSource {
   /// 详情页链接：`/index.php/vod/play/id/<id>/sid/1/nid/1.html`。
   static final RegExp _videoLinkPattern = RegExp(r'/vod/play/id/(\d+)/');
 
-  List<VideoItem> _parseVideoCards(String html, {dom.Document? parsed}) {
+  List<VideoItem> _parseVideoCards(
+    String html, {
+    dom.Document? parsed,
+    bool searchResults = false,
+  }) {
     if (html.isEmpty && parsed == null) return const <VideoItem>[];
     final doc = parsed ?? html_parser.parse(html);
     final result = <VideoItem>[];
     final seen = <String>{};
 
     for (final container in doc.querySelectorAll(
-      'div.video-item, .detail_right_div li, .sugetVideo li',
+      searchResults
+          ? '.detail_right_div li'
+          : 'div.video-item, .detail_right_div li, .sugetVideo li',
     )) {
-      dynamic videoLink;
+      dom.Element? videoLink;
       for (final a in container.querySelectorAll('a[href]')) {
         final h = a.attributes['href']?.trim() ?? '';
         if (_videoLinkPattern.hasMatch(h)) {
@@ -833,7 +839,7 @@ class Site91MdSource implements VideoSource {
 
       final href = videoLink.attributes['href']?.trim() ?? '';
       final fullUrl = _resolveUrl(href);
-      if (!seen.add(fullUrl)) continue;
+      if (!searchResults && !seen.add(fullUrl)) continue;
 
       // 标题：优先 `.title`，回退 img 的 alt/title。
       var title = '';
@@ -908,14 +914,29 @@ class Site91MdSource implements VideoSource {
     if (kw.isEmpty) return VideoPage.empty();
     try {
       await restoreSelectedDomain();
-      final uri = Uri.parse(
-        '$_baseUrl/index.php/vod/search/page/$page/wd/${Uri.encodeComponent(kw)}.html',
-      );
-      AppLogger.i('Site91Md', '🔍 搜索第 $page 页: $uri');
-      final html = await _request(uri.toString());
+      if (page < 1) throw ArgumentError.value(page, 'page');
+      final uri = Uri.parse('$_baseUrl/index.php/vod/search.html')
+          .replace(queryParameters: {'wd': kw, 'page': '$page'});
+      // Search must use the current server response, never stale disk HTML.
+      final html = await _request(uri.toString(), null, true);
       final doc = await _parseDocumentInBackground(html);
-      final items = _parseVideoCards(html, parsed: doc);
-      final totalPages = _parseTotalPages(doc, page, items.length);
+      if (doc.querySelector('.detail_right_div') == null) {
+        throw const FormatException('官网搜索页面格式异常，请重试');
+      }
+      final items = _parseVideoCards(html, parsed: doc, searchResults: true);
+      final pagination = doc.querySelector('.nextPage');
+      var totalPages = page;
+      if (pagination != null) {
+        for (final anchor in pagination.querySelectorAll('a[href]')) {
+          final href = anchor.attributes['href'] ?? '';
+          if (!href.contains('/vod/search')) continue;
+          final match =
+              RegExp(r'/page/(\d+)(?:/|\.html)').firstMatch(href) ??
+              RegExp(r'[?&]page=(\d+)').firstMatch(href);
+          final target = match == null ? null : int.tryParse(match.group(1)!);
+          if (target != null && target > totalPages) totalPages = target;
+        }
+      }
       return VideoPage(
         items: items,
         page: page,
