@@ -1382,7 +1382,7 @@ class _PlayerViewState extends State<PlayerView> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: selected ? Colors.white : context.cTextSub,
+                color: selected ? context.cTextMain : context.cTextSub,
               ),
             ),
             if (badge.isNotEmpty) ...[

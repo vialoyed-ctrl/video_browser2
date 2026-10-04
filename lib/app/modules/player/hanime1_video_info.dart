@@ -262,11 +262,11 @@ class _Hanime1VideoInfoState extends State<Hanime1VideoInfo> {
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: Text(
         v.title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 18.48,
           height: 23 / 18.48,
           fontWeight: FontWeight.w700,
-          color: Colors.white,
+          color: context.cTextMain,
         ),
       ),
     );
@@ -338,10 +338,10 @@ class _Hanime1VideoInfoState extends State<Hanime1VideoInfo> {
                       maxLines: 1,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        color: context.cTextMain,
                       ),
                     ),
                   ),
@@ -784,11 +784,11 @@ class _Hanime1VideoInfoState extends State<Hanime1VideoInfo> {
                                 maxLines: 1,
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   height: 20 / 14,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                  color: context.cTextMain,
                                 ),
                               ),
                             ),
@@ -854,7 +854,7 @@ class _Hanime1VideoInfoState extends State<Hanime1VideoInfo> {
                               ? Icons.keyboard_arrow_up
                               : Icons.keyboard_arrow_down,
                           size: 30,
-                          color: Colors.white,
+                          color: context.cTextMain,
                         ),
                       ),
                     ),
@@ -1016,8 +1016,8 @@ class _Hanime1VideoInfoState extends State<Hanime1VideoInfo> {
   Widget _playlistCover(VideoItem item) {
     final thumb = item.thumbnailUrl;
     if (thumb == null || thumb.isEmpty) {
-      return const Center(
-        child: Icon(Icons.movie_outlined, color: Colors.white24, size: 24),
+      return Center(
+        child: Icon(Icons.movie_outlined, color: context.cTextFaint, size: 24),
       );
     }
     return CachedNetworkImage(
@@ -1027,10 +1027,10 @@ class _Hanime1VideoInfoState extends State<Hanime1VideoInfo> {
       memCacheWidth: 400,
       httpHeaders: const {'Referer': 'https://hanime1.me/'},
       placeholder: (_, _) => const SizedBox.expand(),
-      errorWidget: (_, _, _) => const Center(
+      errorWidget: (_, _, _) => Center(
         child: Icon(
           Icons.broken_image_outlined,
-          color: Colors.white24,
+          color: context.cTextFaint,
           size: 20,
         ),
       ),

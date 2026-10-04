@@ -57,7 +57,10 @@ void main() {
           ? AppTheme.dark()
           : AppTheme.light();
       expect(theme.colorScheme.primary, plain.colorScheme.primary);
-      expect(theme.colorScheme.surface, dynamic.surface);
+      expect(
+        theme.colorScheme.surface,
+        brightness == Brightness.light ? Colors.white : dynamic.surface,
+      );
       final fg = theme.colorScheme.onSurface.computeLuminance(),
           bg = theme.colorScheme.surface.computeLuminance();
       expect(

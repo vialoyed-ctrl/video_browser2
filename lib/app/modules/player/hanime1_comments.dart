@@ -359,9 +359,9 @@ class _Hanime1CommentsSliverState extends State<Hanime1CommentsSliver> {
                               c.authorName,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12.6,
-                                color: Colors.white,
+                                color: context.cTextMain,
                               ),
                             ),
                           ),
@@ -387,10 +387,10 @@ class _Hanime1CommentsSliverState extends State<Hanime1CommentsSliver> {
                       // 正文（官网 font-size:1em → 14px）
                       Text(
                         c.body,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           height: 1.35,
-                          color: Colors.white,
+                          color: context.cTextMain,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -470,18 +470,14 @@ class _Hanime1CommentsSliverState extends State<Hanime1CommentsSliver> {
   Widget _buildLikeRow(Hanime1Comment c, {required bool isReply}) {
     return Row(
       children: [
-        const Icon(Icons.thumb_up_alt_outlined, size: 14, color: Colors.white),
+        Icon(Icons.thumb_up_alt_outlined, size: 14, color: context.cTextMain),
         const SizedBox(width: 5),
         Text(
           '${c.likeCount}',
           style: TextStyle(fontSize: 12.6, color: context.cTextSub),
         ),
         const SizedBox(width: 15),
-        const Icon(
-          Icons.thumb_down_alt_outlined,
-          size: 14,
-          color: Colors.white,
-        ),
+        Icon(Icons.thumb_down_alt_outlined, size: 14, color: context.cTextMain),
         const SizedBox(width: 25),
         Text('回覆', style: TextStyle(fontSize: 13.3, color: context.cTextSub)),
       ],

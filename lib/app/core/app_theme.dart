@@ -45,7 +45,33 @@ class AppTheme {
       seedColor: brandSeed,
       brightness: brightness,
     );
-    final scheme = (dynamicScheme ?? brand).copyWith(
+    final base = brightness == Brightness.light
+        ? brand
+        : (dynamicScheme ?? brand);
+    final scheme = base.copyWith(
+      // Keep the light page white and tinted surfaces pale pink.
+      surface: brightness == Brightness.light ? Colors.white : base.surface,
+      surfaceDim: brightness == Brightness.light
+          ? const Color(0xFFF2D6E1)
+          : base.surfaceDim,
+      surfaceBright: brightness == Brightness.light
+          ? Colors.white
+          : base.surfaceBright,
+      surfaceContainerLowest: brightness == Brightness.light
+          ? Colors.white
+          : base.surfaceContainerLowest,
+      surfaceContainerLow: brightness == Brightness.light
+          ? const Color(0xFFFFEAF1)
+          : base.surfaceContainerLow,
+      surfaceContainer: brightness == Brightness.light
+          ? const Color(0xFFFFE3ED)
+          : base.surfaceContainer,
+      surfaceContainerHigh: brightness == Brightness.light
+          ? const Color(0xFFFADCE7)
+          : base.surfaceContainerHigh,
+      surfaceContainerHighest: brightness == Brightness.light
+          ? const Color(0xFFF3D1DF)
+          : base.surfaceContainerHighest,
       primary: brand.primary,
       onPrimary: brand.onPrimary,
       primaryContainer: brand.primaryContainer,
