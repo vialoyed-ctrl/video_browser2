@@ -1,6 +1,11 @@
 name: Build iOS 16 IPA
 on:
   workflow_dispatch:
+    inputs:
+      remux_test_page:
+        description: Optional public video-page URL for an additional transient remux test
+        required: false
+        type: string
   push:
     branches: [ios16]
 permissions:
@@ -8,6 +13,8 @@ permissions:
 jobs:
   remux-test:
     runs-on: ubuntu-latest
+    env:
+      REMUX_TEST_PAGE: ${{ inputs.remux_test_page }}
     steps:
       - uses: actions/checkout@v4
       - name: Install fixture tools

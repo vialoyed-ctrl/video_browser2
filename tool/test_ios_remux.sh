@@ -37,3 +37,12 @@ if "$BUILD/remux" "$BUILD/broken.ts" "$BUILD/broken.mp4"; then exit 1; fi
 test -f "$BUILD/broken.ts"
 test ! -f "$BUILD/broken.mp4"
 echo "Native remux regression tests passed"
+
+if [[ -n "${REMUX_TEST_PAGE:-}" ]]; then
+  cd "$ROOT"
+  python3 tool/fetch_remux_fixture.py
+  "$BUILD/remux" "$BUILD/source.ts" "$BUILD/source.mp4"
+  ffprobe -v error -show_entries stream=codec_name,width,height,sample_rate,channels -of json "$BUILD/source.mp4"
+  ffmpeg -hide_banner -loglevel error -xerror -i "$BUILD/source.mp4" -f null -
+  echo "Reported source video remux and decode passed"
+fi
