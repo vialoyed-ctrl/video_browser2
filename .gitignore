@@ -75,3 +75,7 @@ app.*.map.json
 /*.xml
 /temp_dart.dart
 .flutter_tool_state
+
+# iOS generated media libraries
+/ios/MediaRemux/Vendor/
+/ios/Pods/

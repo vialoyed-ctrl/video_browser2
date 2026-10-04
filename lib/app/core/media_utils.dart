@@ -58,7 +58,7 @@ class MediaUtils {
     required String inputPath,
     required String outputPath,
   }) async {
-    if (!Platform.isAndroid) return false;
+    if (!Platform.isAndroid && !Platform.isIOS) return false;
     try {
       final res = await _channel.invokeMethod<bool>('remuxTsToMp4', {
         'inputPath': inputPath,

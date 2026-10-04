@@ -1,0 +1,64 @@
+name: Build iOS 16 IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [ios16]
+permissions:
+  contents: read
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      FLUTTER_SWIFT_PACKAGE_MANAGER: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: stable
+          cache: true
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Analyze and test
+        run: |
+          flutter analyze lib
+          flutter test --reporter expanded
+      - name: Build iOS TS remux library
+        run: bash tool/build_ios_remux.sh
+      - name: Build unsigned iPhone app
+        run: flutter build ios --release --no-codesign
+      - name: Verify iOS 16 compatibility and package IPA
+        run: |
+          python3 - <<'PY'
+          import plistlib
+          from pathlib import Path
+          app = Path('build/ios/iphoneos/Runner.app')
+          info = plistlib.loads((app / 'Info.plist').read_bytes())
+          assert info['MinimumOSVersion'] == '16.0', info['MinimumOSVersion']
+          for binary in [app / 'Runner', app / 'Frameworks/Flutter.framework/Flutter', app / 'Frameworks/App.framework/App']:
+              assert binary.exists(), str(binary)
+          print('iOS minimum:', info['MinimumOSVersion'])
+          PY
+          mkdir -p build/ios/ipa/Payload
+          cp -R build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
+          cd build/ios/ipa
+          zip -qr playback-warehouse-ios16-unsigned.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: playback-warehouse-ios16
+          path: build/ios/ipa/playback-warehouse-ios16-unsigned.ipa
+          retention-days: 14
+      - name: Save remux sources and relinking materials
+        if: success()
+        run: |
+          mkdir -p build/relink
+          cp -R ios/MediaRemux/Vendor build/relink/
+          cp tool/build_ios_remux.sh build/relink/
+          find build/ios -name '*.o' -exec cp '{}' build/relink/ \;
+          tar -czf build/ios-remux-relink.tar.gz -C build/relink .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-remux-relink-materials
+          path: build/ios-remux-relink.tar.gz
+          retention-days: 14
