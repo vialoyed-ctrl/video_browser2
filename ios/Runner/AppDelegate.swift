@@ -38,10 +38,15 @@ import AVKit
         return
       }
       self.remuxQueue.async {
+        var diagnostic = [CChar](repeating: 0, count: 512)
         let success = input.withCString { src in
-          output.withCString { dst in vb_remux_ts_to_mp4(src, dst) == 0 }
+          output.withCString { dst in vb_remux_ts_to_mp4_with_error(src, dst, &diagnostic, 512) == 0 }
         }
-        DispatchQueue.main.async { result(success) }
+        let message = String(cString: diagnostic)
+        DispatchQueue.main.async {
+          if success { result(true) }
+          else { result(FlutterError(code: "remux_failed", message: "视频转封装失败：\(message)", details: nil)) }
+        }
       }
     }
   }

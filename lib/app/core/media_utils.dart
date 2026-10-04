@@ -67,6 +67,7 @@ class MediaUtils {
       return res ?? false;
     } catch (e) {
       AppLogger.e('MediaUtils', 'remuxTsToMp4 异常: $e');
+      if (Platform.isIOS) rethrow;
       return false;
     }
   }

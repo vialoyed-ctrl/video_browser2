@@ -6,7 +6,16 @@ on:
 permissions:
   contents: read
 jobs:
+  remux-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install fixture tools
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - name: Test real TS remuxing with shipping library configuration
+        run: bash tool/test_ios_remux.sh
   ios:
+    needs: remux-test
     runs-on: macos-15
     timeout-minutes: 45
     env:

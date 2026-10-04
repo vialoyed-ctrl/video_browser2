@@ -53,7 +53,7 @@ class IosDownloadFiles {
           'outputPath': output,
         }) !=
         true) {
-      throw const FileSystemException('视频转封装失败，请重试下载');
+      throw StateError('视频转封装失败，原文件已保留');
     }
     return output;
   }
