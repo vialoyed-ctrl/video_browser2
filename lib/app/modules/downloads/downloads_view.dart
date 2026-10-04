@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../core/formatters.dart';
+import '../../services/ios_download_files.dart';
+import '../../services/task_repository.dart';
 import '../../data/models/video_item.dart';
 import '../../widgets/app_toast.dart';
 import '../../widgets/common.dart';
@@ -252,6 +254,12 @@ class DownloadsView extends GetView<DownloadsController> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
             ),
           ),
+        if (Platform.isIOS && task.status == DownloadStatus.completed)
+          TextButton.icon(
+            onPressed: () => _openDownloadedVideo(task, export: true),
+            icon: const Icon(Icons.ios_share, size: 16),
+            label: const Text('导出', style: TextStyle(fontSize: 12)),
+          ),
         if (task.status == DownloadStatus.failed ||
             task.status == DownloadStatus.canceled)
           TextButton.icon(
@@ -277,24 +285,45 @@ class DownloadsView extends GetView<DownloadsController> {
     );
   }
 
-  Future<void> _openDownloadedVideo(DownloadTask task) async {
-    final path = task.outputPath;
-    if (path == null || path.isEmpty) {
+  Future<void> _openDownloadedVideo(
+    DownloadTask task, {
+    bool export = false,
+  }) async {
+    final savedPath = task.outputPath;
+    if (savedPath == null || savedPath.isEmpty) {
       AppToast.show('视频文件路径为空');
       return;
     }
-    final file = File(path);
-    if (!file.existsSync()) {
-      AppToast.show('视频文件不存在，可能已被移动或删除');
-      return;
-    }
     try {
-      final result = await OpenFilex.open(path, type: 'video/*');
+      if (Platform.isIOS) {
+        final resolved = await IosDownloadFiles.resolve(savedPath);
+        if (resolved == null) {
+          AppToast.show('视频文件不存在，可能已被移动或删除');
+          return;
+        }
+        final playable = await IosDownloadFiles.prepareVideo(resolved);
+        if (task.outputPath != playable) {
+          task.outputPath = playable;
+          TaskRepository.instance.upsert(task);
+          await TaskRepository.instance.flush();
+        }
+        if (export) {
+          await IosDownloadFiles.export(playable);
+        } else {
+          await IosDownloadFiles.open(playable);
+        }
+        return;
+      }
+      if (!File(savedPath).existsSync()) {
+        AppToast.show('视频文件不存在，可能已被移动或删除');
+        return;
+      }
+      final result = await OpenFilex.open(savedPath, type: 'video/*');
       if (result.type != ResultType.done) {
         AppToast.show('打开失败：${result.message}');
       }
     } catch (e) {
-      AppToast.show('调用手机App打开失败：$e');
+      AppToast.show('视频打开失败：$e');
     }
   }
 

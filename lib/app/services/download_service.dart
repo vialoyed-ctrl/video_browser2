@@ -390,6 +390,9 @@ class DownloadService extends GetxService {
             await tempTsFile.delete();
           } catch (_) {}
         } else {
+          if (Platform.isIOS) {
+            throw const FileSystemException('视频转封装失败，请重试下载');
+          }
           AppLogger.w('Downloader', '原生 Remux 失败或不受支持，优雅降级为直接以 .mp4 保存');
           if (finalMp4File.existsSync()) {
             try {

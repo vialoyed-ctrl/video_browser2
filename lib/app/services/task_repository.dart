@@ -20,6 +20,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/media_utils.dart';
+import 'ios_download_files.dart';
 import '../data/models/video_item.dart';
 
 /// 统一的路径解析。
@@ -321,6 +322,16 @@ class TaskRepository {
             (e) => DownloadTask.fromJson(Map<String, dynamic>.from(e as Map)),
           ),
         );
+
+      // Re-signing must not invalidate previously downloaded videos.
+      if (Platform.isIOS) {
+        for (final task in _tasks) {
+          final savedPath = task.outputPath;
+          if (savedPath == null || savedPath.isEmpty) continue;
+          final resolved = await IosDownloadFiles.resolve(savedPath);
+          if (resolved != null) task.outputPath = resolved;
+        }
+      }
 
       // 进程上次退出时正在运行的任务，恢复到"等待中"，避免出现永久卡住的假运行态。
       for (final t in _tasks) {

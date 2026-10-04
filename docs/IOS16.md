@@ -19,3 +19,5 @@ AVFoundation backend and the existing Dart loopback proxies. The media_utils bri
 uses a minimal LGPL FFmpeg 8.0.1 build to remux TS downloads to valid MP4 files,
 without re-encoding. FFmpeg sources, license, build script, and relinking objects
 are included in the separate CI artifact. No Apple credentials are used in CI.
+
+Downloads: tap Open for the iOS system video player, or Export > Save to Files. Existing downloads are rebased after re-signing, and old TS files mislabeled as MP4 are repaired without deleting the source. Keep the same Apple account and bundle ID when updating; do not uninstall the old app if you want to preserve downloads.
