@@ -70,14 +70,16 @@ class PreloadService {
   bool _isSite91Item(VideoItem item) {
     final url = (item.detailUrl ?? item.id).toLowerCase();
     if (url.contains('hanime1.me')) return false;
-    if (Get.isRegistered<VideoSource>() &&
-        Get.find<VideoSource>().id == 'site91') {
-      return true;
+    if (Get.isRegistered<VideoSource>()) {
+      // 91 与 91麻豆 的播放地址都可能带时效签名，需走同一套「新鲜度」判定。
+      final id = Get.find<VideoSource>().id;
+      if (id == 'site91' || id == 'site91md') return true;
     }
     return url.contains('91porn') ||
         url.contains('91p9.') ||
         url.contains('91tanhua') ||
-        url.contains('hsex.icu');
+        url.contains('hsex.icu') ||
+        url.contains('91md');
   }
 
   bool _isFreshResolvedUrl(VideoItem item, String key, String url) {
@@ -619,7 +621,10 @@ class PreloadService {
       _resolvedHlsUrlTimes.remove(targetUrl);
     }
     if (Get.isRegistered<VideoSource>()) {
-      final source = Get.find<VideoSource>();
+      final source = SourceRegistry.forVideo(
+        item,
+        fallback: Get.find<VideoSource>(),
+      );
       final cached = source.getCachedHlsUrl(targetUrl);
       if (cached != null && cached.isNotEmpty) {
         _setResolvedUrl(item.id, cached);

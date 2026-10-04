@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../data/models/video_item.dart';
 import '../../data/sources/site91_source.dart';
+import '../../data/sources/site91md_source.dart';
 import '../../data/sources/video_source.dart';
 import '../../routes/app_routes.dart';
 import '../../services/preload_service.dart';
@@ -24,6 +25,37 @@ class HomeController extends GetxController {
   final RxBool loadingMore = false.obs;
   final RxBool hasMore = true.obs;
   final RxnString error = RxnString();
+  final RxnString loadMoreError = RxnString();
+  final RxList<VideoCategory> site91mdCategories = <VideoCategory>[].obs;
+  final RxBool loadingSite91mdCategories = false.obs;
+  final RxnString site91mdCategoriesError = RxnString();
+  int _navigationGeneration = 0;
+
+  Future<void> loadSite91mdCategories({bool refresh = false}) async {
+    final source = _source.value;
+    final generation = ++_navigationGeneration;
+    if (source is! Site91MdSource) return;
+    loadingSite91mdCategories.value = true;
+    site91mdCategoriesError.value = null;
+    try {
+      await source.fetchCategories(refresh: refresh);
+      if (generation != _navigationGeneration ||
+          !identical(source, _source.value)) {
+        return;
+      }
+      site91mdCategories.assignAll(
+        source.categoriesForChannel(ChannelType.video),
+      );
+    } catch (e) {
+      if (generation == _navigationGeneration) {
+        site91mdCategoriesError.value = '栏目加载失败：$e';
+      }
+    } finally {
+      if (generation == _navigationGeneration) {
+        loadingSite91mdCategories.value = false;
+      }
+    }
+  }
 
   final ScrollController scroll = ScrollController();
 
@@ -65,9 +97,15 @@ class HomeController extends GetxController {
           return '我的 · ${currentCategory.value?.name ?? "专区"}';
       }
     }
+    if (_source.value.id == 'site91md') {
+      return currentCategory.value?.name ?? _source.value.displayName;
+    }
     switch (currentChannel.value) {
       case ChannelType.home:
-        return '91PORNY 九色';
+        // 91麻豆 的首页标题用它自己的展示名，避免串成 91 的「九色」。
+        return _source.value.id == 'site91md'
+            ? _source.value.displayName
+            : '91PORNY 九色';
       case ChannelType.video:
         return '视频 · ${currentCategory.value?.name ?? "精选"}';
       case ChannelType.kedou:
@@ -92,6 +130,8 @@ class HomeController extends GetxController {
     currentChannel.value = ChannelType.home;
     currentCategory.value = null;
     hotKeywords.clear();
+    site91mdCategories.clear();
+    loadSite91mdCategories();
     loadFirstPage(supersede: true);
     loadHotKeywords();
   }
@@ -100,12 +140,14 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     scroll.addListener(_onScroll);
+    loadSite91mdCategories();
     loadFirstPage();
     loadHotKeywords();
   }
 
   @override
   void onClose() {
+    _navigationGeneration++;
     _firstPageGeneration++;
     _keywordGeneration++;
     scroll.dispose();
@@ -137,6 +179,7 @@ class HomeController extends GetxController {
     loadingMore.value = false;
     loadingFirst.value = true;
     error.value = null;
+    loadMoreError.value = null;
     _seenVideoIds.clear();
 
     try {
@@ -179,6 +222,7 @@ class HomeController extends GetxController {
     final channel = currentChannel.value;
     final categoryPath = currentCategory.value?.path;
     loadingMore.value = true;
+    loadMoreError.value = null;
 
     try {
       int targetPage = _page + 1;
@@ -210,8 +254,14 @@ class HomeController extends GetxController {
           hasMore.value = false;
         }
       }
-    } catch (_) {
-      if (generation == _firstPageGeneration) hasMore.value = false;
+    } catch (e) {
+      if (generation == _firstPageGeneration) {
+        if (source is Site91MdSource) {
+          loadMoreError.value = '下一页加载失败，请重试';
+        } else {
+          hasMore.value = false;
+        }
+      }
     } finally {
       if (generation == _firstPageGeneration) {
         loadingMore.value = false;
@@ -259,7 +309,7 @@ class HomeController extends GetxController {
     if (!scroll.hasClients) return;
     final position = scroll.position;
     if (position.pixels >= position.maxScrollExtent - 240) {
-      loadMore();
+      if (loadMoreError.value == null) loadMore();
     }
   }
 }

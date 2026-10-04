@@ -1567,7 +1567,10 @@ class PlayerController extends GetxController {
         '开始现场解析视频详情 (forceRefresh=$forceRefresh): $targetUrl',
       );
 
-      final source = Get.find<VideoSource>();
+      final source = SourceRegistry.forVideo(
+        item,
+        fallback: Get.find<VideoSource>(),
+      );
       // 诊断：确认现场解析用的是哪个源（PornHub 卡死排查用）。
       AppLogger.i(
         'Player',
@@ -1694,7 +1697,10 @@ class PlayerController extends GetxController {
     final generation = _videoSwitchGeneration;
     unawaited(() async {
       try {
-        final source = Get.find<VideoSource>();
+        final source = SourceRegistry.forVideo(
+          currentVideo,
+          fallback: Get.find<VideoSource>(),
+        );
         final detail = await source.fetchDetail(
           targetUrl,
           forceRefresh: forceRefresh,

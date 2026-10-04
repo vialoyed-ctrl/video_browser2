@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../core/formatters.dart';
 import '../data/models/video_item.dart';
+import '../data/sources/video_source.dart';
 import '../routes/app_navigator.dart';
 import '../services/player_service.dart';
 import '../services/preload_service.dart';
@@ -31,6 +32,12 @@ String _thumbRefererFor(VideoItem video) {
   final host = Uri.tryParse(video.detailUrl ?? '')?.host ?? '';
   if (host.contains('hanime1.me')) return 'https://hanime1.me/';
   if (host.contains('pornhub')) return 'https://cn.pornhub.com/';
+  // 91麻豆（MacCMS）的封面与页面同源，用条目自己的 host 作 Referer；
+  // 命中不了（含用户自加镜像）时退回原 91 默认值，不改动既有行为。
+  if (SourceRegistry.isSite91MdVideo(video)) {
+    final uri = Uri.tryParse(video.detailUrl ?? video.id);
+    if (uri != null && uri.hasAuthority) return '${uri.origin}/';
+  }
   return 'https://91porny.com/';
 }
 
@@ -159,31 +166,34 @@ class BiliVideoCardV extends StatelessWidget {
                     ),
                   ),
                   // 封面右下角：视频时长角标
-                  Positioned(
-                    right: 6,
-                    bottom: 4,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 1,
-                      ),
-                      decoration: BoxDecoration(
-                        color: context.cImageScrim.withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        video.durationStr ??
-                            (video.duration != null
-                                ? Formatters.duration(video.duration)
-                                : '10:00'),
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
+                  if (video.author != '91麻豆' ||
+                      video.durationStr != null ||
+                      video.duration != null)
+                    Positioned(
+                      right: 6,
+                      bottom: 4,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.cImageScrim.withValues(alpha: 0.6),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          video.durationStr ??
+                              (video.duration != null
+                                  ? Formatters.duration(video.duration)
+                                  : '10:00'),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -458,28 +468,31 @@ class BiliVideoCardH extends StatelessWidget {
                   children: [
                     _buildCover(context),
                     // 右下角时长
-                    Positioned(
-                      right: 4,
-                      bottom: 4,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 1,
-                        ),
-                        decoration: BoxDecoration(
-                          color: context.cImageScrim.withValues(alpha: 0.65),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        child: Text(
-                          video.durationStr ?? '10:00',
-                          style: const TextStyle(
-                            fontSize: 9,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                    if (video.author != '91麻豆' ||
+                        video.durationStr != null ||
+                        video.duration != null)
+                      Positioned(
+                        right: 4,
+                        bottom: 4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 1,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.cImageScrim.withValues(alpha: 0.65),
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                          child: Text(
+                            video.durationStr ?? '10:00',
+                            style: const TextStyle(
+                              fontSize: 9,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),

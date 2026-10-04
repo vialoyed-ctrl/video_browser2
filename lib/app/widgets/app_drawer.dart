@@ -38,20 +38,21 @@ class AppDrawer extends StatelessWidget {
     final isPornHub = rootCtrl?.isPornHub ?? false;
     // 没有 RootController 时按 91 处理，保持与改动前「非 hanime 即 91」一致。
     final is91 = rootCtrl?.is91 ?? true;
+    // 91麻豆 是独立版面，共用 91 版面但菜单按自己的分类渲染。
+    final is91md = rootCtrl?.is91md ?? false;
 
-    // 只在 91 版面下才去取 HomeController。
+    // 只在 91 / 91麻豆 版面下才去取 HomeController。
     //
     // `HomeController` 是 `Get.lazyPut` 注册的，而 `Get.find` 会**立刻把它造出来**，
-    // 触发 `onInit → loadFirstPage()`：拉 91 首页整页 + `preloadList` 整页预加载。
+    // 触发 `onInit → loadFirstPage()`：拉整页 + `preloadList` 整页预加载。
     //
     // 这个抽屉被 `hanime1_main_view.dart` / `pornhub_main_view.dart` 的
     // `Scaffold.drawer` 引用，而 Scaffold **即使抽屉没被打开也会构建它** ——
-    // 于是用户在 hanime1 / pornhub 版面时，后台照样在跑 91 的首页加载与整页预加载
-    // （实测启动 20 秒内 44 次预加载 + 68 次流嗅探 + 40 次 LRU 清理），
+    // 于是用户在 hanime1 / pornhub 版面时，后台照样在跑 91 的首页加载与整页预加载，
     // 主 isolate 被占满，最终触发 ANR。
     //
-    // 91 菜单只在 `is91` 分支里消费 `homeCtrl`，所以非 91 时给 null 是安全的。
-    final homeCtrl = (is91 && Get.isRegistered<HomeController>())
+    // 91 菜单只在 `is91` / `is91md` 分支里消费 `homeCtrl`，非这两者时给 null 是安全的。
+    final homeCtrl = ((is91 || is91md) && Get.isRegistered<HomeController>())
         ? Get.find<HomeController>()
         : null;
     final primaryColor = theme.colorScheme.primary;
@@ -76,7 +77,9 @@ class AppDrawer extends StatelessWidget {
                         ? Icons.movie_filter_rounded
                         : (isPornHub
                               ? Icons.play_circle_outline_rounded
-                              : Icons.category_rounded),
+                              : (is91md
+                                    ? Icons.local_movies_rounded
+                                    : Icons.category_rounded)),
                     color: theme.colorScheme.onPrimary,
                     size: 20,
                   ),
@@ -84,7 +87,9 @@ class AppDrawer extends StatelessWidget {
                   Text(
                     isHanime
                         ? 'Hanime1 动漫菜单'
-                        : (isPornHub ? 'PornHub 账号' : '分类菜单'),
+                        : (isPornHub
+                              ? 'PornHub 账号'
+                              : (is91md ? '91麻豆 分类菜单' : '分类菜单')),
                     style: TextStyle(
                       color: theme.colorScheme.onPrimary,
                       fontSize: 16,
@@ -204,6 +209,31 @@ class AppDrawer extends StatelessWidget {
                           Hanime1Controller.to.switchTab(3);
                         }
                       },
+                    ),
+                  ] else if (is91md) ...[
+                    // 91麻豆 版面：共用 91 版面骨架，但菜单按它自己的分类渲染。
+                    _buildSingleTile(
+                      context: context,
+                      icon: Icons.home_rounded,
+                      title: '首页',
+                      isSelected:
+                          homeCtrl?.currentChannel.value == ChannelType.home,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        homeCtrl?.switchChannel(ChannelType.home);
+                      },
+                    ),
+                    _buildChannelExpansionTile(
+                      context: context,
+                      icon: Icons.category_rounded,
+                      title: '分类',
+                      channel: ChannelType.video,
+                      categories:
+                          homeCtrl?.source.categoriesForChannel(
+                            ChannelType.video,
+                          ) ??
+                          const <VideoCategory>[],
+                      homeCtrl: homeCtrl,
                     ),
                   ] else ...[
                     // PornHub 版面：原「分类菜单」位置改为账号/登录块
@@ -455,6 +485,8 @@ class AppDrawer extends StatelessWidget {
     switch (platform) {
       case AppPlatform.site91:
         return Icons.auto_awesome;
+      case AppPlatform.site91md:
+        return Icons.local_movies_rounded;
       case AppPlatform.hanime1:
         return Icons.movie_outlined;
       case AppPlatform.pornHub:

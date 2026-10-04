@@ -907,6 +907,10 @@ class _PlayerViewState extends State<PlayerView> {
         );
       }
 
+      if (SourceRegistry.isSite91MdVideo(v)) {
+        return _buildSite91MdVideoInfo(context, v);
+      }
+
       // PornHub 走独立的详情面板（下载/最爱/添加/分享 + 分类标签 + 相关/推荐/评论/片单）。
       // 91 的版式与调用链**完全不动** —— 只有识别为 PornHub 的条目才分流。
       if (_isPornHubVideo(v)) {
@@ -1355,6 +1359,62 @@ class _PlayerViewState extends State<PlayerView> {
         ],
       );
     });
+  }
+
+  Widget _buildSite91MdVideoInfo(BuildContext context, VideoItem video) {
+    return Padding(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            video.title,
+            style: Theme.of(context).textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 12,
+            runSpacing: 6,
+            children: [
+              const Text('91麻豆'),
+              if (video.viewsStr?.isNotEmpty ?? false) Text(video.viewsStr!),
+              if (video.publishedAt?.isNotEmpty ?? false)
+                Text(video.publishedAt!),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            children: [
+              FilledButton.tonalIcon(
+                onPressed: () => _enqueueDownload(video: video),
+                icon: const Icon(Icons.download_rounded),
+                label: const Text('下载'),
+                style: FilledButton.styleFrom(minimumSize: const Size(110, 44)),
+              ),
+              Obx(() {
+                final saved = Get.find<UserService>().isVideoInAnyFolder(
+                  video.id,
+                );
+                return OutlinedButton.icon(
+                  onPressed: () => _showFavoriteBottomSheet(context, video),
+                  icon: Icon(
+                    saved
+                        ? Icons.bookmark_rounded
+                        : Icons.bookmark_border_rounded,
+                  ),
+                  label: Text(saved ? '已收藏' : '收藏'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(110, 44),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   /// 单个 Tab 按钮。官网没给 `.tablinks` 写样式（用浏览器默认按钮外观），

@@ -246,7 +246,7 @@ class _SearchViewState extends State<SearchView> {
     } else {
       if (!Get.isRegistered<SearchController>()) {
         Get.lazyPut<SearchController>(
-          () => SearchController(Get.find<VideoSource>()),
+          () => SearchController(SourceRegistry.defaultSource),
           fenix: true,
         );
       }
@@ -457,7 +457,7 @@ class _SearchViewState extends State<SearchView> {
                                 const SizedBox(width: 8),
                                 if (controller.totalItems.value > 0)
                                   Text(
-                                    '(${controller.totalItems.value})',
+                                    '(${controller.isSite91Md ? controller.results.length : controller.totalItems.value})',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: theme.colorScheme.onSurfaceVariant,
@@ -978,6 +978,7 @@ class _SearchViewState extends State<SearchView> {
 
   /// 官方 5 维筛选面板（排序、选择分类[除论坛]、发布时间、播放量、视频长度）
   Widget _buildOfficialFilterCard(BuildContext context) {
+    if (controller.isSite91Md) return const SizedBox.shrink();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -1810,6 +1811,25 @@ class _SearchViewState extends State<SearchView> {
 
   /// 官方标准紧凑分页控制栏（« 上一页、数字页码、下一页 »、总数统计与跳页框）
   Widget _buildPaginationBar(BuildContext context) {
+    if (controller.isSite91Md) {
+      return Obx(
+        () => Padding(
+          padding: const EdgeInsets.all(20),
+          child: controller.pageLoading.value
+              ? const Center(child: CircularProgressIndicator())
+              : controller.hasMore.value
+              ? Center(
+                  child: FilledButton.tonalIcon(
+                    onPressed: controller.nextPage,
+                    icon: const Icon(Icons.expand_more),
+                    label: const Text('加载更多'),
+                  ),
+                )
+              : const Center(child: Text('已显示全部搜索结果')),
+        ),
+      );
+    }
+
     final theme = Theme.of(context);
 
     return Obx(() {

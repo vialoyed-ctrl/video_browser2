@@ -6,8 +6,12 @@ import 'search_controller.dart';
 class SearchBinding extends Bindings {
   @override
   void dependencies() {
+    // Each route captures the currently selected source, never an old fenix instance.
+    if (Get.isRegistered<SearchController>()) {
+      Get.delete<SearchController>(force: true);
+    }
     Get.lazyPut<SearchController>(
-      () => SearchController(Get.find<VideoSource>()),
+      () => SearchController(SourceRegistry.defaultSource),
       fenix: true,
     );
   }
