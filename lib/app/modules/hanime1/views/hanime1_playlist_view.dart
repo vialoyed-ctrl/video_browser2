@@ -53,7 +53,7 @@ class _Hanime1PlaylistViewState extends State<Hanime1PlaylistView> {
     super.dispose();
   }
 
-  Future<void> _load({String? sort, int? page}) async {
+  Future<void> _load({String? sort, int? page, bool append = false}) async {
     if (!mounted) return;
     final request = ++_request;
     final source = _source;
@@ -87,7 +87,22 @@ class _Hanime1PlaylistViewState extends State<Hanime1PlaylistView> {
       if (result == null) {
         _error = '播放清單載入失敗，請下拉重試';
       } else {
-        _playlist = result;
+        _playlist = append && _playlist != null
+            ? Hanime1PlaylistPage(
+                id: result.id,
+                title: result.title,
+                creator: result.creator,
+                creatorPath: result.creatorPath,
+                coverUrl: result.coverUrl,
+                videoCount: result.videoCount,
+                viewsText: result.viewsText,
+                items: [..._playlist!.items, ...result.items],
+                page: result.page,
+                hasMore: result.hasMore,
+                sort: result.sort,
+                totalPages: result.totalPages,
+              )
+            : result;
         _page = result.page;
         _sort = result.sort;
       }
@@ -118,7 +133,7 @@ class _Hanime1PlaylistViewState extends State<Hanime1PlaylistView> {
         child: PullToNextPage(
           hasNext: (_playlist?.totalPages ?? 1) > _page,
           isLoading: _loading,
-          onNext: () => _load(page: _page + 1),
+          onNext: () => _load(page: _page + 1, append: true),
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics(),
@@ -153,15 +168,17 @@ class _Hanime1PlaylistViewState extends State<Hanime1PlaylistView> {
                       ),
                     ),
                   ),
-                if (playlist.totalPages > 1)
-                  SliverToBoxAdapter(
-                    child: Hanime1Pagination(
-                      currentPage: _page,
-                      totalPages: playlist.totalPages,
-                      isLoading: _loading,
-                      onPageChanged: (page) => _load(page: page),
-                    ),
+                SliverToBoxAdapter(
+                  child: Hanime1Pagination(
+                    currentPage: _page,
+                    onNext: () => _load(page: _page + 1, append: true),
+                    hasNext: playlist.hasMore,
+                    error: _error,
+                    totalPages: playlist.totalPages,
+                    isLoading: _loading,
+                    onPageChanged: (page) => _load(page: page),
                   ),
+                ),
               ] else if (_loading)
                 const SliverFillRemaining(
                   hasScrollBody: false,

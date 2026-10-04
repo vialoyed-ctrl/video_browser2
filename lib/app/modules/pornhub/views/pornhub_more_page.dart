@@ -131,6 +131,8 @@ class _CategoryVideosPage extends StatefulWidget {
 class _CategoryVideosPageState extends State<_CategoryVideosPage> {
   final List<VideoItem> _items = <VideoItem>[];
   bool _loading = true;
+  bool _hasMore = false;
+  int _page = 1, _request = 0;
   String? _error;
 
   @override
@@ -139,7 +141,9 @@ class _CategoryVideosPageState extends State<_CategoryVideosPage> {
     _load();
   }
 
-  Future<void> _load() async {
+  Future<void> _load({int targetPage = 1, bool append = false}) async {
+    if (_loading && _items.isNotEmpty) return;
+    final request = ++_request;
     setState(() {
       _loading = true;
       _error = null;
@@ -147,17 +151,18 @@ class _CategoryVideosPageState extends State<_CategoryVideosPage> {
     try {
       final page = await PornHubController.to.source.fetchPathPage(
         widget.category.path as String,
-        1,
+        targetPage,
       );
-      if (!mounted) return;
+      if (!mounted || request != _request) return;
       setState(() {
-        _items
-          ..clear()
-          ..addAll(page.items);
+        if (!append) _items.clear();
+        _items.addAll(page.items);
+        _page = page.page;
+        _hasMore = page.hasMore;
         _loading = false;
       });
     } catch (e) {
-      if (!mounted) return;
+      if (!mounted || request != _request) return;
       setState(() {
         _error = '获取失败: $e';
         _loading = false;
@@ -169,7 +174,7 @@ class _CategoryVideosPageState extends State<_CategoryVideosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.category.name as String)),
-      body: _loading
+      body: _loading && _items.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : _error != null && _items.isEmpty
           ? PornHubErrorBlock(message: _error!, onRetry: _load)
@@ -181,8 +186,13 @@ class _CategoryVideosPageState extends State<_CategoryVideosPage> {
                 ),
                 SliverToBoxAdapter(
                   child: PornHubListFooter(
-                    isLoadingMore: false,
-                    hasMore: false,
+                    isLoadingMore: _loading,
+                    hasMore: _hasMore,
+                    currentPage: _page,
+                    onJump: (page) => _load(targetPage: page),
+                    onLoadMore: () =>
+                        _load(targetPage: _page + 1, append: true),
+                    errorText: _error,
                     isEmpty: _items.isEmpty,
                     emptyHint: '该分类暂无内容',
                   ),
@@ -440,6 +450,8 @@ class _CollectionPage extends StatefulWidget {
 class _CollectionPageState extends State<_CollectionPage> {
   final List<VideoItem> _items = <VideoItem>[];
   bool _loading = true;
+  bool _hasMore = false;
+  int _page = 1, _request = 0;
   String? _error;
 
   @override
@@ -448,22 +460,28 @@ class _CollectionPageState extends State<_CollectionPage> {
     _load();
   }
 
-  Future<void> _load() async {
+  Future<void> _load({int targetPage = 1, bool append = false}) async {
+    if (_loading && _items.isNotEmpty) return;
+    final request = ++_request;
     setState(() {
       _loading = true;
       _error = null;
     });
     try {
-      final page = await widget.fetcher(1);
-      if (!mounted) return;
+      final page = await widget.fetcher(targetPage);
+      if (page.summary == PornHubSource.requestFailureMessage) {
+        throw StateError(PornHubSource.requestFailureMessage);
+      }
+      if (!mounted || request != _request) return;
       setState(() {
-        _items
-          ..clear()
-          ..addAll(page.items as List<VideoItem>);
+        if (!append) _items.clear();
+        _items.addAll(page.items as List<VideoItem>);
+        _page = page.page as int;
+        _hasMore = page.hasMore as bool;
         _loading = false;
       });
     } catch (e) {
-      if (!mounted) return;
+      if (!mounted || request != _request) return;
       setState(() {
         _error = '获取失败: $e';
         _loading = false;
@@ -475,7 +493,7 @@ class _CollectionPageState extends State<_CollectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: _loading
+      body: _loading && _items.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : _error != null && _items.isEmpty
           ? PornHubErrorBlock(message: _error!, onRetry: _load)
@@ -487,8 +505,13 @@ class _CollectionPageState extends State<_CollectionPage> {
                 ),
                 SliverToBoxAdapter(
                   child: PornHubListFooter(
-                    isLoadingMore: false,
-                    hasMore: false,
+                    isLoadingMore: _loading,
+                    hasMore: _hasMore,
+                    currentPage: _page,
+                    onJump: (page) => _load(targetPage: page),
+                    onLoadMore: () =>
+                        _load(targetPage: _page + 1, append: true),
+                    errorText: _error,
                     isEmpty: _items.isEmpty,
                     emptyHint: '暂无视频',
                   ),

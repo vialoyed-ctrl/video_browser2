@@ -150,6 +150,9 @@ class _Hanime1RankingTabState extends State<Hanime1RankingTab> {
                     SliverToBoxAdapter(
                       child: Hanime1Pagination(
                         currentPage: ctrl.rankingPage.value,
+                        onNext: ctrl.loadMoreRanking,
+                        hasNext: ctrl.hasMoreRanking.value,
+                        error: ctrl.rankingError.value,
                         totalPages: ctrl.rankingTotalPages.value,
                         isLoading: ctrl.isLoadingRanking.value,
                         onPageChanged: (page) => ctrl.loadRanking(

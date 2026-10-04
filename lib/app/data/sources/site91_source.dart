@@ -297,6 +297,13 @@ class Site91Source implements VideoSource {
 
   String get currentBaseUrl => _baseUrl;
 
+  /// 永久保留、不可删除的候选域名：域名对话框据此单独成组展示。
+  List<String> get domainCandidates => defaultDomains;
+
+  /// 规范化用户输入的域名：让 UI 与数据层共用同一套清洗规则，
+  /// 避免对话框显示的值与最终生效的值不一致。
+  String normalizeDomainInput(String url) => normalizeDomain(url);
+
   static String _cleanBaseUrl(String url) {
     var cleaned = url.trim();
     if (cleaned.isEmpty) return cleaned;

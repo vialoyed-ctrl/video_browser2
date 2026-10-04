@@ -24,6 +24,8 @@ class HomeController extends GetxController {
   final RxBool loadingFirst = true.obs;
   final RxBool loadingMore = false.obs;
   final RxBool hasMore = true.obs;
+  final RxInt currentPage = 1.obs;
+  int? _failedJumpPage;
   final RxnString error = RxnString();
   final RxnString loadMoreError = RxnString();
   final RxList<VideoCategory> site91mdCategories = <VideoCategory>[].obs;
@@ -169,7 +171,7 @@ class HomeController extends GetxController {
   }
 
   /// 加载首屏数据（清空历史去重记录）
-  Future<void> loadFirstPage({bool supersede = false}) async {
+  Future<void> loadFirstPage({bool supersede = false, int page = 1}) async {
     if (_inFlight && !supersede) return;
     final generation = ++_firstPageGeneration;
     final source = _source.value;
@@ -180,13 +182,13 @@ class HomeController extends GetxController {
     loadingFirst.value = true;
     error.value = null;
     loadMoreError.value = null;
-    _seenVideoIds.clear();
+    _failedJumpPage = null;
 
     try {
       final result = await source.fetchChannelPage(
         channel: channel,
         categoryPath: categoryPath,
-        page: 1,
+        page: page,
         pageSize: pageSize,
       );
 
@@ -197,14 +199,22 @@ class HomeController extends GetxController {
           .toList();
       videos.assignAll(newItems);
       PreloadService.instance.preloadList(newItems, isNewPage: true);
-      _page = 1;
+      _page = page;
+      currentPage.value = page;
       hasMore.value = result.hasMore;
 
       if (scroll.hasClients) {
         scroll.jumpTo(0);
       }
     } catch (e) {
-      if (generation == _firstPageGeneration) error.value = '内容加载失败：$e';
+      if (generation == _firstPageGeneration) {
+        if (videos.isEmpty) {
+          error.value = '内容加载失败：$e';
+        } else {
+          loadMoreError.value = '第 $page 页加载失败，请重试';
+          _failedJumpPage = page;
+        }
+      }
     } finally {
       if (generation == _firstPageGeneration) {
         loadingFirst.value = false;
@@ -240,12 +250,14 @@ class HomeController extends GetxController {
       if (newItems.isNotEmpty) {
         videos.addAll(newItems);
         _page = targetPage;
+        currentPage.value = targetPage;
         hasMore.value = result.hasMore;
         PreloadService.instance.preloadList(newItems, isNewPage: false);
       } else {
         // 如果拉到了条目但全部已存在于界面中（如官网分类交集），尝试再探一页
         if (result.hasMore && targetPage < 50) {
           _page = targetPage;
+          currentPage.value = targetPage;
           _inFlight = false;
           loadingMore.value = false;
           await loadMore();
@@ -256,11 +268,7 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       if (generation == _firstPageGeneration) {
-        if (source is Site91MdSource) {
-          loadMoreError.value = '下一页加载失败，请重试';
-        } else {
-          hasMore.value = false;
-        }
+        loadMoreError.value = '下一页加载失败，请重试';
       }
     } finally {
       if (generation == _firstPageGeneration) {
@@ -268,6 +276,20 @@ class HomeController extends GetxController {
         _inFlight = false;
       }
     }
+  }
+
+  Future<void> retryOrLoadMore() async {
+    final target = _failedJumpPage;
+    if (target != null) {
+      await loadFirstPage(page: target);
+    } else {
+      await loadMore();
+    }
+  }
+
+  Future<void> jumpToPage(int page) async {
+    if (page < 1 || loadingFirst.value || loadingMore.value) return;
+    await loadFirstPage(page: page);
   }
 
   /// 加载首页热搜词

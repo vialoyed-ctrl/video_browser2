@@ -611,6 +611,8 @@ class _PornHubSubscriptionsTabState extends State<PornHubSubscriptionsTab> {
               SliverToBoxAdapter(
                 child: PornHubListFooter(
                   isLoadingMore: loading,
+                  currentPage: isClips ? _ctrl.clipsPage : _ctrl.feedPage,
+                  onJump: isClips ? _ctrl.jumpClipsPage : _ctrl.jumpFeedPage,
                   hasMore: hasMore,
                   onLoadMore: isClips
                       ? _ctrl.loadMoreClips

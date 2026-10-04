@@ -125,9 +125,13 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
     _submit();
   }
 
-  Future<void> _load({required bool reset, bool clear = false}) async {
+  Future<void> _load({
+    required bool reset,
+    bool clear = false,
+    int? targetPage,
+  }) async {
     if (!reset && (_loading || !_hasMore)) return;
-    final request = ++_request, page = reset ? 1 : _page;
+    final request = ++_request, page = reset ? (targetPage ?? 1) : _page;
     final path = _path, kind = _kind;
     setState(() {
       _loading = true;
@@ -554,6 +558,9 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                             ),
                           SliverToBoxAdapter(
                             child: PornHubListFooter(
+                              currentPage: (_page - 1).clamp(1, 2147483647),
+                              onJump: (page) =>
+                                  _load(reset: true, targetPage: page),
                               isLoadingMore: _loading,
                               hasMore: _hasMore,
                               errorText: _error,

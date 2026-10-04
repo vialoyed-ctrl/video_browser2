@@ -687,12 +687,14 @@ class _Hanime1ProfileTabState extends State<Hanime1ProfileTab> {
       ),
       Hanime1VideoGridSliver(items: items),
     ];
-    if (key.isNotEmpty && (tabPage?.totalPages ?? 1) > 1) {
+    if (key.isNotEmpty && tabPage != null) {
       slivers.add(
         SliverToBoxAdapter(
           child: Hanime1Pagination(
-            currentPage: tabPage?.page ?? 1,
-            totalPages: tabPage?.totalPages ?? 1,
+            currentPage: tabPage.page,
+            onNext: () => ctrl.loadMoreUserTab(key),
+            hasNext: tabPage.hasMore,
+            totalPages: tabPage.totalPages,
             isLoading: ctrl.loadingMoreUserTab.value == key,
             onPageChanged: (page) => ctrl.goToUserTabPage(key, page),
           ),

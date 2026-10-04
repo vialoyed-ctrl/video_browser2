@@ -53,7 +53,7 @@ class UiController extends PornHubController {
   @override
   Future<void> fetchCreatorCounts() async {}
   @override
-  Future<void> loadFavorites() async {}
+  Future<void> loadFavorites({int targetPage = 1, bool append = false}) async {}
   @override
   Future<void> loadPublicPlaylists() async {}
 }
@@ -286,4 +286,3 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 }
-

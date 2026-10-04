@@ -3,6 +3,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../widgets/append_pagination_footer.dart';
+
 import '../../core/app_theme.dart';
 
 import 'package:get/get.dart';
@@ -413,55 +415,16 @@ class HomeView extends GetView<HomeController> {
     }
   }
 
-  Widget _footer(BuildContext context) {
-    return Obx(() {
-      if (controller.loadingMore.value) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          ),
-        );
-      }
-      if (controller.source is Site91MdSource &&
-          controller.loadMoreError.value != null) {
-        return Center(
-          child: TextButton.icon(
-            onPressed: controller.loadMore,
-            icon: const Icon(Icons.refresh),
-            label: Text(controller.loadMoreError.value!),
-          ),
-        );
-      }
-      if (!controller.hasMore.value) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Center(
-            child: Text(
-              '已经到底了',
-              style: TextStyle(
-                fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        );
-      }
-      if (controller.source is Site91MdSource) {
-        return Center(
-          child: TextButton(
-            onPressed: controller.loadMore,
-            child: const Text('加载下一页'),
-          ),
-        );
-      }
-      return const SizedBox(height: 24);
-    });
-  }
+  Widget _footer(BuildContext context) => Obx(
+    () => AppendPaginationFooter(
+      page: controller.currentPage.value,
+      hasMore: controller.hasMore.value,
+      loading: controller.loadingMore.value || controller.loadingFirst.value,
+      error: controller.loadMoreError.value,
+      onJump: controller.jumpToPage,
+      onNext: controller.retryOrLoadMore,
+    ),
+  );
 
   void _enqueue(VideoItem video) {
     final service = Get.find<DownloadService>();

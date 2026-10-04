@@ -436,6 +436,13 @@ class _PornHubMineTabState extends State<PornHubMineTab> {
           );
         }
         return _VideoPane(
+          currentPage: _ctrl.favoritesPage.value,
+          onJump: (page) => _ctrl.loadFavorites(targetPage: page),
+          hasMore: _ctrl.favoritesHasMore.value,
+          onLoadMore: () => _ctrl.loadFavorites(
+            targetPage: _ctrl.favoritesPage.value + 1,
+            append: true,
+          ),
           items: _ctrl.favorites,
           loading: _ctrl.isLoadingFavorites.value,
           error: _ctrl.favoritesError.value,
@@ -444,6 +451,8 @@ class _PornHubMineTabState extends State<PornHubMineTab> {
         );
       case PornHubMineSection.playlists:
         return _VideoPane(
+          currentPage: _ctrl.playlistPage,
+          onJump: _ctrl.jumpPlaylistPage,
           items: _ctrl.playlistVideos,
           loading: _ctrl.isLoadingPlaylistVideos.value,
           error: _ctrl.playlistVideosError.value,
@@ -459,6 +468,13 @@ class _PornHubMineTabState extends State<PornHubMineTab> {
         );
       case PornHubMineSection.history:
         return _VideoPane(
+          currentPage: _ctrl.historyPage.value,
+          onJump: (page) => _ctrl.loadHistory(targetPage: page),
+          hasMore: _ctrl.historyHasMore.value,
+          onLoadMore: () => _ctrl.loadHistory(
+            targetPage: _ctrl.historyPage.value + 1,
+            append: true,
+          ),
           items: _ctrl.history,
           loading: _ctrl.isLoadingHistory.value,
           error: _ctrl.historyError.value,
@@ -506,6 +522,8 @@ Widget _playlistCover(PornHubPlaylist p, ColorScheme colors, double size) {
 class _VideoPane extends StatelessWidget {
   const _VideoPane({
     required this.items,
+    this.currentPage = 1,
+    this.onJump,
     required this.loading,
     required this.error,
     required this.emptyHint,
@@ -517,6 +535,8 @@ class _VideoPane extends StatelessWidget {
   final bool hasMore;
   final VoidCallback? onLoadMore;
   final List<VideoItem> items;
+  final int currentPage;
+  final ValueChanged<int>? onJump;
   final bool loading;
   final String? error;
   final String emptyHint;
@@ -558,6 +578,8 @@ class _VideoPane extends StatelessWidget {
               SliverToBoxAdapter(
                 child: PornHubListFooter(
                   isLoadingMore: loading,
+                  currentPage: currentPage,
+                  onJump: onJump,
                   hasMore: hasMore,
                   onLoadMore: onLoadMore,
                   errorText: items.isNotEmpty ? error : null,

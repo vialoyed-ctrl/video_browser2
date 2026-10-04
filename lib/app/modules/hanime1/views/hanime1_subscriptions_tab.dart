@@ -128,6 +128,9 @@ class _Hanime1SubscriptionsTabState extends State<Hanime1SubscriptionsTab> {
                       SliverToBoxAdapter(
                         child: Hanime1Pagination(
                           currentPage: ctrl.subscriptionsPage.value,
+                          onNext: ctrl.loadMoreSubscriptions,
+                          hasNext: ctrl.hasMoreSub.value,
+                          error: ctrl.subscriptionsError.value,
                           totalPages: ctrl.subscriptionsTotalPages.value,
                           isLoading: ctrl.isLoadingSub.value,
                           onPageChanged: (page) => ctrl.loadSubscriptions(

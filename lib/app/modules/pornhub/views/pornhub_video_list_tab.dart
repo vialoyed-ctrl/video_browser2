@@ -103,6 +103,8 @@ class _PornHubVideoListTabState extends State<PornHubVideoListTab> {
               SliverToBoxAdapter(
                 child: PornHubListFooter(
                   isLoadingMore: st.isLoadingMore.value,
+                  currentPage: st.page,
+                  onJump: (page) => _ctrl.jumpListPage(_effectivePath, page),
                   hasMore: st.hasMore.value,
                   onLoadMore: () => _ctrl.loadMore(_effectivePath),
                   errorText: error,

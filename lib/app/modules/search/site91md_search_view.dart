@@ -7,6 +7,7 @@ import '../../routes/app_navigator.dart';
 import '../../services/download_service.dart';
 import '../../widgets/app_toast.dart';
 import '../../widgets/bili_video_card.dart';
+import '../../widgets/append_pagination_footer.dart';
 import 'site91md_search_controller.dart';
 
 class Site91MdSearchView extends StatefulWidget {
@@ -56,7 +57,6 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: TextField(
@@ -147,89 +147,15 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
                 ),
               ),
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 16, 12, 32),
-                  child: Column(
-                    children: [
-                      if (controller.error != null) ...[
-                        Text(
-                          controller.error!,
-                          style: TextStyle(color: colors.error),
-                        ),
-                        TextButton.icon(
-                          onPressed: controller.retry,
-                          icon: const Icon(Icons.refresh),
-                          label: const Text('重试本页'),
-                        ),
-                      ],
-                      if (controller.loadingMore)
-                        const CircularProgressIndicator()
-                      else if (controller.hasMore && controller.error == null)
-                        FilledButton.tonalIcon(
-                          onPressed: controller.loading
-                              ? null
-                              : controller.loadMore,
-                          icon: const Icon(Icons.expand_more),
-                          label: const Text('续接下一页'),
-                        ),
-                      const SizedBox(height: 12),
-                      if (controller.lastAvailablePage > 1)
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: 6,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            OutlinedButton(
-                              onPressed:
-                                  controller.loading ||
-                                      controller.loadingMore ||
-                                      controller.page <= 1
-                                  ? null
-                                  : () => _page(controller.page - 1),
-                              child: const Text('上一页'),
-                            ),
-                            ...List.generate(
-                              controller.lastAvailablePage > 7
-                                  ? 7
-                                  : controller.lastAvailablePage,
-                              (index) {
-                                final start = controller.page > 4
-                                    ? controller.page - 3
-                                    : 1;
-                                final page = start + index;
-                                if (page > controller.lastAvailablePage) {
-                                  return const SizedBox.shrink();
-                                }
-                                return OutlinedButton(
-                                  onPressed:
-                                      controller.loading ||
-                                          controller.loadingMore
-                                      ? null
-                                      : () => _page(page),
-                                  style: OutlinedButton.styleFrom(
-                                    backgroundColor: page == controller.page
-                                        ? colors.primaryContainer
-                                        : null,
-                                    minimumSize: const Size(40, 40),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                    ),
-                                  ),
-                                  child: Text('$page'),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      if (!controller.hasMore &&
-                          controller.error == null &&
-                          controller.items.isNotEmpty)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 12),
-                          child: Text('已到官网最后一页'),
-                        ),
-                    ],
-                  ),
+                child: AppendPaginationFooter(
+                  page: controller.page,
+                  hasMore: controller.hasMore,
+                  loading: controller.loading || controller.loadingMore,
+                  error: controller.error,
+                  onJump: _page,
+                  onNext: controller.error != null
+                      ? controller.retry
+                      : controller.loadMore,
                 ),
               ),
             ],

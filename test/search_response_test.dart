@@ -51,6 +51,38 @@ VideoPage _summaryPage(String summary) => VideoPage(
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  test('append, jump and failed jump retry preserve the correct page', () async {
+    final source = _DelayedSource();
+    final controller = SearchController(source);
+    addTearDown(controller.onClose);
+    controller.keyword.value = 'paging';
+    VideoPage response(int page) => VideoPage(
+      items: [VideoItem(id: '$page', title: 'sample', author: '', hlsUrl: '')],
+      page: page, totalPages: 20, hasMore: true,
+    );
+    final first = controller.runSearch();
+    source.requests['paging']!.complete(response(1));
+    await first;
+    final append = controller.goToPage(2, append: true);
+    source.requests['paging']!.complete(response(2));
+    await append;
+    expect(controller.results.map((v) => v.id), ['1', '2']);
+    final jump = controller.goToPage(10);
+    source.requests['paging']!.completeError(StateError('offline'));
+    await jump;
+    expect(controller.currentPage.value, 2);
+    expect(controller.results.map((v) => v.id), ['1', '2']);
+    controller.nextPage();
+    source.requests['paging']!.complete(response(10));
+    await Future<void>.delayed(Duration.zero);
+    expect(controller.currentPage.value, 10);
+    expect(controller.results.single.id, '10');
+    final following = controller.goToPage(11, append: true);
+    source.requests['paging']!.complete(response(11));
+    await following;
+    expect(controller.results.map((v) => v.id), ['10', '11']);
+  });
+
   test(
     'new Hanime filter runs immediately and stale results cannot replace it',
     () async {

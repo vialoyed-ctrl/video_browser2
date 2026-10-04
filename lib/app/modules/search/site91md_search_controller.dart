@@ -43,12 +43,7 @@ class Site91MdSearchController extends ChangeNotifier {
   }
 
   Future<void> goToPage(int target) async {
-    if (_disposed ||
-        loading ||
-        loadingMore ||
-        !searched ||
-        target < 1 ||
-        target > lastAvailablePage) {
+    if (_disposed || loading || loadingMore || !searched || target < 1) {
       return;
     }
     await _load(target, append: false);

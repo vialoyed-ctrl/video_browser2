@@ -6,7 +6,10 @@
 /// 本对话框把「测试」与「采用」彻底分开：
 ///   - 点单项的「测试」= 纯探测，不改变当前生效域名（[Site91Source.probeDomain]）
 ///   - 底部主按钮在输入新域名时显示「添加并使用」，否则显示「保存并使用」；
-///     两种操作都会采用并持久化（[Site91Source.setBaseUrl]）。
+///     两种操作都会采用并持久化（[Site91Source.saveDomainConfiguration]）。
+///
+/// 本文件只服务 91 源（91porny），恢复为原先写死 [Site91Source] 的形态。
+/// 91麻豆 有独立的 `site91md_domain_picker.dart`，两者互不影响。
 library;
 
 import 'package:flutter/material.dart';
@@ -64,11 +67,13 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
   @override
   void initState() {
     super.initState();
-    final current = Site91Source.normalizeDomain(widget.source.currentBaseUrl);
+    final current = widget.source.normalizeDomainInput(
+      widget.source.currentBaseUrl,
+    );
     _selected = current.isNotEmpty
         ? current
-        : (Site91Source.defaultDomains.isNotEmpty
-              ? Site91Source.defaultDomains.first
+        : (widget.source.domainCandidates.isNotEmpty
+              ? widget.source.domainCandidates.first
               : '');
     _loadCustomDomains();
   }
@@ -85,9 +90,9 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
     setState(() {
       _customDomains = domains;
       _loadingCustomDomains = false;
-      if (!Site91Source.defaultDomains.contains(_selected) &&
+      if (!widget.source.domainCandidates.contains(_selected) &&
           !domains.contains(_selected)) {
-        _selected = Site91Source.defaultDomains.first;
+        _selected = widget.source.domainCandidates.first;
       }
     });
   }
@@ -121,7 +126,9 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
     setState(() {
       _customDomains = _customDomains.where((item) => item != domain).toList();
       _probe.remove(domain);
-      if (_selected == domain) _selected = Site91Source.defaultDomains.first;
+      if (_selected == domain) {
+        _selected = widget.source.domainCandidates.first;
+      }
     });
   }
 
@@ -131,12 +138,12 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
     final customDomains = List<String>.of(_customDomains);
     final input = _customCtrl.text.trim();
     if (input.isNotEmpty) {
-      selected = Site91Source.normalizeDomain(input);
+      selected = widget.source.normalizeDomainInput(input);
       if (selected.isEmpty) {
         AppToast.show('请输入有效的域名，例如 www.example.com');
         return;
       }
-      if (!Site91Source.defaultDomains.contains(selected) &&
+      if (!widget.source.domainCandidates.contains(selected) &&
           !customDomains.contains(selected)) {
         customDomains.add(selected);
       }
@@ -179,7 +186,7 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
                 ),
               ),
               const SizedBox(height: 10),
-              for (final domain in Site91Source.defaultDomains)
+              for (final domain in widget.source.domainCandidates)
                 _tile(domain, theme, isCustom: false),
               if (_loadingCustomDomains)
                 const Padding(
