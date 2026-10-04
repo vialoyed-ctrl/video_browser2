@@ -1,21 +1,25 @@
 # 播放仓库
 
-Flutter Android 视频浏览、播放与下载应用，包含 91、Hanime1 和 PornHub 三个独立内容模块。
+<img src="assets/branding/app-icon.png" width="120" alt="播放仓库图标" />
+
+一款简洁的视频播放应用，支持清晰度选择、播放控制、缓存与下载。
 
 ## 功能
 
-- 视频浏览、搜索、筛选、刷新与分页。
-- 视频播放、画质选择、倍速、进度及亮度/音量手势。
-- 下载队列、缓存、断点续传与任务管理。
-- 支持对应内容源的账号登录、订阅、收藏、历史与片单。
-- PornHub 创作者个人页、切片、分类/标签，以及相关、推荐、评论和片单面板。
-- Material 3 明暗主题与统一滚动交互。
+- 视频浏览与关键词搜索。
+- 清晰度选择、倍速播放、进度拖动。
+- 亮度与音量手势调节。
+- 视频缓存、下载队列与断点续传。
+- 收藏、片单及播放记录管理。
+- 明暗主题、下拉刷新与分页。
 
-各内容源的功能随官网可用接口和账号权限而变化。
+## 下载
 
-## 开发与测试
+在本仓库的 Releases 页面下载 APK。普通 64 位 Android 手机选择 `playback-warehouse-arm64.apk`，旧款 32 位设备选择 `playback-warehouse-arm32.apk`。
 
-安装与 `pubspec.yaml` 相容的 Flutter SDK、Android SDK 和 JDK，然后运行：
+## 开发
+
+安装兼容 `pubspec.yaml` 的 Flutter SDK、Android SDK 和 JDK：
 
 ```sh
 flutter pub get
@@ -23,19 +27,16 @@ flutter analyze lib
 flutter test
 ```
 
-项目使用 `third_party/video_player_android` 中的本地播放器插件，必须一起保留。第三方许可和作者署名位于对应依赖目录。
+项目使用本地播放器依赖，需保留 `third_party/video_player_android` 目录。第三方许可与作者署名保留在依赖目录中。
 
-## Android 编译
+## 编译
 
-Windows 使用项目根目录的 `build_apk.bat`。脚本优先查找 PATH 中的 Flutter；JDK 路径由脚本中的 `JAVA_HOME` 设置，首次使用请按本机环境调整。
+Windows 运行根目录 `build_apk.bat`。首次使用时请按本机环境调整脚本中的 JDK 路径，并将 Flutter 添加到 PATH。
 
-64 位安装包位于 `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`，脚本同时复制为 `vb_base_64bit.apk`。
+安装包输出到 `build/app/outputs/flutter-apk/`。
 
-当前 release 构建使用 Android debug 签名配置；正式发行时应配置自己的签名，签名文件与密码不提交到仓库。
+当前构建使用开发签名配置；配置自己的发行签名时，请勿将密钥或密码提交到仓库。
 
-## 隐私处理
+## 隐私
 
-- 不包含真实账号密码、登录 Cookie、抓取的账号页面或本机配置。
-- 不包含手机截图、调试日志、缓存、安装包与历史源码备份。
-- 账号测试样例已匿名化。真实登录集成测试通过环境变量 `HANIME1_TEST_EMAIL` 和 `HANIME1_TEST_PASSWORD` 读取凭据，未设置时跳过。
-- 登录日志不输出邮箱、用户名或用户编号。
+仓库不包含账号凭据、本机会话、手机截图、调试日志或缓存。需要账号的集成测试通过环境变量读取凭据，未配置时自动跳过。
