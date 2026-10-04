@@ -9,6 +9,7 @@
 /// 6. 深度适配深色与浅色模式，保证全界面高对比度与清晰度。
 library;
 
+import '../../widgets/retained_page_sliver.dart';
 import '../../widgets/pull_to_next_page.dart';
 import '../../widgets/append_pagination_footer.dart';
 
@@ -476,59 +477,58 @@ class _SearchViewState extends State<SearchView> {
                                 items: results.toList(growable: false),
                               )
                       else
-                        SliverPadding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                        RetainedPageSliver(
+                          key: ValueKey(
+                            "${controller.keyword.value}:${controller.searchType.value}",
                           ),
-                          sliver: Builder(
-                            builder: (context) {
-                              final screenWidth = MediaQuery.sizeOf(context)
-                                  .width;
-                              final columnCount =
-                                  ResponsiveLayout.gridColumnCount(screenWidth);
-                              final columnWidth =
-                                  (screenWidth - 16 - (columnCount - 1) * 6) /
-                                  columnCount;
-                              final childAspectRatio =
-                                  ResponsiveLayout.cardAspectRatio(columnWidth);
+                          items: List.of(results),
+                          page: controller.currentPage.value,
+                          footer: _buildPaginationBar(context),
+                          gridBuilder: (pageItems) => SliverPadding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            sliver: Builder(
+                              builder: (context) {
+                                final screenWidth = MediaQuery.sizeOf(context)
+                                    .width;
+                                final columnCount =
+                                    ResponsiveLayout.gridColumnCount(
+                                      screenWidth,
+                                    );
+                                final columnWidth =
+                                    (screenWidth - 16 - (columnCount - 1) * 6) /
+                                    columnCount;
+                                final childAspectRatio =
+                                    ResponsiveLayout.cardAspectRatio(
+                                      columnWidth,
+                                    );
 
-                              return SliverGrid(
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: columnCount,
-                                      crossAxisSpacing: 6,
-                                      mainAxisSpacing: 6,
-                                      childAspectRatio: childAspectRatio,
-                                    ),
-                                delegate: SliverChildBuilderDelegate((
-                                  context,
-                                  index,
-                                ) {
-                                  final video = results[index];
-                                  return BiliVideoCardV(
-                                    video: video,
-                                    onTap: () => AppNavigator.toPlayer(video),
-                                    onDownload: () => _enqueue(video),
-                                  );
-                                }, childCount: results.length),
-                              );
-                            },
+                                return SliverGrid(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: columnCount,
+                                        crossAxisSpacing: 6,
+                                        mainAxisSpacing: 6,
+                                        childAspectRatio: childAspectRatio,
+                                      ),
+                                  delegate: SliverChildBuilderDelegate((
+                                    context,
+                                    index,
+                                  ) {
+                                    final video = pageItems[index];
+                                    return BiliVideoCardV(
+                                      video: video,
+                                      onTap: () => AppNavigator.toPlayer(video),
+                                      onDownload: () => _enqueue(video),
+                                    );
+                                  }, childCount: pageItems.length),
+                                );
+                              },
+                            ),
                           ),
                         ),
-
-                      // 4.6 底部控件
-                      //
-                      // hanime1 是官网那条「跳页条」（上一頁 / 页码输入框 / 下一頁），
-                      // 列表下方才有；91 保持原有卡片式分页栏不动。
-                      if (results.isNotEmpty)
-                        SliverToBoxAdapter(
-                          child: controller.isHanime1
-                              ? _buildPaginationBar(context)
-                              : _buildPaginationBar(context),
-                        )
-                      else
-                        const SliverToBoxAdapter(child: SizedBox(height: 32)),
                     ],
                   ],
                 ),
@@ -612,23 +612,23 @@ class _SearchViewState extends State<SearchView> {
                 ),
               )
             else ...[
-              if (controller.totalPages.value > 1)
-                SliverToBoxAdapter(child: const SizedBox.shrink()),
-              if (artistDirectory)
-                _Hanime1StudioGridSliver(
-                  items: results.toList(growable: false),
-                  onTapItem: (studio) =>
-                      controller.searchVideosForArtist(studio.title),
-                )
-              // 只有 里番 / 泡面番 / 新番预告 三类用 3 列竖版海报卡
-              // （封面 3:4 + 标题 + 作者，「新番預告」另带日期角标）；
-              // 其余类型保持原来的 2 列横版 `.horizontal-card`。
-              else if (_hanime1UsesPosterGrid(controller))
-                Hanime1PosterGridSliver(items: results.toList(growable: false))
-              else
-                Hanime1VideoGridSliver(items: results.toList(growable: false)),
-              if (controller.totalPages.value > 1)
-                SliverToBoxAdapter(child: _buildPaginationBar(context)),
+              RetainedPageSliver(
+                key: ValueKey(
+                  "${controller.keyword.value}:${controller.searchType.value}",
+                ),
+                items: List.of(results),
+                page: controller.currentPage.value,
+                footer: _buildPaginationBar(context),
+                gridBuilder: (pageItems) => artistDirectory
+                    ? _Hanime1StudioGridSliver(
+                        items: pageItems,
+                        onTapItem: (studio) =>
+                            controller.searchVideosForArtist(studio.title),
+                      )
+                    : _hanime1UsesPosterGrid(controller)
+                    ? Hanime1PosterGridSliver(items: pageItems)
+                    : Hanime1VideoGridSliver(items: pageItems),
+              ),
             ],
           ],
         ),
@@ -1470,6 +1470,9 @@ class _SearchViewState extends State<SearchView> {
   Widget _buildPaginationBar(BuildContext context) => Obx(
     () => AppendPaginationFooter(
       page: controller.currentPage.value,
+      totalPages: controller.totalPages.value > 1
+          ? controller.totalPages.value
+          : null,
       hasMore: controller.hasMore.value,
       loading: controller.loading.value || controller.pageLoading.value,
       error: controller.error.value,

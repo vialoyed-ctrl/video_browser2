@@ -1,6 +1,8 @@
 /// 首页视图：浏览列表 + 触底分页 + 官方侧边栏 + 九色热搜 + 分类标签栏。
 library;
 
+import '../../widgets/retained_page_sliver.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../widgets/append_pagination_footer.dart';
@@ -219,26 +221,33 @@ class HomeView extends GetView<HomeController> {
             SliverToBoxAdapter(child: Obx(() => _buildHeaderSection(context))),
 
           // 视频网格列表（动态 2~5 列智能自适应）
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columnCount,
-                crossAxisSpacing: 6,
-                mainAxisSpacing: 6,
-                childAspectRatio: childAspectRatio,
+          RetainedPageSliver(
+            key: ValueKey(
+              '${controller.source.id}:${controller.currentChannel.value}:${controller.currentCategory.value?.path}',
+            ),
+            items: List.of(controller.videos),
+            page: controller.currentPage.value,
+            footer: _footer(context),
+            gridBuilder: (pageItems) => SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              sliver: SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columnCount,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 6,
+                  childAspectRatio: childAspectRatio,
+                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final video = pageItems[index];
+                  return BiliVideoCardV(
+                    video: video,
+                    onTap: () => AppNavigator.toPlayer(video),
+                    onDownload: () => _enqueue(video),
+                  );
+                }, childCount: pageItems.length),
               ),
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final video = controller.videos[index];
-                return BiliVideoCardV(
-                  video: video,
-                  onTap: () => AppNavigator.toPlayer(video),
-                  onDownload: () => _enqueue(video),
-                );
-              }, childCount: controller.videos.length),
             ),
           ),
-          SliverToBoxAdapter(child: _footer(context)),
         ],
       ),
     );

@@ -7,6 +7,8 @@
 /// 单独持有自己的加载态更清晰，也不会让主 Tab 的状态机变复杂。
 library;
 
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -180,12 +182,10 @@ class _CategoryVideosPageState extends State<_CategoryVideosPage> {
           ? PornHubErrorBlock(message: _error!, onRetry: _load)
           : CustomScrollView(
               slivers: <Widget>[
-                SliverPornHubGrid(
-                  videos: _items,
-                  onDownload: enqueuePornHubDownload,
-                ),
-                SliverToBoxAdapter(
-                  child: PornHubListFooter(
+                RetainedPageSliver(
+                  items: List.of(_items),
+                  page: _page,
+                  footer: PornHubListFooter(
                     isLoadingMore: _loading,
                     hasMore: _hasMore,
                     currentPage: _page,
@@ -195,6 +195,10 @@ class _CategoryVideosPageState extends State<_CategoryVideosPage> {
                     errorText: _error,
                     isEmpty: _items.isEmpty,
                     emptyHint: '该分类暂无内容',
+                  ),
+                  gridBuilder: (pageItems) => SliverPornHubGrid(
+                    videos: pageItems,
+                    onDownload: enqueuePornHubDownload,
                   ),
                 ),
               ],
@@ -499,12 +503,10 @@ class _CollectionPageState extends State<_CollectionPage> {
           ? PornHubErrorBlock(message: _error!, onRetry: _load)
           : CustomScrollView(
               slivers: <Widget>[
-                SliverPornHubGrid(
-                  videos: _items,
-                  onDownload: enqueuePornHubDownload,
-                ),
-                SliverToBoxAdapter(
-                  child: PornHubListFooter(
+                RetainedPageSliver(
+                  items: List.of(_items),
+                  page: _page,
+                  footer: PornHubListFooter(
                     isLoadingMore: _loading,
                     hasMore: _hasMore,
                     currentPage: _page,
@@ -514,6 +516,10 @@ class _CollectionPageState extends State<_CollectionPage> {
                     errorText: _error,
                     isEmpty: _items.isEmpty,
                     emptyHint: '暂无视频',
+                  ),
+                  gridBuilder: (pageItems) => SliverPornHubGrid(
+                    videos: pageItems,
+                    onDownload: enqueuePornHubDownload,
                   ),
                 ),
               ],

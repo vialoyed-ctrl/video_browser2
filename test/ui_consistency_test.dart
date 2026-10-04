@@ -41,7 +41,7 @@ void main() {
   });
 
   testWidgets(
-    'a bottom pull turns one page, top pulls and the final page do not',
+    'a bottom pull appends without resetting position; top and final-page pulls do not load',
     (tester) async {
       final scroll = ScrollController();
       var calls = 0;
@@ -81,7 +81,7 @@ void main() {
       expect(calls, 1);
       pending!.complete();
       await tester.pumpAndSettle();
-      expect(scroll.offset, 0);
+      expect(scroll.offset, scroll.position.maxScrollExtent);
       hasNext = false;
       await tester.pumpWidget(screen());
       scroll.jumpTo(scroll.position.maxScrollExtent);

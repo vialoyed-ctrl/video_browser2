@@ -13,6 +13,8 @@
 /// 板块切换按需加载：已有数据不重复请求，下拉刷新才重抓。
 library;
 
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -571,12 +573,10 @@ class _VideoPane extends StatelessWidget {
                 child: Center(child: CircularProgressIndicator()),
               )
             else ...<Widget>[
-              SliverPornHubGrid(
-                videos: items,
-                onDownload: enqueuePornHubDownload,
-              ),
-              SliverToBoxAdapter(
-                child: PornHubListFooter(
+              RetainedPageSliver(
+                items: List.of(items),
+                page: currentPage,
+                footer: PornHubListFooter(
                   isLoadingMore: loading,
                   currentPage: currentPage,
                   onJump: onJump,
@@ -585,6 +585,10 @@ class _VideoPane extends StatelessWidget {
                   errorText: items.isNotEmpty ? error : null,
                   isEmpty: items.isEmpty,
                   emptyHint: error ?? emptyHint,
+                ),
+                gridBuilder: (pageItems) => SliverPornHubGrid(
+                  videos: pageItems,
+                  onDownload: enqueuePornHubDownload,
                 ),
               ),
             ],

@@ -1,3 +1,5 @@
+import '../../widgets/retained_page_sliver.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -112,42 +114,11 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
                   hasScrollBody: false,
                   child: Center(child: Text('官网没有匹配的结果')),
                 ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                sliver: SliverLayoutBuilder(
-                  builder: (context, constraints) {
-                    final columns = ResponsiveLayout.gridColumnCount(
-                      constraints.crossAxisExtent,
-                    );
-                    final width =
-                        (constraints.crossAxisExtent - (columns - 1) * 6) /
-                        columns;
-                    return SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: columns,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 6,
-                        childAspectRatio: ResponsiveLayout.cardAspectRatio(
-                          width,
-                        ),
-                      ),
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        final video = controller.items[index];
-                        return BiliVideoCardV(
-                          video: video,
-                          onTap: () => AppNavigator.toPlayer(video),
-                          onDownload: () {
-                            Get.find<DownloadService>().enqueue(video);
-                            AppToast.show('已加入下载队列');
-                          },
-                        );
-                      }, childCount: controller.items.length),
-                    );
-                  },
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: AppendPaginationFooter(
+              RetainedPageSliver(
+                key: ValueKey(controller.keyword),
+                items: List.of(controller.items),
+                page: controller.page,
+                footer: AppendPaginationFooter(
                   page: controller.page,
                   hasMore: controller.hasMore,
                   loading: controller.loading || controller.loadingMore,
@@ -156,6 +127,40 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
                   onNext: controller.error != null
                       ? controller.retry
                       : controller.loadMore,
+                ),
+                gridBuilder: (pageItems) => SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  sliver: SliverLayoutBuilder(
+                    builder: (context, constraints) {
+                      final columns = ResponsiveLayout.gridColumnCount(
+                        constraints.crossAxisExtent,
+                      );
+                      final width =
+                          (constraints.crossAxisExtent - (columns - 1) * 6) /
+                          columns;
+                      return SliverGrid(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: columns,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 6,
+                          childAspectRatio: ResponsiveLayout.cardAspectRatio(
+                            width,
+                          ),
+                        ),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final video = pageItems[index];
+                          return BiliVideoCardV(
+                            video: video,
+                            onTap: () => AppNavigator.toPlayer(video),
+                            onDownload: () {
+                              Get.find<DownloadService>().enqueue(video);
+                              AppToast.show('已加入下载队列');
+                            },
+                          );
+                        }, childCount: pageItems.length),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

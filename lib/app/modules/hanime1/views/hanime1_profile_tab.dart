@@ -48,6 +48,8 @@
 /// `.horizontal-card`，实测 2 列、`gap:17px 7px`，与 [Hanime1VideoGridSliver] 一致。
 library;
 
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -685,12 +687,14 @@ class _Hanime1ProfileTabState extends State<Hanime1ProfileTab> {
       SliverToBoxAdapter(
         child: _buildRowTitle(fallback ?? _virtualRow(key), showMore: false),
       ),
-      Hanime1VideoGridSliver(items: items),
     ];
     if (key.isNotEmpty && tabPage != null) {
       slivers.add(
-        SliverToBoxAdapter(
-          child: Hanime1Pagination(
+        RetainedPageSliver(
+          key: ValueKey(key),
+          items: List.of(items),
+          page: tabPage.page,
+          footer: Hanime1Pagination(
             currentPage: tabPage.page,
             onNext: () => ctrl.loadMoreUserTab(key),
             hasNext: tabPage.hasMore,
@@ -698,8 +702,11 @@ class _Hanime1ProfileTabState extends State<Hanime1ProfileTab> {
             isLoading: ctrl.loadingMoreUserTab.value == key,
             onPageChanged: (page) => ctrl.goToUserTabPage(key, page),
           ),
+          gridBuilder: (pageItems) => Hanime1VideoGridSliver(items: pageItems),
         ),
       );
+    } else {
+      slivers.add(Hanime1VideoGridSliver(items: items));
     }
     return slivers;
   }

@@ -13,6 +13,8 @@
 ///   - 下拉刷新才清缓存重抓。
 library;
 
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -604,12 +606,11 @@ class _PornHubSubscriptionsTabState extends State<PornHubSubscriptionsTab> {
                   }),
                 ),
               ),
-              SliverPornHubGrid(
-                videos: videos,
-                onDownload: enqueuePornHubDownload,
-              ),
-              SliverToBoxAdapter(
-                child: PornHubListFooter(
+              RetainedPageSliver(
+                key: ValueKey('${_ctrl.selectedCreator.value}:$isClips'),
+                items: List.of(videos),
+                page: isClips ? _ctrl.clipsPage : _ctrl.feedPage,
+                footer: PornHubListFooter(
                   isLoadingMore: loading,
                   currentPage: isClips ? _ctrl.clipsPage : _ctrl.feedPage,
                   onJump: isClips ? _ctrl.jumpClipsPage : _ctrl.jumpFeedPage,
@@ -618,6 +619,10 @@ class _PornHubSubscriptionsTabState extends State<PornHubSubscriptionsTab> {
                       ? _ctrl.loadMoreClips
                       : _ctrl.loadMoreFeed,
                   errorText: error,
+                ),
+                gridBuilder: (pageItems) => SliverPornHubGrid(
+                  videos: pageItems,
+                  onDownload: enqueuePornHubDownload,
                 ),
               ),
             ],

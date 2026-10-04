@@ -23,6 +23,7 @@ class Hanime1Pagination extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AppendPaginationFooter(
     page: currentPage,
+    totalPages: totalPages > 1 || hasNext == false ? totalPages : null,
     hasMore: hasNext ?? currentPage < totalPages,
     loading: isLoading,
     error: error,

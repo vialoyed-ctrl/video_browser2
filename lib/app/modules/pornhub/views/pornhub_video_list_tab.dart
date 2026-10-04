@@ -4,6 +4,8 @@
 /// 因此合并成一个组件，由 [showSortBar] 控制。
 library;
 
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -96,12 +98,11 @@ class _PornHubVideoListTabState extends State<PornHubVideoListTab> {
                 ),
               )
             else ...<Widget>[
-              SliverPornHubGrid(
-                videos: videos,
-                onDownload: enqueuePornHubDownload,
-              ),
-              SliverToBoxAdapter(
-                child: PornHubListFooter(
+              RetainedPageSliver(
+                key: ValueKey(_effectivePath),
+                items: List.of(videos),
+                page: st.page,
+                footer: PornHubListFooter(
                   isLoadingMore: st.isLoadingMore.value,
                   currentPage: st.page,
                   onJump: (page) => _ctrl.jumpListPage(_effectivePath, page),
@@ -110,6 +111,10 @@ class _PornHubVideoListTabState extends State<PornHubVideoListTab> {
                   errorText: error,
                   isEmpty: videos.isEmpty,
                   emptyHint: '暂无内容',
+                ),
+                gridBuilder: (pageItems) => SliverPornHubGrid(
+                  videos: pageItems,
+                  onDownload: enqueuePornHubDownload,
                 ),
               ),
             ],

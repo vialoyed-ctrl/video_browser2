@@ -1,3 +1,5 @@
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -181,9 +183,10 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
                   parent: BouncingScrollPhysics(),
                 ),
                 slivers: [
-                  SliverPornHubGrid(videos: _videos),
-                  SliverToBoxAdapter(
-                    child: PornHubListFooter(
+                  RetainedPageSliver(
+                    items: List.of(_videos),
+                    page: (_page - 1).clamp(1, 2147483647),
+                    footer: PornHubListFooter(
                       currentPage: (_page - 1).clamp(1, 2147483647),
                       onJump: (page) => _load(reset: true, targetPage: page),
                       isLoadingMore: _loading,
@@ -193,6 +196,8 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
                       errorText: _error,
                       onLoadMore: () => _load(reset: _videos.isEmpty),
                     ),
+                    gridBuilder: (pageItems) =>
+                        SliverPornHubGrid(videos: pageItems),
                   ),
                 ],
               ),

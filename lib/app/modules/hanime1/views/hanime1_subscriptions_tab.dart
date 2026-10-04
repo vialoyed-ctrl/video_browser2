@@ -8,6 +8,8 @@
 /// 5. 未登录状态下友好引导与一键登录测试账号。
 library;
 
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -116,17 +118,10 @@ class _Hanime1SubscriptionsTabState extends State<Hanime1SubscriptionsTab> {
                     ),
                     slivers: [
                       const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                      Hanime1VideoGridSliver(
-                        items: ctrl.subVideos.toList(growable: false),
-                        padding: const EdgeInsets.fromLTRB(
-                          Hanime1CardH.horizontalPadding,
-                          0,
-                          Hanime1CardH.horizontalPadding,
-                          24,
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Hanime1Pagination(
+                      RetainedPageSliver(
+                        items: List.of(ctrl.subVideos.toList(growable: false)),
+                        page: ctrl.subscriptionsPage.value,
+                        footer: Hanime1Pagination(
                           currentPage: ctrl.subscriptionsPage.value,
                           onNext: ctrl.loadMoreSubscriptions,
                           hasNext: ctrl.hasMoreSub.value,
@@ -137,6 +132,15 @@ class _Hanime1SubscriptionsTabState extends State<Hanime1SubscriptionsTab> {
                             creatorQuery: ctrl.selectedCreator.value,
                             isRefresh: false,
                             page: page,
+                          ),
+                        ),
+                        gridBuilder: (pageItems) => Hanime1VideoGridSliver(
+                          items: pageItems,
+                          padding: const EdgeInsets.fromLTRB(
+                            Hanime1CardH.horizontalPadding,
+                            0,
+                            Hanime1CardH.horizontalPadding,
+                            24,
                           ),
                         ),
                       ),
