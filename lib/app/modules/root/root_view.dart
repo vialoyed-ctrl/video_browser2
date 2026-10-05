@@ -8,9 +8,9 @@ import '../../core/responsive_utils.dart';
 import '../../data/sources/site91_source.dart';
 import '../../data/sources/video_source.dart';
 import '../../widgets/domain_picker.dart';
-import '../feed/feed_view.dart';
 import '../hanime1/views/hanime1_main_view.dart';
 import '../home/home_view.dart';
+import '../feed/feed_view.dart';
 import '../mine/mine_view.dart';
 import '../pornhub/views/pornhub_main_view.dart';
 import 'root_controller.dart';
@@ -23,12 +23,6 @@ class RootView extends StatefulWidget {
 }
 
 class _RootViewState extends State<RootView> {
-  static const List<Widget> _pages = <Widget>[
-    HomeView(),
-    FeedView(),
-    MineView(),
-  ];
-
   /// 内容域名是否已就绪。
   bool _domainReady = false;
 
@@ -39,6 +33,9 @@ class _RootViewState extends State<RootView> {
   }
 
   /// 恢复上次选择的域名；从未选过则强制引导用户选一个。
+  ///
+  /// 只有 91（91porny）需要首次显式选择域名（无默认），因此这里仍写死 [Site91Source]。
+  /// 91麻豆 主站固定，恢复时会自动回退主站，不在此处弹窗打断。
   Future<void> _prepareDomain() async {
     final source = Get.find<VideoSource>();
     if (source is! Site91Source) {
@@ -74,6 +71,11 @@ class _RootViewState extends State<RootView> {
       }
 
       final currentIndex = rootCtrl.currentIndex.value;
+      final pages = <Widget>[
+        const HomeView(),
+        if (rootCtrl.is91) const FeedView(),
+        const MineView(),
+      ];
 
       if (isWide) {
         // 平板大屏 / 宽屏横向模式：Material 3 规范侧边导航栏
@@ -93,17 +95,18 @@ class _RootViewState extends State<RootView> {
                     size: 32,
                   ),
                 ),
-                destinations: const <NavigationRailDestination>[
+                destinations: <NavigationRailDestination>[
                   NavigationRailDestination(
                     icon: Icon(Icons.video_library_outlined),
                     selectedIcon: Icon(Icons.video_library),
                     label: Text('浏览'),
                   ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.dynamic_feed_outlined),
-                    selectedIcon: Icon(Icons.dynamic_feed),
-                    label: Text('动态'),
-                  ),
+                  if (rootCtrl.is91)
+                    const NavigationRailDestination(
+                      icon: Icon(Icons.dynamic_feed_outlined),
+                      selectedIcon: Icon(Icons.dynamic_feed),
+                      label: Text('动态'),
+                    ),
                   NavigationRailDestination(
                     icon: Icon(Icons.person_outline),
                     selectedIcon: Icon(Icons.person),
@@ -113,7 +116,7 @@ class _RootViewState extends State<RootView> {
               ),
               const VerticalDivider(thickness: 0.8, width: 0.8),
               Expanded(
-                child: IndexedStack(index: currentIndex, children: _pages),
+                child: IndexedStack(index: currentIndex, children: pages),
               ),
             ],
           ),
@@ -122,21 +125,22 @@ class _RootViewState extends State<RootView> {
 
       // 手机竖屏与窄屏模式：标准 91 底部导航栏
       return Scaffold(
-        body: IndexedStack(index: currentIndex, children: _pages),
+        body: IndexedStack(index: currentIndex, children: pages),
         bottomNavigationBar: NavigationBar(
           selectedIndex: currentIndex,
           onDestinationSelected: rootCtrl.switchTab,
-          destinations: const <NavigationDestination>[
+          destinations: <NavigationDestination>[
             NavigationDestination(
               icon: Icon(Icons.video_library_outlined),
               selectedIcon: Icon(Icons.video_library),
               label: '浏览',
             ),
-            NavigationDestination(
-              icon: Icon(Icons.dynamic_feed_outlined),
-              selectedIcon: Icon(Icons.dynamic_feed),
-              label: '动态',
-            ),
+            if (rootCtrl.is91)
+              const NavigationDestination(
+                icon: Icon(Icons.dynamic_feed_outlined),
+                selectedIcon: Icon(Icons.dynamic_feed),
+                label: '动态',
+              ),
             NavigationDestination(
               icon: Icon(Icons.person_outline),
               selectedIcon: Icon(Icons.person),

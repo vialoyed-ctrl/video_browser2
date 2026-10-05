@@ -1,3 +1,5 @@
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -125,9 +127,13 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
     _submit();
   }
 
-  Future<void> _load({required bool reset, bool clear = false}) async {
+  Future<void> _load({
+    required bool reset,
+    bool clear = false,
+    int? targetPage,
+  }) async {
     if (!reset && (_loading || !_hasMore)) return;
-    final request = ++_request, page = reset ? 1 : _page;
+    final request = ++_request, page = reset ? (targetPage ?? 1) : _page;
     final path = _path, kind = _kind;
     setState(() {
       _loading = true;
@@ -501,9 +507,26 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                           )
                         else ...[
                           if (_kind == 'videos' || _kind == 'clips')
-                            SliverPornHubGrid(
-                              videos: _videos,
-                              onDownload: enqueuePornHubDownload,
+                            RetainedPageSliver(
+                              items: List.of(_videos),
+                              page: (_page - 1).clamp(1, 2147483647),
+                              footer: PornHubListFooter(
+                                currentPage: (_page - 1).clamp(1, 2147483647),
+                                onJump: (page) =>
+                                    _load(reset: true, targetPage: page),
+                                isLoadingMore: _loading,
+                                hasMore: _hasMore,
+                                errorText: _error,
+                                isEmpty: count == 0,
+                                emptyHint: _kind == 'playlists'
+                                    ? '已获取片单没有匹配项，可继续加载下一页'
+                                    : '没有找到匹配结果',
+                                onLoadMore: () => _load(reset: false),
+                              ),
+                              gridBuilder: (pageItems) => SliverPornHubGrid(
+                                videos: pageItems,
+                                onDownload: enqueuePornHubDownload,
+                              ),
                             ),
                           if (_kind == 'creators')
                             SliverList.builder(
@@ -552,25 +575,20 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                                 },
                               ),
                             ),
-                          SliverToBoxAdapter(
-                            child: PornHubListFooter(
-                              isLoadingMore: _loading,
-                              hasMore: _hasMore,
-                              errorText: _error,
-                              isEmpty: count == 0,
-                              emptyHint: _kind == 'playlists'
-                                  ? '已获取片单没有匹配项，可继续加载下一页'
-                                  : '没有找到匹配结果',
-                              onLoadMore: () => _load(reset: false),
-                            ),
-                          ),
-                          if (count == 0 && _hasMore)
+                          if (_kind != 'videos' && _kind != 'clips')
                             SliverToBoxAdapter(
-                              child: TextButton(
-                                onPressed: _loading
-                                    ? null
-                                    : () => _load(reset: false),
-                                child: const Text('加载下一页'),
+                              child: PornHubListFooter(
+                                currentPage: (_page - 1).clamp(1, 2147483647),
+                                onJump: (page) =>
+                                    _load(reset: true, targetPage: page),
+                                isLoadingMore: _loading,
+                                hasMore: _hasMore,
+                                errorText: _error,
+                                isEmpty: count == 0,
+                                emptyHint: _kind == 'playlists'
+                                    ? '已获取片单没有匹配项，可继续加载下一页'
+                                    : '没有找到匹配结果',
+                                onLoadMore: () => _load(reset: false),
                               ),
                             ),
                         ],

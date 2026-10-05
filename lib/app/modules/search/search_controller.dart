@@ -66,6 +66,8 @@ class SearchController extends GetxController {
   final RxBool loading = false.obs;
   final RxBool hasMore = true.obs;
   final RxnString error = RxnString();
+  int? _failedPage;
+  bool _failedAppend = false;
 
   /// 热门搜索词推荐
   final RxList<String> hotKeywords = <String>[].obs;
@@ -547,6 +549,7 @@ class SearchController extends GetxController {
     loading.value = true;
     error.value = null;
     hasSearched.value = true;
+    _failedPage = null;
 
     try {
       final result = await _source.search(
@@ -618,10 +621,10 @@ class SearchController extends GetxController {
   }
 
   /// 跳转至指定页码（对齐官网点击页码或跳页）
-  Future<void> goToPage(int page) async {
+  Future<void> goToPage(int page, {bool append = false}) async {
     if (isClosed || _inFlight) return;
     if (page < 1) return;
-    if (totalPages.value > 0 && page > totalPages.value) return;
+
     if (page == currentPage.value && results.isNotEmpty) return;
 
     _inFlight = true;
@@ -636,7 +639,11 @@ class SearchController extends GetxController {
         pageSize: pageSize,
       );
       if (currentRequestId != _searchRequestId) return;
-      results.assignAll(result.items);
+      if (append) {
+        results.addAll(result.items);
+      } else {
+        results.assignAll(result.items);
+      }
       _preloadResults(result.items);
       if (selectedAuthor.value == null && result.users.isNotEmpty) {
         searchedUsers.assignAll(result.users);
@@ -644,6 +651,7 @@ class SearchController extends GetxController {
       if (result.summary != null && result.summary!.isNotEmpty) {
         summaryText.value = result.summary;
       }
+      _failedPage = null;
       currentPage.value = page;
       if (result.totalPages > 0) {
         totalPages.value = result.totalPages;
@@ -654,7 +662,7 @@ class SearchController extends GetxController {
       jumpPageInput.text = '$page';
       hasMore.value = page < totalPages.value;
 
-      if (scroll.hasClients) {
+      if (!append && scroll.hasClients) {
         scroll.animateTo(
           0,
           duration: const Duration(milliseconds: 300),
@@ -663,7 +671,9 @@ class SearchController extends GetxController {
       }
     } catch (e) {
       if (currentRequestId != _searchRequestId) return;
-      error.value = '加载第 $page 页失败：$e';
+      _failedPage = page;
+      _failedAppend = append;
+      error.value = '加载第 $page 页失败，请重试';
     } finally {
       if (currentRequestId == _searchRequestId) {
         pageLoading.value = false;
@@ -673,8 +683,13 @@ class SearchController extends GetxController {
   }
 
   void nextPage() {
-    if (currentPage.value < totalPages.value) {
-      goToPage(currentPage.value + 1);
+    final failed = _failedPage;
+    if (failed != null && error.value != null) {
+      goToPage(failed, append: _failedAppend);
+      return;
+    }
+    if (hasMore.value) {
+      goToPage(currentPage.value + 1, append: true);
     }
   }
 

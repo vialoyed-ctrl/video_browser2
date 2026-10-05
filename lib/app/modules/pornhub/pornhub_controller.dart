@@ -196,10 +196,14 @@ class PornHubController extends GetxController {
   /// 最热 Tab 当前选中的路径。
   final RxString hotPathSelected = '/video?o=ht'.obs;
 
-  Future<void> loadList(String path, {bool isRefresh = true}) async {
+  Future<void> loadList(
+    String path, {
+    bool isRefresh = true,
+    int? targetPage,
+  }) async {
     final st = stateOf(path);
+    final requestedPage = targetPage ?? (isRefresh ? 1 : st.page);
     if (isRefresh) {
-      st.page = 1;
       st.hasMore.value = true;
     }
     final request = ++st.request;
@@ -210,7 +214,7 @@ class PornHubController extends GetxController {
     }
     st.error.value = null;
     try {
-      final page = await _source.fetchPathPage(path, st.page);
+      final page = await _source.fetchPathPage(path, requestedPage);
       if (request != st.request) return;
       if (page.summary == PornHubSource.requestFailureMessage) {
         st.error.value = page.summary;
@@ -229,6 +233,7 @@ class PornHubController extends GetxController {
       } else {
         st.items.addAll(page.items);
       }
+      st.page = page.page;
       st.hasMore.value = page.hasMore;
       if (page.items.isEmpty && isRefresh) {
         st.error.value = '未获取到内容，请下拉重试';
@@ -253,6 +258,11 @@ class PornHubController extends GetxController {
     }
     st.page++;
     await loadList(path, isRefresh: false);
+  }
+
+  Future<void> jumpListPage(String path, int page) async {
+    if (page < 1) return;
+    await loadList(path, targetPage: page);
   }
 
   /// 切换排序（最热 Tab 用）。
@@ -542,7 +552,7 @@ class PornHubController extends GetxController {
   ///
   /// 与 [loadFavorites] 同款：request-id 防竞态 + isClosed，避免切换创作者后
   /// 在飞的旧请求把别人的切片追加进池子。
-  Future<void> loadClips({bool reset = false}) async {
+  Future<void> loadClips({bool reset = false, int? targetPage}) async {
     final creator = selectedCreator.value;
     // 「全部订阅」没有对应的切片列表页：明确提示，不臆造聚合结果。
     if (creator == allSubs) {
@@ -558,13 +568,9 @@ class PornHubController extends GetxController {
     if (!reset && !_clipsHasMore) return;
     final request = ++_clipsRequest;
     if (reset) {
-      _clipPool.clear();
-      _clipSeen.clear();
-      clipVideos.clear();
-      _clipsNextPage = 1;
       _clipsHasMore = true;
     }
-    final page = _clipsNextPage;
+    final page = reset ? (targetPage ?? 1) : _clipsNextPage;
     isLoadingClips.value = true;
     clipsError.value = null;
     try {
@@ -575,13 +581,17 @@ class PornHubController extends GetxController {
         _clipsHasMore = true;
         return;
       }
+      if (reset) {
+        _clipPool.clear();
+        _clipSeen.clear();
+      }
       for (final item in res.items) {
         if (_clipSeen.add(item.id)) _clipPool.add(item);
       }
       clipVideos.assignAll(_clipPool);
       if (res.totalItems > 0) clipCounts[creator] = res.totalItems;
       _clipsHasMore = res.hasMore && res.items.isNotEmpty;
-      if (res.items.isNotEmpty) _clipsNextPage = page + 1;
+      _clipsNextPage = page + 1;
       if (clipVideos.isEmpty && res.summary != null) {
         clipsError.value = res.summary;
       }
@@ -601,6 +611,30 @@ class PornHubController extends GetxController {
     if (isLoadingClips.value || !_clipsHasMore) return;
     await loadClips();
   }
+
+  int get feedPage =>
+      ((selectedCreator.value == allSubs
+                  ? _subsNextPage
+                  : (_creatorNextPage[selectedCreator.value] ?? 1)) -
+              1)
+          .clamp(1, 2147483647);
+  int get clipsPage => (_clipsNextPage - 1).clamp(1, 2147483647);
+  int get playlistPage => (_playlistNextPage - 1).clamp(1, 2147483647);
+  Future<void> jumpFeedPage(int page) async {
+    if (page > 0) await loadFeed(reset: true, targetPage: page);
+  }
+
+  Future<void> jumpClipsPage(int page) async {
+    if (page > 0) await loadClips(reset: true, targetPage: page);
+  }
+
+  Future<void> jumpPlaylistPage(int page) async {
+    final id = selectedPlaylistId.value;
+    if (page > 0 && id != null) await loadPlaylistVideos(id, targetPage: page);
+  }
+
+  final RxInt favoritesPage = 1.obs, historyPage = 1.obs;
+  final RxBool favoritesHasMore = false.obs, historyHasMore = false.obs;
 
   /// 收藏（保持原样）。
   final RxList<VideoItem> favorites = <VideoItem>[].obs;
@@ -773,17 +807,17 @@ class PornHubController extends GetxController {
   }
 
   /// 重新加载 / 首次加载（reset = 从头拉第 1 页）。
-  Future<void> loadFeed({bool reset = false}) {
+  Future<void> loadFeed({bool reset = false, int? targetPage}) {
     if (!reset && isLoadingFeed.value) return _feedTask ?? Future<void>.value();
     _creatorSelectionTimer?.cancel();
-    final task = _loadFeed(reset: reset);
+    final task = _loadFeed(reset: reset, targetPage: targetPage);
     _feedTask = task;
     return task.whenComplete(() {
       if (identical(_feedTask, task)) _feedTask = null;
     });
   }
 
-  Future<void> _loadFeed({required bool reset}) async {
+  Future<void> _loadFeed({required bool reset, int? targetPage}) async {
     if (!_feedHasMore && !reset) return;
     final creator = selectedCreator.value;
     final req = ++_feedRequest;
@@ -794,7 +828,7 @@ class PornHubController extends GetxController {
       unawaited(fetchSelectedCreatorCount(creator));
     }
     final page = reset
-        ? 1
+        ? (targetPage ?? 1)
         : (creator == allSubs
               ? _subsNextPage
               : (_creatorNextPage[creator] ?? 1));
@@ -888,7 +922,7 @@ class PornHubController extends GetxController {
   /// 是否还有下一页。
   bool get feedHasMore => _feedHasMore;
 
-  Future<void> loadFavorites() async {
+  Future<void> loadFavorites({int targetPage = 1, bool append = false}) async {
     if (isLoadingFavorites.value) return;
     if (!isLoggedIn) {
       favoritesError.value = '请先登录 PornHub';
@@ -898,13 +932,19 @@ class PornHubController extends GetxController {
     isLoadingFavorites.value = true;
     favoritesError.value = null;
     try {
-      final page = await _source.fetchFavorites();
+      final page = await _source.fetchFavorites(page: targetPage);
       if (request != _favoritesRequest || isClosed) return;
       if (page.summary == PornHubSource.requestFailureMessage) {
         favoritesError.value = page.summary;
         return;
       }
-      favorites.assignAll(page.items);
+      if (append) {
+        favorites.addAll(page.items);
+      } else {
+        favorites.assignAll(page.items);
+      }
+      favoritesPage.value = page.page;
+      favoritesHasMore.value = page.hasMore;
       if (page.items.isEmpty && page.summary != null) {
         favoritesError.value = page.summary;
       }
@@ -918,7 +958,7 @@ class PornHubController extends GetxController {
   }
 
   /// 观看历史 `/users/<name>/videos/recent`
-  Future<void> loadHistory() async {
+  Future<void> loadHistory({int targetPage = 1, bool append = false}) async {
     if (isLoadingHistory.value) return;
     if (!isLoggedIn) {
       historyError.value = '请先登录 PornHub';
@@ -928,13 +968,19 @@ class PornHubController extends GetxController {
     isLoadingHistory.value = true;
     historyError.value = null;
     try {
-      final page = await _source.fetchHistory();
+      final page = await _source.fetchHistory(page: targetPage);
       if (request != _historyRequest || isClosed) return;
       if (page.summary == PornHubSource.requestFailureMessage) {
         historyError.value = page.summary;
         return;
       }
-      history.assignAll(page.items);
+      if (append) {
+        history.addAll(page.items);
+      } else {
+        history.assignAll(page.items);
+      }
+      historyPage.value = page.page;
+      historyHasMore.value = page.hasMore;
       // 展示官网实际返回的最近观看记录数；不会用本机历史覆盖账号记录。
       // 无记录时保持 null，
       // 让 chip 只显示「历史」而不显示一个臆造的条数。
@@ -1057,21 +1103,27 @@ class PornHubController extends GetxController {
     }
   }
 
-  Future<void> loadPlaylistVideos(String playlistId) async {
+  Future<void> loadPlaylistVideos(
+    String playlistId, {
+    int targetPage = 1,
+  }) async {
     if (selectedPlaylistId.value != playlistId) playlistVideos.clear();
     selectedPlaylistId.value = playlistId;
     final request = ++_playlistVideosRequest;
     isLoadingPlaylistVideos.value = true;
     playlistVideosError.value = null;
     try {
-      final page = await _source.fetchPlaylistVideos(playlistId, page: 1);
+      final page = await _source.fetchPlaylistVideos(
+        playlistId,
+        page: targetPage,
+      );
       if (request != _playlistVideosRequest || isClosed) return;
       if (page.summary == PornHubSource.requestFailureMessage) {
         playlistVideosError.value = page.summary;
         return;
       }
       playlistVideos.assignAll(page.items);
-      _playlistNextPage = 2;
+      _playlistNextPage = page.page + 1;
       playlistHasMore.value = page.hasMore;
       if (page.items.isEmpty && page.summary != null) {
         playlistVideosError.value = page.summary;

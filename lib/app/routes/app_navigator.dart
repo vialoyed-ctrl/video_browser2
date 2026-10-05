@@ -7,6 +7,7 @@ import '../modules/player/player_view.dart';
 import '../modules/hanime1/views/hanime1_playlist_view.dart';
 import '../modules/search/search_controller.dart' as app_search;
 import '../modules/search/search_view.dart';
+import '../modules/search/site91md_search_view.dart';
 import '../services/player_service.dart';
 import 'app_routes.dart';
 
@@ -60,7 +61,13 @@ abstract class AppNavigator {
 
   /// 打开搜索页（可传入预填关键词或 Hanime1 分类）
   static Future<T?>? toSearch<T>({String? keyword, String? category}) {
-    final source = Get.find<VideoSource>();
+    final source = SourceRegistry.defaultSource;
+    if (source.id == 'site91md') {
+      return Get.to<T>(
+        () => Site91MdSearchView(source: source, initialKeyword: keyword ?? ''),
+        preventDuplicates: false,
+      );
+    }
     // Hanime1 与 91 共用搜索页面，但必须每次绑定当前数据源。
     // 默认命名路由中的 lazy SearchController 可能已在 91 模式下创建，
     // 切换版面后继续复用会让 Hanime1 的搜索仍发往 91。

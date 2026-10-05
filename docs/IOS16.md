@@ -21,3 +21,17 @@ without re-encoding. FFmpeg sources, license, build script, and relinking object
 are included in the separate CI artifact. No Apple credentials are used in CI.
 
 Downloads: tap Open for the iOS system video player, or Export > Save to Files. Existing downloads are rebased after re-signing, and old TS files mislabeled as MP4 are repaired without deleting the source. Keep the same Apple account and bundle ID when updating; do not uninstall the old app if you want to preserve downloads.
+
+## Updated source compatibility
+
+This iOS release includes the shared application updates from source commit
+`91d52e32cb27189be2fff4b09596992d78e35554`: the fourth content source,
+its search/navigation, consistent appended-page rows and page jumps, and the
+restored primary-source activity feed. iOS remains at minimum version 16.0
+with the same bundle ID `com.vialoyed.videoBrowser`.
+
+The native FFmpeg bridge and its AAC stream-parameter probing, HLS timestamp
+repair, legacy TS-in-MP4 repair, system playback, export, and Documents path
+recovery are preserved. Source updates are merged into this branch instead
+of replacing the iOS files. The build continues to gate IPA compilation on
+real native TS remux/decode regression tests and the complete Flutter suite.

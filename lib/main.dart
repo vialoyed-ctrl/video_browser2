@@ -12,6 +12,7 @@ import 'app/core/app_scroll_behavior.dart';
 import 'app/data/sources/hanime1_source.dart';
 import 'app/data/sources/pornhub_source.dart';
 import 'app/data/sources/site91_source.dart';
+import 'app/data/sources/site91md_source.dart';
 import 'app/data/sources/video_source.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
@@ -104,6 +105,11 @@ Future<void> main() async {
   final pornHub = PornHubSource();
   SourceRegistry.register(pornHub);
 
+  // 91麻豆（苹果CMS）内容源。本地账号：无登录，收藏/历史走本地存储。
+  // 主站固定保留，镜像站由用户在「选择内容域名」里自行增删。
+  final site91md = Site91MdSource();
+  SourceRegistry.register(site91md);
+
   Get.put<VideoSource>(SourceRegistry.defaultSource, permanent: true);
 
   final downloadService = DownloadService();
@@ -124,6 +130,16 @@ Future<void> main() async {
     if (automatic) {
       AppToast.show(
         '当前域名不可用，已自动切换到 ${to.replaceFirst(RegExp(r'^https?://'), '')}',
+      );
+    }
+  };
+
+  // 91麻豆 同样支持主站 + 镜像站切换，需要同一套「旧域名 URL 重写 + 自动切换提示」。
+  site91md.onDomainChanged = (from, to, automatic) {
+    userService.rebaseVideoUrls(site91md.rebaseUrl);
+    if (automatic) {
+      AppToast.show(
+        '91麻豆 当前域名不可用，已自动切换到 ${to.replaceFirst(RegExp(r'^https?://'), '')}',
       );
     }
   };

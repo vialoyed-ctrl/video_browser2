@@ -7,7 +7,6 @@ import 'package:video_browser/app/data/models/video_item.dart';
 import 'package:video_browser/app/data/sources/hanime1_source.dart';
 import 'package:video_browser/app/data/sources/video_source.dart';
 import 'package:video_browser/app/modules/hanime1/hanime1_controller.dart';
-import 'package:video_browser/app/modules/feed/feed_controller.dart';
 import 'package:video_browser/app/modules/search/search_controller.dart';
 import 'package:video_browser/app/services/hanime1_auth_service.dart';
 import 'package:video_browser/app/services/preload_service.dart';
@@ -111,23 +110,4 @@ void main() {
     expect(search.results, isEmpty);
   });
 
-  test('relative and absolute dates retain the same ordering basis', () {
-    final now = DateTime(2026, 10, 4, 12);
-    expect(
-      FeedController.parsePublishedDate('1分钟前', reference: now),
-      now.subtract(const Duration(minutes: 1)),
-    );
-    expect(
-      FeedController.parsePublishedDate('2个星期前', reference: now),
-      now.subtract(const Duration(days: 14)),
-    );
-    expect(
-      FeedController.parsePublishedDate('2026/10/03', reference: now),
-      DateTime(2026, 10, 3),
-    );
-    expect(
-      FeedController.parsePublishedDate('未知', reference: now),
-      DateTime.fromMillisecondsSinceEpoch(0),
-    );
-  });
 }

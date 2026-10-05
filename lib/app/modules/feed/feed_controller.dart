@@ -29,7 +29,8 @@ class FeedController extends GetxController {
 
   static const int pageSize = 24;
 
-  final VideoSource _source = Get.find<VideoSource>();
+  final VideoSource _source =
+      SourceRegistry.byId('site91') ?? Get.find<VideoSource>();
   final UserService _userSvc = Get.find<UserService>();
 
   final ScrollController scrollController = ScrollController();

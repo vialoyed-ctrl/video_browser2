@@ -1,3 +1,5 @@
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -87,10 +89,10 @@ class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
     if (mounted) setState(() => _subBusy = false);
   }
 
-  Future<void> _load({required bool reset}) async {
+  Future<void> _load({required bool reset, int? targetPage}) async {
     if (!reset && (_loading || !_hasMore)) return;
     final request = ++_request;
-    final page = reset ? 1 : _page;
+    final page = reset ? (targetPage ?? 1) : _page;
     final clips = _clips;
     setState(() {
       _loading = true;
@@ -259,18 +261,22 @@ class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
                       ),
                     )
                   else ...[
-                    SliverPornHubGrid(
-                      videos: _items,
-                      onDownload: enqueuePornHubDownload,
-                    ),
-                    SliverToBoxAdapter(
-                      child: PornHubListFooter(
+                    RetainedPageSliver(
+                      items: List.of(_items),
+                      page: (_page - 1).clamp(1, 2147483647),
+                      footer: PornHubListFooter(
+                        currentPage: (_page - 1).clamp(1, 2147483647),
+                        onJump: (page) => _load(reset: true, targetPage: page),
                         isLoadingMore: _loading,
                         hasMore: _hasMore,
                         errorText: _error,
                         isEmpty: _items.isEmpty,
                         emptyHint: _clips ? '暂无切片' : '暂无视频',
                         onLoadMore: () => _load(reset: false),
+                      ),
+                      gridBuilder: (pageItems) => SliverPornHubGrid(
+                        videos: pageItems,
+                        onDownload: enqueuePornHubDownload,
                       ),
                     ),
                   ],

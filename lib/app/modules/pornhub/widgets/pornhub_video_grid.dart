@@ -5,6 +5,8 @@
 /// 卡片直接用 [BiliVideoCardV] —— 这样三个版面的观感完全一致。
 library;
 
+import '../../../widgets/append_pagination_footer.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/responsive_utils.dart';
@@ -71,6 +73,8 @@ class PornHubListFooter extends StatelessWidget {
     this.errorText,
     this.emptyHint,
     this.isEmpty = false,
+    this.currentPage = 1,
+    this.onJump,
   });
 
   final bool isLoadingMore;
@@ -79,6 +83,8 @@ class PornHubListFooter extends StatelessWidget {
   final String? errorText;
   final String? emptyHint;
   final bool isEmpty;
+  final int currentPage;
+  final ValueChanged<int>? onJump;
 
   @override
   Widget build(BuildContext context) {
@@ -96,47 +102,13 @@ class PornHubListFooter extends StatelessWidget {
         ),
       );
     }
-    if (isLoadingMore) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 20),
-        child: Center(
-          child: SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(strokeWidth: 2.2),
-          ),
-        ),
-      );
-    }
-    if (errorText != null && hasMore) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 18),
-        child: Center(
-          child: TextButton(
-            onPressed: onLoadMore,
-            child: Text('${errorText!} · 点击重试'),
-          ),
-        ),
-      );
-    }
-    if (hasMore) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 18),
-        child: Center(
-          child: TextButton(onPressed: onLoadMore, child: const Text('加载更多')),
-        ),
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Center(
-        child: Text(
-          '没有更多了',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ),
+    return AppendPaginationFooter(
+      page: currentPage,
+      hasMore: hasMore,
+      loading: isLoadingMore,
+      error: errorText,
+      onJump: onJump,
+      onNext: onLoadMore,
     );
   }
 }

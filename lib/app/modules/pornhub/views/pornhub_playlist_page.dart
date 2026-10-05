@@ -1,3 +1,5 @@
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -61,7 +63,7 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
     super.dispose();
   }
 
-  Future<void> _load({bool reset = false}) async {
+  Future<void> _load({bool reset = false, int? targetPage}) async {
     if (_loading || (!reset && !_hasMore)) return;
     final request = ++_request;
     setState(() {
@@ -80,7 +82,7 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
       }
       final page = await _source.fetchPlaylistVideos(
         widget.id,
-        page: reset ? 1 : _page,
+        page: reset ? (targetPage ?? 1) : _page,
       );
       if (!mounted || request != _request) return;
       if (page.summary == PornHubSource.requestFailureMessage) {
@@ -181,9 +183,12 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
                   parent: BouncingScrollPhysics(),
                 ),
                 slivers: [
-                  SliverPornHubGrid(videos: _videos),
-                  SliverToBoxAdapter(
-                    child: PornHubListFooter(
+                  RetainedPageSliver(
+                    items: List.of(_videos),
+                    page: (_page - 1).clamp(1, 2147483647),
+                    footer: PornHubListFooter(
+                      currentPage: (_page - 1).clamp(1, 2147483647),
+                      onJump: (page) => _load(reset: true, targetPage: page),
                       isLoadingMore: _loading,
                       hasMore: _hasMore,
                       isEmpty: !_loading && _error == null && _videos.isEmpty,
@@ -191,6 +196,8 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
                       errorText: _error,
                       onLoadMore: () => _load(reset: _videos.isEmpty),
                     ),
+                    gridBuilder: (pageItems) =>
+                        SliverPornHubGrid(videos: pageItems),
                   ),
                 ],
               ),

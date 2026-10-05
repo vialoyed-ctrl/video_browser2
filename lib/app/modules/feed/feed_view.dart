@@ -24,7 +24,9 @@ class FeedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(FeedController());
+    final controller = Get.isRegistered<FeedController>()
+        ? Get.find<FeedController>()
+        : Get.put(FeedController());
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 

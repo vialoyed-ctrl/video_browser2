@@ -519,6 +519,8 @@ const Map<String, Set<String>> _ownedUrlMarkers = <String, Set<String>>{
   'hanime1': <String>{'hanime1.me'},
   // PornHub 有三个域名变体（cn / www / 各地分站），任一命中即视为本源条目。
   'pornhub': <String>{'pornhub.com', 'pornhub.net'},
+  // 91麻豆 主站与镜像站都跑同一套 MacCMS，用固定主站标记即可（镜像由用户自加）。
+  'site91md': <String>{'91md.me'},
 };
 
 /// 内容源归属判断。
@@ -533,6 +535,7 @@ extension VideoSourceOwnership on VideoSource {
   /// 未登记标记的源一律返回 `true`（不做限制，保持既有行为）；`detailUrl`
   /// 为空的条目也放行（无从判断时不误伤）。
   bool ownsItem(VideoItem item) {
+    if (id == 'site91md' && SourceRegistry.isSite91MdVideo(item)) return true;
     final markers = _ownedUrlMarkers[id];
     if (markers == null || markers.isEmpty) return true;
     final url = item.detailUrl ?? '';
@@ -564,6 +567,17 @@ class SourceRegistry {
       if (s.id == id) return s;
     }
     return null;
+  }
+
+  /// Saved 91md items must keep their parser when another site is selected.
+  static bool isSite91MdVideo(VideoItem item) =>
+      item.author == '91麻豆' ||
+      RegExp(r'/vod/(?:play|detail)/id/\d+')
+          .hasMatch(item.detailUrl ?? item.id);
+
+  static VideoSource forVideo(VideoItem item, {required VideoSource fallback}) {
+    if (isSite91MdVideo(item)) return byId('site91md') ?? fallback;
+    return fallback;
   }
 
   static VideoSource get defaultSource {

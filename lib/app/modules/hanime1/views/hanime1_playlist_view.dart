@@ -1,6 +1,8 @@
 /// Hanime1 官方用户播放清单详情页。
 library;
 
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +55,7 @@ class _Hanime1PlaylistViewState extends State<Hanime1PlaylistView> {
     super.dispose();
   }
 
-  Future<void> _load({String? sort, int? page}) async {
+  Future<void> _load({String? sort, int? page, bool append = false}) async {
     if (!mounted) return;
     final request = ++_request;
     final source = _source;
@@ -87,7 +89,22 @@ class _Hanime1PlaylistViewState extends State<Hanime1PlaylistView> {
       if (result == null) {
         _error = '播放清單載入失敗，請下拉重試';
       } else {
-        _playlist = result;
+        _playlist = append && _playlist != null
+            ? Hanime1PlaylistPage(
+                id: result.id,
+                title: result.title,
+                creator: result.creator,
+                creatorPath: result.creatorPath,
+                coverUrl: result.coverUrl,
+                videoCount: result.videoCount,
+                viewsText: result.viewsText,
+                items: [..._playlist!.items, ...result.items],
+                page: result.page,
+                hasMore: result.hasMore,
+                sort: result.sort,
+                totalPages: result.totalPages,
+              )
+            : result;
         _page = result.page;
         _sort = result.sort;
       }
@@ -118,7 +135,7 @@ class _Hanime1PlaylistViewState extends State<Hanime1PlaylistView> {
         child: PullToNextPage(
           hasNext: (_playlist?.totalPages ?? 1) > _page,
           isLoading: _loading,
-          onNext: () => _load(page: _page + 1),
+          onNext: () => _load(page: _page + 1, append: true),
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics(),
@@ -137,29 +154,33 @@ class _Hanime1PlaylistViewState extends State<Hanime1PlaylistView> {
                     child: Center(child: Text('這個播放清單目前沒有影片')),
                   )
                 else
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                    sliver: SliverList.separated(
-                      itemCount: playlist.items.length,
-                      separatorBuilder: (_, _) => Divider(
-                        height: 1,
-                        color: theme.colorScheme.outlineVariant.withValues(
-                          alpha: .5,
-                        ),
-                      ),
-                      itemBuilder: (context, index) => _PlaylistVideoTile(
-                        video: playlist.items[index],
-                        onTap: () => _play(playlist.items[index]),
-                      ),
-                    ),
-                  ),
-                if (playlist.totalPages > 1)
-                  SliverToBoxAdapter(
-                    child: Hanime1Pagination(
+                  RetainedPageSliver(
+                    items: List.of(playlist.items),
+                    page: _page,
+                    footer: Hanime1Pagination(
                       currentPage: _page,
+                      onNext: () => _load(page: _page + 1, append: true),
+                      hasNext: playlist.hasMore,
+                      error: _error,
                       totalPages: playlist.totalPages,
                       isLoading: _loading,
                       onPageChanged: (page) => _load(page: page),
+                    ),
+                    gridBuilder: (pageItems) => SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                      sliver: SliverList.separated(
+                        itemCount: pageItems.length,
+                        separatorBuilder: (_, _) => Divider(
+                          height: 1,
+                          color: theme.colorScheme.outlineVariant.withValues(
+                            alpha: .5,
+                          ),
+                        ),
+                        itemBuilder: (context, index) => _PlaylistVideoTile(
+                          video: pageItems[index],
+                          onTap: () => _play(pageItems[index]),
+                        ),
+                      ),
                     ),
                   ),
               ] else if (_loading)

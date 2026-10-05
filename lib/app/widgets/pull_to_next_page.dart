@@ -10,7 +10,7 @@ class PullToNextPage extends StatefulWidget {
     required this.hasNext,
     required this.isLoading,
     required this.onNext,
-    this.resetPosition = true,
+    this.resetPosition = false,
   });
   final Widget child;
   final bool hasNext, isLoading, resetPosition;

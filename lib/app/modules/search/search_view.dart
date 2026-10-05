@@ -9,11 +9,11 @@
 /// 6. 深度适配深色与浅色模式，保证全界面高对比度与清晰度。
 library;
 
+import '../../widgets/retained_page_sliver.dart';
 import '../../widgets/pull_to_next_page.dart';
+import '../../widgets/append_pagination_footer.dart';
 
 import 'package:flutter/material.dart' hide SearchController;
-import 'package:flutter/services.dart'
-    show FilteringTextInputFormatter, LengthLimitingTextInputFormatter;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 
@@ -246,7 +246,7 @@ class _SearchViewState extends State<SearchView> {
     } else {
       if (!Get.isRegistered<SearchController>()) {
         Get.lazyPut<SearchController>(
-          () => SearchController(Get.find<VideoSource>()),
+          () => SearchController(SourceRegistry.defaultSource),
           fenix: true,
         );
       }
@@ -282,30 +282,6 @@ class _SearchViewState extends State<SearchView> {
     controller.goToPage(page);
   }
 
-  /// 底部跳页条输入框提交。
-  ///
-  /// [SearchController.jumpToPage] 本身不夹取，而 [SearchController.goToPage]
-  /// 对 `page > totalPages` 是**静默 return**（无提示、无跳转），所以这里先夹一次，
-  /// 对齐官网 `validateNumberInput` 的行为。
-  void _submitSkipPageInput() {
-    final n = int.tryParse(controller.jumpPageInput.text.trim());
-    if (n == null) {
-      controller.jumpPageInput.text = '${controller.currentPage.value}';
-      return;
-    }
-    final clamped = _clampPage(n);
-    controller.jumpPageInput.text = '$clamped';
-    _goToPage(clamped);
-  }
-
-  /// 把页码夹到 `1..totalPages`。
-  int _clampPage(int n) {
-    final total = controller.totalPages.value;
-    if (n < 1) return 1;
-    if (total > 0 && n > total) return total;
-    return n;
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -330,8 +306,10 @@ class _SearchViewState extends State<SearchView> {
                     controller.currentPage.value < controller.totalPages.value,
                 isLoading:
                     controller.loading.value || controller.pageLoading.value,
-                onNext: () =>
-                    controller.goToPage(controller.currentPage.value + 1),
+                onNext: () => controller.goToPage(
+                  controller.currentPage.value + 1,
+                  append: true,
+                ),
                 child: CustomScrollView(
                   controller: controller.scroll,
                   physics: const AlwaysScrollableScrollPhysics(
@@ -371,7 +349,7 @@ class _SearchViewState extends State<SearchView> {
                       ),
 
                     // 4. 内容与状态分支展示
-                    if (error != null)
+                    if (error != null && results.isEmpty)
                       SliverFillRemaining(
                         hasScrollBody: false,
                         child: ErrorView(
@@ -478,9 +456,7 @@ class _SearchViewState extends State<SearchView> {
                       // （见 [_buildHanime1SkipBar]）。桌面端（≥768px）才反过来。
                       // 91 保持原样：分页栏在列表下方，且不带跳页条。
                       if (controller.isHanime1 && results.isNotEmpty)
-                        SliverToBoxAdapter(
-                          child: _buildHanime1PaginationBar(context),
-                        ),
+                        SliverToBoxAdapter(child: const SizedBox.shrink()),
 
                       // 4.5 视频流
                       //
@@ -501,59 +477,58 @@ class _SearchViewState extends State<SearchView> {
                                 items: results.toList(growable: false),
                               )
                       else
-                        SliverPadding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                        RetainedPageSliver(
+                          key: ValueKey(
+                            "${controller.keyword.value}:${controller.searchType.value}",
                           ),
-                          sliver: Builder(
-                            builder: (context) {
-                              final screenWidth = MediaQuery.sizeOf(context)
-                                  .width;
-                              final columnCount =
-                                  ResponsiveLayout.gridColumnCount(screenWidth);
-                              final columnWidth =
-                                  (screenWidth - 16 - (columnCount - 1) * 6) /
-                                  columnCount;
-                              final childAspectRatio =
-                                  ResponsiveLayout.cardAspectRatio(columnWidth);
+                          items: List.of(results),
+                          page: controller.currentPage.value,
+                          footer: _buildPaginationBar(context),
+                          gridBuilder: (pageItems) => SliverPadding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            sliver: Builder(
+                              builder: (context) {
+                                final screenWidth = MediaQuery.sizeOf(context)
+                                    .width;
+                                final columnCount =
+                                    ResponsiveLayout.gridColumnCount(
+                                      screenWidth,
+                                    );
+                                final columnWidth =
+                                    (screenWidth - 16 - (columnCount - 1) * 6) /
+                                    columnCount;
+                                final childAspectRatio =
+                                    ResponsiveLayout.cardAspectRatio(
+                                      columnWidth,
+                                    );
 
-                              return SliverGrid(
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: columnCount,
-                                      crossAxisSpacing: 6,
-                                      mainAxisSpacing: 6,
-                                      childAspectRatio: childAspectRatio,
-                                    ),
-                                delegate: SliverChildBuilderDelegate((
-                                  context,
-                                  index,
-                                ) {
-                                  final video = results[index];
-                                  return BiliVideoCardV(
-                                    video: video,
-                                    onTap: () => AppNavigator.toPlayer(video),
-                                    onDownload: () => _enqueue(video),
-                                  );
-                                }, childCount: results.length),
-                              );
-                            },
+                                return SliverGrid(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: columnCount,
+                                        crossAxisSpacing: 6,
+                                        mainAxisSpacing: 6,
+                                        childAspectRatio: childAspectRatio,
+                                      ),
+                                  delegate: SliverChildBuilderDelegate((
+                                    context,
+                                    index,
+                                  ) {
+                                    final video = pageItems[index];
+                                    return BiliVideoCardV(
+                                      video: video,
+                                      onTap: () => AppNavigator.toPlayer(video),
+                                      onDownload: () => _enqueue(video),
+                                    );
+                                  }, childCount: pageItems.length),
+                                );
+                              },
+                            ),
                           ),
                         ),
-
-                      // 4.6 底部控件
-                      //
-                      // hanime1 是官网那条「跳页条」（上一頁 / 页码输入框 / 下一頁），
-                      // 列表下方才有；91 保持原有卡片式分页栏不动。
-                      if (results.isNotEmpty)
-                        SliverToBoxAdapter(
-                          child: controller.isHanime1
-                              ? _buildHanime1SkipBar(context)
-                              : _buildPaginationBar(context),
-                        )
-                      else
-                        const SliverToBoxAdapter(child: SizedBox(height: 32)),
                     ],
                   ],
                 ),
@@ -576,7 +551,8 @@ class _SearchViewState extends State<SearchView> {
       return PullToNextPage(
         hasNext: controller.currentPage.value < controller.totalPages.value,
         isLoading: controller.loading.value || controller.pageLoading.value,
-        onNext: () => controller.goToPage(controller.currentPage.value + 1),
+        onNext: () =>
+            controller.goToPage(controller.currentPage.value + 1, append: true),
         child: CustomScrollView(
           controller: controller.scroll,
           physics: const AlwaysScrollableScrollPhysics(
@@ -610,7 +586,7 @@ class _SearchViewState extends State<SearchView> {
                   backgroundColor: context.cSurfaceAlt,
                 ),
               ),
-            if (error != null)
+            if (error != null && results.isEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: ErrorView(
@@ -636,23 +612,23 @@ class _SearchViewState extends State<SearchView> {
                 ),
               )
             else ...[
-              if (controller.totalPages.value > 1)
-                SliverToBoxAdapter(child: _buildHanime1PaginationBar(context)),
-              if (artistDirectory)
-                _Hanime1StudioGridSliver(
-                  items: results.toList(growable: false),
-                  onTapItem: (studio) =>
-                      controller.searchVideosForArtist(studio.title),
-                )
-              // 只有 里番 / 泡面番 / 新番预告 三类用 3 列竖版海报卡
-              // （封面 3:4 + 标题 + 作者，「新番預告」另带日期角标）；
-              // 其余类型保持原来的 2 列横版 `.horizontal-card`。
-              else if (_hanime1UsesPosterGrid(controller))
-                Hanime1PosterGridSliver(items: results.toList(growable: false))
-              else
-                Hanime1VideoGridSliver(items: results.toList(growable: false)),
-              if (controller.totalPages.value > 1)
-                SliverToBoxAdapter(child: _buildHanime1SkipBar(context)),
+              RetainedPageSliver(
+                key: ValueKey(
+                  "${controller.keyword.value}:${controller.searchType.value}",
+                ),
+                items: List.of(results),
+                page: controller.currentPage.value,
+                footer: _buildPaginationBar(context),
+                gridBuilder: (pageItems) => artistDirectory
+                    ? _Hanime1StudioGridSliver(
+                        items: pageItems,
+                        onTapItem: (studio) =>
+                            controller.searchVideosForArtist(studio.title),
+                      )
+                    : _hanime1UsesPosterGrid(controller)
+                    ? Hanime1PosterGridSliver(items: pageItems)
+                    : Hanime1VideoGridSliver(items: pageItems),
+              ),
             ],
           ],
         ),
@@ -1491,577 +1467,19 @@ class _SearchViewState extends State<SearchView> {
   /// - 首部**固定两个**（`1 2`），不是常见的 `1 2 3`；只有贴近开头时才展开成 4 个；
   /// - 尾部固定是最后两页，只有贴近结尾时才展开成 5 个。
   /// 返回 `null` 表示省略号。
-  static List<int?> _hanime1PageWindow(int current, int total) {
-    if (total <= 1) return const <int?>[];
-    // 页数很少时官网直接铺满，不插省略号。
-    if (total <= 7) return List<int?>.generate(total, (i) => i + 1);
-    if (current <= 2) {
-      return <int?>[1, 2, 3, 4, null, total - 1, total];
-    }
-    if (current >= total - 1) {
-      return <int?>[1, 2, null, for (var i = total - 4; i <= total; i++) i];
-    }
-    return <int?>[
-      1,
-      2,
-      null,
-      current - 1,
-      current,
-      current + 1,
-      null,
-      total - 1,
-      total,
-    ];
-  }
-
-  // ── 官网分页条 / 跳页条的配色，全部来自无头 Chrome 实测的 computed style ──
-  /// `.pagination .page-item .page-link { border-color: #2b2b2b }`
-
-  /// `.pagination .page-item.active .page-link { background-color: #dc143c }`
-  /// 注意：选中色改由 `context.cAccent` 提供（随主题 / 莫奈变），不再是写死的绯红。
-
-  /// `.pagination>li>a { color: #fff !important }` —— 注意是白，不是 #636b6f
-
-  /// `.skip-page-button / .skip-page-wrapper { background-color: #2e2e2e }`
-
-  /// `.skip-page-button { color: #b8babc }`
-
-  /// `.skip-page-wrapper { border: 2px solid #757575 }`，也是右侧「/ 360」的颜色
-
-  /// hanime1 的**上方**数字分页条 —— 逐值复刻 hanime1.me 手机网页。
-  ///
-  /// 位置：官网手机端（≤767px）把它放在搜索结果列表的**上方**（紧跟顶部广告位），
-  /// 桌面端才在下方。列表下方那条是「跳页条」，见 [_buildHanime1SkipBar]。
-  ///
-  /// 所有数值来自**无头 Chrome 实测的 computed style**，不是手抄 CSS：
-  /// ```
-  /// 容器  .search-pagination   text-align:center; margin:10px 0 -12px 0
-  /// UL    .pagination          display:inline-block; margin:20px 0; radius:4px
-  /// 格子  .page-link           padding:6px 10px; margin:3px;
-  ///                            border:1px solid #2b2b2b; radius:4px;
-  ///                            background:transparent; color:#fff;
-  ///                            font:700 12px/17.1429px
-  /// 当前页                     background:#dc143c; border-color:#dc143c
-  /// 禁用   .disabled .page-link  border:none; padding:6px 5px
-  /// ```
-  ///
-  /// 几个「只看 Bootstrap 会写错」的点：
-  /// 1. 文字色是 **#fff**，既不是 Bootstrap 的 #337ab7、也不是 #636b6f ——
-  ///    `.pagination>li>a{color:#fff!important}` 里的 `!important` 压过了特异性
-  ///    更高的 `.search-pagination .pagination>li>a{color:#636b6f}`。
-  ///    **只比选择器特异性会判错，`!important` 必须一起算**；
-  /// 2. 字号是 **12px**（不是 body 的 14px），行高 12 × 1.428571429 = 17.1429px；
-  /// 3. 每格有 `margin:3px`（`.3rem`，官网 `html{font-size:10px}`），所以相邻两格
-  ///    之间是 **6px** 空隙 —— 不存在「负 margin 把边框叠成一条线」，
-  ///    每个格子都是完整的 1px 四边框；
-  /// 4. 圆角是**每格** 4px，不是只有首尾；
-  /// 5. 上下页是 `&lsaquo;` / `&rsaquo;` 单字符，**不是**「上一页」文字；
-  /// 6. 禁用的格子（`…` 和到头的 `‹ ›`）**没有边框**，水平 padding 收窄到 5px。
-  ///
-  /// 页码格使用官网原生样式，当前页是红底数字；窄屏按官网表现自然换行。
-  Widget _buildHanime1PaginationBar(BuildContext context) {
-    return Obx(() {
-      final current = controller.currentPage.value;
-      final total = controller.totalPages.value;
-      final busy = controller.pageLoading.value;
-      if (total <= 1) return const SizedBox(height: 8);
-
-      final window = _hanime1PageWindow(current, total);
-
-      final cells = <Widget>[
-        _hanime1PageCell(
-          label: '\u2039',
-          enabled: current > 1 && !busy,
-          noBorder: current <= 1,
-          onTap: () => _goToPage(current - 1),
-        ),
-        for (final it in window)
-          if (it == null)
-            // 省略号在官网是 `.page-item.disabled` → 无边框
-            _hanime1PageCell(label: '...', noBorder: true)
-          else if (it == current)
-            _hanime1PageCell(label: '$it', selected: true)
-          else
-            _hanime1PageCell(
-              label: '$it',
-              enabled: !busy,
-              onTap: () => _goToPage(it),
-            ),
-        _hanime1PageCell(
-          label: '\u203A',
-          enabled: current < total && !busy,
-          noBorder: current >= total,
-          onTap: () => _goToPage(current + 1),
-        ),
-      ];
-
-      // 官网容器 `margin-top:10px` + UL 的 `margin-top:20px` → 上方 30px；
-      // UL 的 `margin-bottom:20px` + 容器 `margin-bottom:-12px` → 下方 8px。
-      return Padding(
-        padding: const EdgeInsets.only(top: 14, bottom: 4),
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          // 官网两态是 `float:left` 顶对齐（实测有边框的格高 31.1、无边框 29.1，
-          // 但 top 相同），所以这里也顶对齐，不做垂直居中补差。
-          crossAxisAlignment: WrapCrossAlignment.start,
-          // 官网每格 `margin:3px`，相邻两格叠加成 6px。
-          spacing: 6,
-          runSpacing: 6,
-          children: cells,
-        ),
-      );
-    });
-  }
-
-  /// 官网分页里的一个普通格子（对应一个 `<li class="page-item">`）。
-  ///
-  /// 尺寸来自实测：正常格 `padding:6px 10px` +
-  /// `1px` 边框 + `12px/17.1429px` 文字 → 高约 31px；禁用格无边框、水平 padding
-  /// 2px（官网 5px）→ 高约 29px。官网两态**顶对齐**（`float:left`），
-  /// 所以这里也不做垂直居中补差，交由上层 [Wrap] 的 start 对齐处理。
-  Widget _hanime1PageCell({
-    required String label,
-    bool enabled = false,
-    bool noBorder = false,
-    bool selected = false,
-    VoidCallback? onTap,
-  }) {
-    return InkWell(
-      onTap: enabled ? onTap : null,
-      borderRadius: BorderRadius.circular(4),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: noBorder ? 5 : 10,
-          vertical: 6,
-        ),
-        decoration: BoxDecoration(
-          color: selected ? context.cAccent : Colors.transparent,
-          border: noBorder
-              ? null
-              : Border.all(
-                  color: selected ? context.cAccent : context.cBorder,
-                  width: 1,
-                ),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            height: 1.428571429,
-            // 官网 body { font-weight: 700 }，分页文字跟着加粗。
-            fontWeight: FontWeight.w700,
-            color: context.cTextMain,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// hanime1 的**下方**跳页条 —— 逐值复刻 hanime1.me 手机网页。
-  ///
-  /// 官网手机端结构（实测 computed style）：
-  /// ```
-  /// form.skip-to-page   display:flex; justify-content:center; align-items:center;
-  ///                     gap:10px; padding:0 10px; margin-bottom:33px
-  /// .skip-page-button   background:#2e2e2e; color:#b8babc; height:40px;
-  ///                     line-height:40px; radius:3px; padding:0 10px
-  /// .skip-page-wrapper  width:102px; height:40px; background:#2e2e2e;
-  ///                     border:2px solid #757575; radius:3px; padding-left:12px
-  /// #skip-page-input    position:absolute; top:8px; width:31px
-  /// 右侧提示            position:absolute; top:8px; right:12px; color:#757575
-  /// ```
-  /// 手机端整行宽 = 62 + 10 + 102 + 10 + 62 = **246px**，居中。
-  /// 桌面端会显示「跳轉」按钮并隐藏上下页 —— App 只做手机端，所以只保留上下页。
-  Widget _buildHanime1SkipBar(BuildContext context) {
-    return Obx(() {
-      final current = controller.currentPage.value;
-      final total = controller.totalPages.value;
-      final busy = controller.pageLoading.value;
-      if (total <= 1) return const SizedBox(height: 24);
-
-      return Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 33),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _hanime1SkipButton(
-              label: '上一頁',
-              enabled: current > 1 && !busy,
-              onTap: () => _goToPage(current - 1),
-            ),
-            const SizedBox(width: 10),
-            _hanime1SkipInput(total: total, busy: busy),
-            const SizedBox(width: 10),
-            _hanime1SkipButton(
-              label: '下一頁',
-              enabled: current < total && !busy,
-              onTap: () => _goToPage(current + 1),
-            ),
-          ],
-        ),
-      );
-    });
-  }
-
-  /// 跳页条上的「上一頁 / 下一頁」按钮。
-  ///
-  /// 官网到头的那个方向（第 1 页的「上一頁」、末页的「下一頁」）`href` 是 `#`，
-  /// 点了没反应，**但外观和可点时完全一样**（官网没有 disabled 变灰样式）。
-  /// 这里照抄，只把点击置空。
-  Widget _hanime1SkipButton({
-    required String label,
-    required bool enabled,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: enabled ? onTap : null,
-      borderRadius: BorderRadius.circular(3),
-      child: Container(
-        height: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: context.cSurfaceAlt,
-          borderRadius: BorderRadius.circular(3),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: context.cTextSub,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 跳页条中间那个「页码 / 总页数」输入框（官网 `.skip-page-wrapper`）。
-  ///
-  /// 官网用绝对定位把 input 放在 `top:8px`、把 `/ 360` 放在 `right:12px`；
-  /// 官网那个 40px 高的盒子减去 2px 边框后内容区正好 36px，20px 行高居中即
-  /// `top:8px`，所以这里用 `Row(crossAxisAlignment: center)` 就能等价复刻，
-  /// 不需要额外的 top padding。
-  ///
-  /// 复用 [SearchController.jumpPageInput] —— 它只挂在这一个 TextField 上。
-  Widget _hanime1SkipInput({required int total, required bool busy}) {
-    return SizedBox(
-      width: 102,
-      height: 40,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: context.cSurfaceAlt,
-          border: Border.all(color: context.cBorder, width: 2),
-          borderRadius: BorderRadius.circular(3),
-        ),
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: 31,
-              height: 20,
-              child: TextField(
-                controller: controller.jumpPageInput,
-                enabled: !busy,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.go,
-                maxLines: 1,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(4),
-                ],
-                onSubmitted: (_) => controller.jumpToPage(),
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.428571429,
-                  fontWeight: FontWeight.w700,
-                  color: context.cTextSub,
-                ),
-                cursorColor: context.cTextSub,
-                cursorWidth: 1,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  isCollapsed: true,
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
-                ),
-              ),
-            ),
-            const Spacer(),
-            // 官网是 `/&nbsp;&nbsp;360`，即「/」后两个空格再跟总页数。
-            Text(
-              '/  $total',
-              style: TextStyle(
-                fontSize: 14,
-                height: 1.428571429,
-                fontWeight: FontWeight.w700,
-                color: context.cBorder,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// 官方标准紧凑分页控制栏（« 上一页、数字页码、下一页 »、总数统计与跳页框）
-  Widget _buildPaginationBar(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Obx(() {
-      final current = controller.currentPage.value;
-      final total = controller.totalPages.value;
-      final itemsCount = controller.totalItems.value;
-      final isPageLoading = controller.pageLoading.value;
-
-      if (total <= 1 && controller.results.isEmpty) {
-        return const SizedBox(height: 24);
-      }
-
-      final pageList = _generatePageNumbers(current, total);
-
-      return Container(
-        margin: const EdgeInsets.fromLTRB(10, 14, 10, 36),
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-        decoration: BoxDecoration(
-          color: context.cSurfaceAlt,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: context.cBorder, width: 1),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isPageLoading)
-              const Padding(
-                padding: EdgeInsets.only(bottom: 12),
-                child: SizedBox(height: 2, child: LinearProgressIndicator()),
-              ),
-
-            // 1. 上一页 / 页码列表 / 下一页
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // 上一页
-                  OutlinedButton.icon(
-                    onPressed: (current > 1 && !isPageLoading)
-                        ? controller.prevPage
-                        : null,
-                    icon: const Icon(Icons.chevron_left, size: 18),
-                    label: const Text('上一页'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: theme.colorScheme.onSurface,
-                      disabledForegroundColor: theme.colorScheme.outline,
-                      side: BorderSide(color: context.cBorder, width: 0.9),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 6,
-                      ),
-                      minimumSize: const Size(0, 34),
-                      visualDensity: VisualDensity.compact,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-
-                  // 动态数字页码组
-                  ...pageList.map((item) {
-                    if (item is int) {
-                      final isCurrent = item == current;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: InkWell(
-                          onTap: (!isCurrent && !isPageLoading)
-                              ? () => controller.goToPage(item)
-                              : null,
-                          borderRadius: BorderRadius.circular(4),
-                          child: Container(
-                            width: 32,
-                            height: 32,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: isCurrent
-                                  ? theme.colorScheme.primary
-                                  : (context.cSurface),
-                              border: Border.all(
-                                color: isCurrent
-                                    ? theme.colorScheme.primary
-                                    : (context.cBorder),
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              '$item',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: isCurrent
-                                    ? FontWeight.bold
-                                    : FontWeight.w500,
-                                color: isCurrent
-                                    ? Colors.white
-                                    : theme.colorScheme.onSurface,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 3),
-                        child: Text(
-                          '...',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      );
-                    }
-                  }),
-
-                  const SizedBox(width: 6),
-
-                  // 下一页
-                  OutlinedButton.icon(
-                    onPressed: (current < total && !isPageLoading)
-                        ? controller.nextPage
-                        : null,
-                    icon: const Icon(Icons.chevron_right, size: 18),
-                    label: const Text('下一页'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: theme.colorScheme.onSurface,
-                      disabledForegroundColor: theme.colorScheme.outline,
-                      side: BorderSide(color: context.cBorder, width: 0.9),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 6,
-                      ),
-                      minimumSize: const Size(0, 34),
-                      visualDensity: VisualDensity.compact,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            // 2. 统计信息与快速跳转
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '第 $current / $total 页${itemsCount > 0 ? " · 共 $itemsCount 部视频" : ""}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  '跳至',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                SizedBox(
-                  width: 44,
-                  height: 28,
-                  child: TextField(
-                    controller: controller.jumpPageInput,
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: context.cSurface,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                          color: context.cBorder,
-                          width: 0.8,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                          color: context.cBorder,
-                          width: 0.8,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(
-                          color: theme.colorScheme.primary,
-                          width: 1.2,
-                        ),
-                      ),
-                      isDense: true,
-                    ),
-                    onSubmitted: (_) => _submitSkipPageInput(),
-                  ),
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  '页',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: isPageLoading
-                      ? null
-                      : () => controller.jumpToPage(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: context.scheme.onPrimary,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    minimumSize: const Size(0, 28),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  child: const Text(
-                    '跳转',
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
-  }
-
-  /// 动态计算展示的页码列表（带省略号）
-  List<dynamic> _generatePageNumbers(int current, int total) {
-    if (total <= 7) {
-      return List<int>.generate(total, (i) => i + 1);
-    }
-    if (current <= 4) {
-      return [1, 2, 3, 4, 5, '...', total];
-    }
-    if (current >= total - 3) {
-      return [1, '...', total - 4, total - 3, total - 2, total - 1, total];
-    }
-    return [1, '...', current - 1, current, current + 1, '...', total];
-  }
+  Widget _buildPaginationBar(BuildContext context) => Obx(
+    () => AppendPaginationFooter(
+      page: controller.currentPage.value,
+      totalPages: controller.totalPages.value > 1
+          ? controller.totalPages.value
+          : null,
+      hasMore: controller.hasMore.value,
+      loading: controller.loading.value || controller.pageLoading.value,
+      error: controller.error.value,
+      onJump: _goToPage,
+      onNext: controller.nextPage,
+    ),
+  );
 
   void _enqueue(VideoItem video) {
     final service = Get.find<DownloadService>();

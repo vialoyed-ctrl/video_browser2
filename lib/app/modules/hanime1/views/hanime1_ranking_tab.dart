@@ -6,6 +6,8 @@
 /// 3. 下拉刷新与触底分页加载。
 library;
 
+import '../../../widgets/retained_page_sliver.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../../widgets/pull_to_next_page.dart';
@@ -138,23 +140,31 @@ class _Hanime1RankingTabState extends State<Hanime1RankingTab> {
                   ),
                   slivers: [
                     const SliverToBoxAdapter(child: SizedBox(height: 12)),
-                    Hanime1VideoGridSliver(
-                      items: ctrl.rankingVideos.toList(growable: false),
-                      padding: const EdgeInsets.fromLTRB(
-                        Hanime1CardH.horizontalPadding,
-                        0,
-                        Hanime1CardH.horizontalPadding,
-                        24,
+                    RetainedPageSliver(
+                      key: ValueKey(ctrl.currentRankTabIndex.value),
+                      items: List.of(
+                        ctrl.rankingVideos.toList(growable: false),
                       ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Hanime1Pagination(
+                      page: ctrl.rankingPage.value,
+                      footer: Hanime1Pagination(
                         currentPage: ctrl.rankingPage.value,
+                        onNext: ctrl.loadMoreRanking,
+                        hasNext: ctrl.hasMoreRanking.value,
+                        error: ctrl.rankingError.value,
                         totalPages: ctrl.rankingTotalPages.value,
                         isLoading: ctrl.isLoadingRanking.value,
                         onPageChanged: (page) => ctrl.loadRanking(
                           ctrl.rankingTabs[ctrl.currentRankTabIndex.value],
                           page: page,
+                        ),
+                      ),
+                      gridBuilder: (pageItems) => Hanime1VideoGridSliver(
+                        items: pageItems,
+                        padding: const EdgeInsets.fromLTRB(
+                          Hanime1CardH.horizontalPadding,
+                          0,
+                          Hanime1CardH.horizontalPadding,
+                          24,
                         ),
                       ),
                     ),

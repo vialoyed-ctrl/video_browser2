@@ -1,4 +1,4 @@
-# 视频起播响应速度优化方案（hanime1 / 91）
+# 视频起播响应速度优化方案（内容源 / 内容源）
 
 > 结论先行：本项目 Android 端的起播延迟，主要不来自解码或播放器初始化，而来自**两处可修复的工程缺陷**——
 > ① Media3 磁盘缓存被一次性签名 URL 打散，跨会话永不命中；② 播放器只在解码器实际读到字节时才写缓存，
@@ -12,7 +12,7 @@
 
 `lib/app/services/player_service.dart:25` 定义 `usesNativeMediaCache => Platform.isAndroid`。
 
-| 平台 | 91（HLS） | hanime1（MP4 直链） |
+| 平台 | 内容源（HLS） | 内容源（MP4 直链） |
 |---|---|---|
 | **Android** | ExoPlayer + Media3 `SimpleCache`，**直连远端 m3u8** | ExoPlayer + Media3 `SimpleCache`，**直连远端 MP4** |
 | **Windows** | Dart 回环代理 `HlsCacheProxy`（4 并发分片管线） | Dart `HanimeMp4RangeProxy`（512KB 分块 + 6 路预取） |
@@ -25,8 +25,8 @@ Android 的性能完全取决于 Media3 的原生配置。这是本方案的着�
 ```
 用户点击
   └─(A) 取真实流地址：整页 HTML 抓取 + 解析，抽出带签名的直链
-        91      → https://cdn/.../index.m3u8?t=1759300000
-        hanime1 → https://vdownload.hembed.com/408437-1080p.mp4?secure=...
+        内容源      → https://cdn/.../index.m3u8?t=1759300000
+        内容源 → https://vdownload.hembed.com/408437-1080p.mp4?secure=...
   └─(B) ExoPlayer.prepare()：拉清单/探 moov
   └─(C) 缓冲到 bufferForPlaybackMs 后才出画
 ```
@@ -38,7 +38,7 @@ Android 的性能完全取决于 Media3 的原生配置。这是本方案的着�
 
 **瓶颈 1（最严重）：磁盘缓存键不稳定 → 跨会话永不命中。**
 
-两个源的直链都带**每次请求重新签发**的签名参数（91 的 `?t=`，hanime1 的 `?secure=`）。
+两个源的直链都带**每次请求重新签发**的签名参数（内容源 的 `?t=`，内容源 的 `?secure=`）。
 而 Media3 默认缓存键是完整 URL：
 
 ```java
@@ -55,7 +55,7 @@ CacheKeyFactory DEFAULT = (dataSpec) -> dataSpec.key != null ? dataSpec.key : da
 **瓶颈 2：Android 上没有任何主动预取。**
 
 - `preload_service.dart:613` `preload()` 首行即 `if (Platform.isAndroid) return;`
-- `preload_service.dart:572` `touchDown()` 的 91 分支同样 `if (Platform.isAndroid) return;`
+- `preload_service.dart:572` `touchDown()` 的 内容源 分支同样 `if (Platform.isAndroid) return;`
 
 于是 Android 只有「解码器读到哪、缓存到哪」的被动填充。第一次打开必然是冷启动。
 `PreloadService` 里已有的两阶段预取，对 Android 而言只剩 Stage 1（解析 URL），Stage 2 整体缺失。
@@ -85,14 +85,14 @@ CacheKeyFactory DEFAULT = (dataSpec) -> dataSpec.key != null ? dataSpec.key : da
 | # | 方案 | 能力 | 结论 |
 |---|---|---|---|
 | 1 | **`CacheKeyFactory`**（androidx.media3） | 自定义缓存键 | ✅ **采用**。直接解决瓶颈 1，一处生效，覆盖清单与分片 |
-| 2 | **`HlsDownloader`**（media3-exoplayer-hls） | 拉清单 + 全部分片 + 加密密钥，写入指定 Cache | ✅ **采用**（91） |
-| 3 | **`ProgressiveDownloader`**（media3-exoplayer） | 按字节区间缓存 MP4 | ✅ **采用**（hanime1） |
+| 2 | **`HlsDownloader`**（media3-exoplayer-hls） | 拉清单 + 全部分片 + 加密密钥，写入指定 Cache | ✅ **采用**（内容源） |
+| 3 | **`ProgressiveDownloader`**（media3-exoplayer） | 按字节区间缓存 MP4 | ✅ **采用**（内容源） |
 | 4 | **`CacheWriter`**（media3-datasource） | 底层写缓存的工具类 | ✅ 已由 2/3 内部使用，不单独调用 |
 | 5 | **`DefaultLoadControl`** 调参 | 控制出画阈值 | ✅ **采用**。改动最小、直接作用于出画时刻 |
 | 6 | **`HlsMediaSource.allowChunklessPreparation`** | 免分片准备 | ⚪ **已默认开启**（源码默认 `true`），无需改动 |
 | 7 | **`PreloadManager` / `DefaultPreloadManager`**（media3 1.8+） | 为动态列表预载媒体源 | ❌ **不采用**。官方 Part 2 明确：预载进入**内存** `PreloadCache`，「与磁盘缓存结合仍在开发中」。本方案要求持久化缓存，且该 API 标记实验性 |
 | 8 | **`DownloadManager` / `DownloadService`**（media3-exoplayer） | 完整离线下载管理 | ❌ **不采用**。需要前台服务、通知、数据库与生命周期托管，对「预取头部窗口」过重 |
-| 9 | **danikula/AndroidVideoCache** | 代理式边下边播 | ❌ **不采用**。README 自述「only with direct urls to media file，不支持 DASH/HLS」——**对 91 的 HLS 源不适用**；且本项目已有两套 Dart 回环代理，再叠一层代理会引入第三份缓存与重复流量 |
+| 9 | **danikula/AndroidVideoCache** | 代理式边下边播 | ❌ **不采用**。README 自述「only with direct urls to media file，不支持 DASH/HLS」——**对 内容源 的 HLS 源不适用**；且本项目已有两套 Dart 回环代理，再叠一层代理会引入第三份缓存与重复流量 |
 | 10 | **OkHttp / Cronet 作为 HTTP 栈** | 连接池、HTTP/2、QUIC | ⚪ **列为后续可选**。当前 `DefaultHttpDataSource` 已足够；Cronet 需引入额外原生库并改 `DataSource.Factory`，收益依赖服务端是否支持 HTTP/2/QUIC，未验证前不引入 |
 | 11 | **`PriorityTaskManager`** | 让后台下载为播放让路 | ⚪ **列为后续可选**。需与播放器共享管理器，改动面扩大到 `HttpVideoAsset`，本轮未做 |
 
@@ -120,8 +120,8 @@ https://vdownload.hembed.com/408437-1080p.mp4?secure=xxx
 
 ### 3.2 原生全量预缓存（新增 `Media3Preloader.java`）
 
-- 91 → `HlsDownloader.Factory(...).setExecutor(IO).setStartPositionUs(0).setDurationUs(...)`；
-  hanime1 → `ProgressiveDownloader(item, factory, IO, positionBytes, lengthBytes)`。
+- 内容源 → `HlsDownloader.Factory(...).setExecutor(IO).setStartPositionUs(0).setDurationUs(...)`；
+  内容源 → `ProgressiveDownloader(item, factory, IO, positionBytes, lengthBytes)`。
 - 两者都通过 `Media3PlaybackCache.createCacheDataSourceFactory(...)` 拿到
   **与播放器同一个 `SimpleCache` + 同一个键工厂**。因此预下载的字节就是播放器要读的字节，
   不存在「下了一份、播的是另一份」的重复流量。
@@ -130,7 +130,7 @@ https://vdownload.hembed.com/408437-1080p.mp4?secure=xxx
   若共用同一个池，驱动器会占满线程导致工作线程拿不到线程而死锁。驱动池大小同时就是并发上限。
 - HLS 传 `StreamKey(GROUP_INDEX_VARIANT, variantIndex)`：多变体清单只缓存选定变体，
   避免一次性拉全部码率；**媒体清单会忽略该键**（`HlsMediaPlaylist.copy` 直接返回 `this`），
-  所以 91 常见的单清单场景仍然是整片缓存。
+  所以 内容源 常见的单清单场景仍然是整片缓存。
 - 取消语义：同一 `taskId` 重复入队会先取消旧任务；已落盘的字节保留。
 
 ### 3.3 出画阈值与 HTTP 超时
@@ -199,9 +199,9 @@ https://vdownload.hembed.com/408437-1080p.mp4?secure=xxx
 2. **升级后首轮缓存全部失效。** 键算法改变，旧条目（按完整 URL 键）不再可达，需由 LRU 自然淘汰。
    这是预期行为，但用户侧表现为「升级后第一次打开没变快」。
 3. **MP4 非 faststart 时头部预取无收益。** 若 moov 在文件尾，播放器首帧必须读尾部，
-   缓存头部对首帧无帮助。hanime1 的直链由浏览器 `<video>` 播放，通常为 faststart，但**未逐条验证**。
+   缓存头部对首帧无帮助。内容源 的直链由浏览器 `<video>` 播放，通常为 faststart，但**未逐条验证**。
 4. **HLS 多变体清单只缓存一个变体。** 若播放器实际选中的不是 `variantIndex=0`，
-   该次预取白做（不产生错误，只是浪费带宽）。当前 91 在应用内以单条 `原画 (Auto)` 呈现，故取 0。
+   该次预取白做（不产生错误，只是浪费带宽）。当前 内容源 在应用内以单条 `原画 (Auto)` 呈现，故取 0。
 5. **预取与播放共享带宽。** 本轮未引入 `PriorityTaskManager`。
    播放器的 `CacheDataSource` 未启用 `FLAG_BLOCK_ON_CACHE`，因此在预取正在写入的区段上会回退到上游读取，
    **不会阻塞播放**；但两者仍会竞争带宽。这是第 11 项「后续可选」的动机。

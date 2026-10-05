@@ -907,6 +907,10 @@ class _PlayerViewState extends State<PlayerView> {
         );
       }
 
+      if (SourceRegistry.isSite91MdVideo(v)) {
+        return _buildSite91MdVideoInfo(context, v);
+      }
+
       // PornHub 走独立的详情面板（下载/最爱/添加/分享 + 分类标签 + 相关/推荐/评论/片单）。
       // 91 的版式与调用链**完全不动** —— 只有识别为 PornHub 的条目才分流。
       if (_isPornHubVideo(v)) {
@@ -1355,6 +1359,101 @@ class _PlayerViewState extends State<PlayerView> {
         ],
       );
     });
+  }
+
+  Widget _buildSite91MdVideoInfo(BuildContext context, VideoItem video) {
+    return Padding(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            video.title,
+            style: Theme.of(context).textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 12,
+            runSpacing: 6,
+            children: [
+              const Text('91麻豆'),
+              if (video.viewsStr?.isNotEmpty ?? false) Text(video.viewsStr!),
+              if (video.publishedAt?.isNotEmpty ?? false)
+                Text(video.publishedAt!),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSite91MdAction(
+                  icon: Icons.download_rounded,
+                  label: '下载',
+                  onPressed: () => _enqueueDownload(video: video),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Obx(() {
+                  final saved = Get.find<UserService>().isVideoInAnyFolder(
+                    video.id,
+                  );
+                  return _buildSite91MdAction(
+                    icon: saved
+                        ? Icons.bookmark_rounded
+                        : Icons.bookmark_border_rounded,
+                    label: saved ? '已收藏' : '收藏',
+                    onPressed: () => _showFavoriteBottomSheet(context, video),
+                  );
+                }),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildSite91MdAction(
+                  icon: Icons.share_outlined,
+                  label: '分享',
+                  onPressed: () async {
+                    final url = video.detailUrl ?? video.id;
+                    final uri = Uri.tryParse(url);
+                    if (uri == null ||
+                        !uri.hasAuthority ||
+                        !['http', 'https'].contains(uri.scheme)) {
+                      AppToast.show('暂无视频网页链接');
+                      return;
+                    }
+                    await Clipboard.setData(ClipboardData(text: url));
+                    if (mounted) AppToast.show('已复制视频网页链接');
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSite91MdAction({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return FilledButton.tonal(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(0, 64),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 13)),
+        ],
+      ),
+    );
   }
 
   /// 单个 Tab 按钮。官网没给 `.tablinks` 写样式（用浏览器默认按钮外观），

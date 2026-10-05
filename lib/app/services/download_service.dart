@@ -207,7 +207,10 @@ class DownloadService extends GetxService {
         AppLogger.i('Downloader', '任务 [${video.title}] 获取最新视频详情...');
         final targetUrl = video.detailUrl ?? video.id;
         if (targetUrl.isNotEmpty && targetUrl.startsWith('http')) {
-          final source = Get.find<VideoSource>();
+          final source = SourceRegistry.forVideo(
+            video,
+            fallback: Get.find<VideoSource>(),
+          );
           final detail = await source.fetchDetail(
             targetUrl,
             forceRefresh: true,

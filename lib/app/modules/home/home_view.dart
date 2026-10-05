@@ -1,7 +1,11 @@
 /// 首页视图：浏览列表 + 触底分页 + 官方侧边栏 + 九色热搜 + 分类标签栏。
 library;
 
+import '../../widgets/retained_page_sliver.dart';
+
 import 'package:flutter/material.dart';
+
+import '../../widgets/append_pagination_footer.dart';
 
 import '../../core/app_theme.dart';
 
@@ -10,6 +14,7 @@ import 'package:get/get.dart';
 import '../../core/responsive_utils.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/site91_source.dart';
+import '../../data/sources/site91md_source.dart';
 import '../../data/sources/video_source.dart';
 import '../../routes/app_navigator.dart';
 import '../../routes/app_routes.dart';
@@ -20,8 +25,10 @@ import '../../widgets/bili_video_card.dart';
 import '../../widgets/common.dart';
 import '../../widgets/domain_picker.dart';
 import '../../widgets/log_viewer_dialog.dart';
+import '../../widgets/site91md_domain_picker.dart';
 import '../downloads/downloads_view.dart';
 import 'home_controller.dart';
+import 'site91md_category_bar.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -117,14 +124,23 @@ class HomeView extends GetView<HomeController> {
             icon: const Icon(Icons.terminal),
           ),
           Obx(() {
-            // 只有 91 源才有「内容域名」这个概念（hanime1 是固定域名）。
+            // 只有 91 / 91麻豆 才有「内容域名」这个概念（hanime1 是固定域名）。
             // 这里刻意用类型判断而不是比较 id 字符串 —— 原先写成
             // `source.id == '91porny'`，而 Site91Source.id 实际是 'site91'，
             // 条件恒为 false，导致这个按钮从不显示。
+            //
+            // 91 与 91麻豆 各自走**独立**的域名对话框（模块隔离：互不依赖、互不影响）。
             if (controller.source is Site91Source) {
               return IconButton(
                 tooltip: '选择内容域名',
                 onPressed: () => _showDomainDialog(context),
+                icon: const Icon(Icons.language),
+              );
+            }
+            if (controller.source is Site91MdSource) {
+              return IconButton(
+                tooltip: '选择内容域名',
+                onPressed: () => _showSite91MdDomainDialog(context),
                 icon: const Icon(Icons.language),
               );
             }
@@ -138,22 +154,49 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
       body: Obx(() {
-        if (controller.loadingFirst.value && controller.videos.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final error = controller.error.value;
-        if (error != null && controller.videos.isEmpty) {
-          return ErrorView(message: error, onRetry: controller.loadFirstPage);
-        }
-        if (controller.videos.isEmpty) {
-          return const EmptyView(
-            message: '当前分类下没有返回任何视频条目',
-            icon: Icons.video_library_outlined,
+        if (controller.source is Site91MdSource) {
+          return Column(
+            children: [
+              Site91MdCategoryBar(
+                categories: controller.site91mdCategories.toList(),
+                selectedId: controller.currentChannel.value == ChannelType.home
+                    ? null
+                    : controller.currentCategory.value?.id,
+                loading: controller.loadingSite91mdCategories.value,
+                error: controller.site91mdCategoriesError.value,
+                onRetry: () => controller.loadSite91mdCategories(refresh: true),
+                onSelect: (category) => controller.switchChannel(
+                  category == null ? ChannelType.home : ChannelType.video,
+                  category,
+                ),
+              ),
+              const Divider(height: 1),
+              Expanded(child: _feed(context)),
+            ],
           );
         }
-        return _grid(context);
+        return _feed(context);
       }),
     );
+  }
+
+  Widget _feed(BuildContext context) {
+    if (controller.loadingFirst.value &&
+        (controller.source is Site91MdSource || controller.videos.isEmpty)) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final error = controller.error.value;
+    if (error != null &&
+        (controller.source is Site91MdSource || controller.videos.isEmpty)) {
+      return ErrorView(message: error, onRetry: controller.loadFirstPage);
+    }
+    if (controller.videos.isEmpty) {
+      return const EmptyView(
+        message: '当前分类下没有返回任何视频条目',
+        icon: Icons.video_library_outlined,
+      );
+    }
+    return _grid(context);
   }
 
   Widget _grid(BuildContext context) {
@@ -174,29 +217,37 @@ class HomeView extends GetView<HomeController> {
         ),
         slivers: [
           // 顶部专区横幅：九色热搜（首页）或 二级分类栏（视频/蝌蚪/精品）
-          SliverToBoxAdapter(child: Obx(() => _buildHeaderSection(context))),
+          if (controller.source is! Site91MdSource)
+            SliverToBoxAdapter(child: Obx(() => _buildHeaderSection(context))),
 
           // 视频网格列表（动态 2~5 列智能自适应）
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columnCount,
-                crossAxisSpacing: 6,
-                mainAxisSpacing: 6,
-                childAspectRatio: childAspectRatio,
+          RetainedPageSliver(
+            key: ValueKey(
+              '${controller.source.id}:${controller.currentChannel.value}:${controller.currentCategory.value?.path}',
+            ),
+            items: List.of(controller.videos),
+            page: controller.currentPage.value,
+            footer: _footer(context),
+            gridBuilder: (pageItems) => SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              sliver: SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columnCount,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 6,
+                  childAspectRatio: childAspectRatio,
+                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final video = pageItems[index];
+                  return BiliVideoCardV(
+                    video: video,
+                    onTap: () => AppNavigator.toPlayer(video),
+                    onDownload: () => _enqueue(video),
+                  );
+                }, childCount: pageItems.length),
               ),
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final video = controller.videos[index];
-                return BiliVideoCardV(
-                  video: video,
-                  onTap: () => AppNavigator.toPlayer(video),
-                  onDownload: () => _enqueue(video),
-                );
-              }, childCount: controller.videos.length),
             ),
           ),
-          SliverToBoxAdapter(child: _footer(context)),
         ],
       ),
     );
@@ -373,37 +424,16 @@ class HomeView extends GetView<HomeController> {
     }
   }
 
-  Widget _footer(BuildContext context) {
-    return Obx(() {
-      if (controller.loadingMore.value) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          ),
-        );
-      }
-      if (!controller.hasMore.value) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Center(
-            child: Text(
-              '已经到底了',
-              style: TextStyle(
-                fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        );
-      }
-      return const SizedBox(height: 24);
-    });
-  }
+  Widget _footer(BuildContext context) => Obx(
+    () => AppendPaginationFooter(
+      page: controller.currentPage.value,
+      hasMore: controller.hasMore.value,
+      loading: controller.loadingMore.value || controller.loadingFirst.value,
+      error: controller.loadMoreError.value,
+      onJump: controller.jumpToPage,
+      onNext: controller.retryOrLoadMore,
+    ),
+  );
 
   void _enqueue(VideoItem video) {
     final service = Get.find<DownloadService>();
@@ -437,5 +467,17 @@ class HomeView extends GetView<HomeController> {
     if (!ok) return;
     _toast('域名已更新，正在刷新...');
     controller.loadFirstPage();
+  }
+
+  /// 打开 91麻豆 自己的内容域名对话框。
+  ///
+  /// 与 91 的对话框完全独立（[showSite91MdDomainPicker]），这样新增源不会
+  /// 反过来要求改动 91 的对话框实现。
+  Future<void> _showSite91MdDomainDialog(BuildContext context) async {
+    final ok = await showSite91MdDomainPicker(context);
+    if (!ok) return;
+    _toast('域名已更新，正在刷新...');
+    controller.loadSite91mdCategories(refresh: true);
+    controller.loadFirstPage(supersede: true);
   }
 }

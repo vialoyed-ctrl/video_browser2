@@ -47,6 +47,7 @@ class Hanime1Controller extends GetxController {
   final RxBool hasMoreRanking = true.obs;
   final RxInt rankingPage = 1.obs;
   final RxInt rankingTotalPages = 1.obs;
+  final RxnString rankingError = RxnString();
   int _rankPage = 1;
   int _rankRequest = 0;
 
@@ -64,6 +65,7 @@ class Hanime1Controller extends GetxController {
   final RxString subscriptionDuration = ''.obs;
   final RxList<String> subscriptionTags = <String>[].obs;
   final RxBool subscriptionBroad = false.obs;
+  final RxnString subscriptionsError = RxnString();
   int _subPage = 1;
   int _subRequest = 0;
 
@@ -166,12 +168,12 @@ class Hanime1Controller extends GetxController {
     String sortName, {
     bool isRefresh = true,
     int? page,
+    bool append = false,
   }) async {
     if (isClosed) return;
     final requestedPage = page ?? (isRefresh ? 1 : _rankPage);
     final request = ++_rankRequest;
-    _rankPage = requestedPage;
-    rankingPage.value = requestedPage;
+    rankingError.value = null;
     isLoadingRanking.value = true;
     try {
       final pageData = await _source.fetchRankingList(
@@ -179,7 +181,12 @@ class Hanime1Controller extends GetxController {
         page: requestedPage,
       );
       if (isClosed || request != _rankRequest) return;
-      rankingVideos.assignAll(pageData.items);
+      if (append) {
+        rankingVideos.addAll(pageData.items);
+      } else {
+        rankingVideos.assignAll(pageData.items);
+      }
+      _rankPage = pageData.page;
       PreloadService.instance.preloadList(
         pageData.items,
         isNewPage: requestedPage == 1,
@@ -189,7 +196,7 @@ class Hanime1Controller extends GetxController {
       hasMoreRanking.value = pageData.hasMore;
     } catch (_) {
       if (isClosed || request != _rankRequest) return;
-      hasMoreRanking.value = false;
+      rankingError.value = '排行加载失败，请重试';
     } finally {
       if (!isClosed && request == _rankRequest) isLoadingRanking.value = false;
     }
@@ -201,6 +208,7 @@ class Hanime1Controller extends GetxController {
       rankingTabs[currentRankTabIndex.value],
       isRefresh: false,
       page: _rankPage + 1,
+      append: true,
     );
   }
 
@@ -209,6 +217,7 @@ class Hanime1Controller extends GetxController {
     String? creatorQuery,
     bool isRefresh = true,
     int? page,
+    bool append = false,
   }) async {
     if (isClosed) return;
     final requestedPage = page ?? (isRefresh ? 1 : _subPage);
@@ -216,8 +225,7 @@ class Hanime1Controller extends GetxController {
     if (isRefresh) {
       selectedCreator.value = creatorQuery;
     }
-    _subPage = requestedPage;
-    subscriptionsPage.value = requestedPage;
+    subscriptionsError.value = null;
     isLoadingSub.value = true;
 
     try {
@@ -233,7 +241,12 @@ class Hanime1Controller extends GetxController {
       );
       if (isClosed || request != _subRequest) return;
       subData.value = data;
-      subVideos.assignAll(data.items);
+      if (append) {
+        subVideos.addAll(data.items);
+      } else {
+        subVideos.assignAll(data.items);
+      }
+      _subPage = data.page;
       PreloadService.instance.preloadList(
         data.items,
         isNewPage: requestedPage == 1,
@@ -243,7 +256,7 @@ class Hanime1Controller extends GetxController {
       hasMoreSub.value = data.hasMore;
     } catch (_) {
       if (isClosed || request != _subRequest) return;
-      hasMoreSub.value = false;
+      subscriptionsError.value = '订阅加载失败，请重试';
     } finally {
       if (!isClosed && request == _subRequest) isLoadingSub.value = false;
     }
@@ -255,6 +268,7 @@ class Hanime1Controller extends GetxController {
       creatorQuery: selectedCreator.value,
       isRefresh: false,
       page: _subPage + 1,
+      append: true,
     );
   }
 
