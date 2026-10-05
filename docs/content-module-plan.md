@@ -1,6 +1,6 @@
-# PornHub 内容源模块 · 整体结构与集成方案
+# 内容源 内容源模块 · 整体结构与集成方案
 
-> 本文所有结构性结论均来自**对 cn.pornhub.com 真实页面的实测**（2026-10-02），
+> 本文所有结构性结论均来自**对 cn.内容源.com 真实页面的实测**（2026-10-02），
 > 不是基于经验推测。实测方法与原始数据见文末「附录 A：实测记录」。
 >
 > 标注口径：**已实测** = 已用真实页面验证；**待验证** = 设计上成立但尚未取得证据；
@@ -12,9 +12,9 @@
 
 | 问题 | 结论 |
 |---|---|
-| 能否接入 | **能**。且播放链路与 91 完全同构（都是 HLS + 签名直链），**播放器、下载、预缓存、缓存策略全部可零改动复用**。 |
+| 能否接入 | **能**。且播放链路与 内容源 完全同构（都是 HLS + 签名直链），**播放器、下载、预缓存、缓存策略全部可零改动复用**。 |
 | 接入成本 | **源层（数据）成本低**：现有 `VideoSource` 抽象就是为此设计的，新增源 = 一个实现 + 注册一行，上层零改动。 |
-| 主要成本在哪 | **模块 UI**（hanime1 级的多 Tab 模块约 10 个文件）与**登录后的写操作**（点赞/收藏/订阅/评论，需真实会话才能抓到端点）。 |
+| 主要成本在哪 | **模块 UI**（内容源 级的多 Tab 模块约 10 个文件）与**登录后的写操作**（点赞/收藏/订阅/评论，需真实会话才能抓到端点）。 |
 | 广告 | **结构性消除**，不是「过滤」。见第四节。 |
 | 最大不确定性 | 登录后的写操作端点（待验证）+ HD 清晰度是否需要登录（待验证）。 |
 
@@ -31,9 +31,9 @@
   home / search / player / downloads
         │  只依赖 VideoSource 接口
         ▼
-  SourceRegistry  ──register()──▶  Site91Source (id: site91)
-                                  Hanime1Source (id: hanime1)
-                                  PornHubSource (id: pornhub)   ← 本次新增
+  SourceRegistry  ──register()──▶  Site内容源Source (id: site内容源)
+                                  内容源Source (id: 内容源)
+                                  内容源Source (id: 内容源)   ← 本次新增
 ```
 
 `VideoSource` 接口要求实现 11 个成员（`video_source.dart:460-510`）：
@@ -44,27 +44,27 @@
 
 ### 2.2 模块目录规划
 
-参照 hanime1 模块（`lib/app/modules/hanime1/`，10 个文件）的结构：
+参照 内容源 模块（`lib/app/modules/内容源/`，10 个文件）的结构：
 
 ```
 lib/app/
 ├─ data/
 │  ├─ models/
-│  │  └─ pornhub_models.dart          # 分类定义、播放器配置模型
+│  │  └─ 内容源_models.dart          # 分类定义、播放器配置模型
 │  └─ sources/
-│     └─ pornhub_source.dart          # ★ 核心：VideoSource 实现
+│     └─ 内容源_source.dart          # ★ 核心：VideoSource 实现
 ├─ services/
-│  └─ pornhub_auth_service.dart       # ★ 登录会话（Cookie 持久化）
+│  └─ 内容源_auth_service.dart       # ★ 登录会话（Cookie 持久化）
 └─ modules/
-   └─ pornhub/
-      ├─ pornhub_binding.dart
-      ├─ pornhub_controller.dart
+   └─ 内容源/
+      ├─ 内容源_binding.dart
+      ├─ 内容源_controller.dart
       └─ views/
-         ├─ pornhub_main_view.dart      # 模块入口（底部 Tab 容器）
-         ├─ pornhub_home_tab.dart       # 首页推荐
-         ├─ pornhub_categories_tab.dart # 分类浏览
-         ├─ pornhub_search_tab.dart     # 搜索 + 筛选
-         └─ pornhub_profile_tab.dart    # 我的（登录态、收藏、稍后观看）
+         ├─ 内容源_main_view.dart      # 模块入口（底部 Tab 容器）
+         ├─ 内容源_home_tab.dart       # 首页推荐
+         ├─ 内容源_categories_tab.dart # 分类浏览
+         ├─ 内容源_search_tab.dart     # 搜索 + 筛选
+         └─ 内容源_profile_tab.dart    # 我的（登录态、收藏、稍后观看）
 ```
 
 ### 2.3 页面布局（对齐官网体验）
@@ -74,20 +74,20 @@ lib/app/
 | 区域 | 官网形态 | 本项目实现 |
 |---|---|---|
 | 顶部 | Logo + 搜索框 + 登录/头像 | `AppBar`：源标识 + 搜索入口 + 登录态头像 |
-| 主导航 | 首页 / 分类 / 频道 / 模特 | 底部 Tab（与 hanime1 模块一致） |
+| 主导航 | 首页 / 分类 / 频道 / 模特 | 底部 Tab（与 内容源 模块一致） |
 | 内容区 | 2 列视频卡片网格（`li.pcVideoListItem`） | 复用 `VideoItem` 卡片组件 |
 | 卡片 | 缩略图 + 时长角标 + 标题 + 上传者 + 播放量 | 字段 1:1 映射，见 2.4 |
 | 分页 | `/video?page=N` | 无限滚动 + `hasMore` |
 | 详情页 | 播放器 + 标题 + 上传者 + 相关推荐 | 复用现有 `PlayerView`（已支持相关推荐/评论） |
 
 **关键复用**：详情页与播放页**不需要新写**。`PlayerView` / `PlayerController` 已经是源无关的，
-hanime1 与 91 共用同一套；PH 通过 `fetchDetail()` 返回 `VideoDetail` 即可接入。
+内容源 与 内容源 共用同一套；PH 通过 `fetchDetail()` 返回 `VideoDetail` 即可接入。
 
 ### 2.4 字段映射（实测覆盖率 100%）
 
 列表卡片 → `VideoItem`：
 
-| `VideoItem` 字段 | PornHub 来源（实测选择器） | 实测样例 |
+| `VideoItem` 字段 | 内容源 来源（实测选择器） | 实测样例 |
 |---|---|---|
 | `id` | `li[data-video-vkey]` | `6a9981b0128b1` |
 | `title` | `a[href*="view_video.php"][title]` | `Stepbrother, why is your dick...` |
@@ -110,7 +110,7 @@ hanime1 与 91 共用同一套；PH 通过 `fetchDetail()` 返回 `VideoDetail` 
 
 | 用途 | 端点 | 实测 |
 |---|---|---|
-| 首页 | `https://cn.pornhub.com/` | ✅ 200，1.26 MB |
+| 首页 | `https://cn.内容源.com/` | ✅ 200，1.26 MB |
 | 分页 | `/video?page=N` | ✅ 链接存在于首页 |
 | 搜索 | `/video/search?search=<q>&page=N` | ✅ 链接存在于首页 |
 | 分类 | `/categories/<slug>`（如 `hentai`、`teen`） | ✅ |
@@ -129,15 +129,15 @@ hanime1 与 91 共用同一套；PH 通过 `fetchDetail()` 返回 `VideoDetail` 
 | `720`（**默认**） | hls | `…/720P_4000K_….mp4/master.m3u8?…` |
 | `480` | hls | `…/480P_2000K_….mp4/master.m3u8?…` |
 | `240` | hls | `…/240P_1000K_….mp4/master.m3u8?…` |
-| `[]` | mp4 | `https://cn.pornhub.com/video/get_media?s=<token>`（**选择器端点，非直链**） |
+| `[]` | mp4 | `https://cn.内容源.com/video/get_media?s=<token>`（**选择器端点，非直链**） |
 
 **设计含义（重要）**：
 
-1. 主链路是**每档一条 HLS master playlist**，与 91 的形态一致 →
+1. 主链路是**每档一条 HLS master playlist**，与 内容源 的形态一致 →
    `VideoVariant(label: '1080p', url: <m3u8>)`，播放/下载/预缓存全部复用现有代码。
 2. 签名参数为 `validfrom` / `validto` / `ipa` / `hdl` / `hash`。**必须**把这几个词加进
    `Media3CacheKeyFactory.VOLATILE_QUERY_PARAMS`（`hash` 已在名单内），
-   否则 Android 端每次重新签发都会产生新的缓存条目 —— 这正是此前 91 缓存的缺陷，
+   否则 Android 端每次重新签发都会产生新的缓存条目 —— 这正是此前 内容源 缓存的缺陷，
    不补的话 PH 会重蹈覆辙。
 3. `format:"mp4"` 那条**不要用**：它是 `get_media` 选择器，需要额外跳转，
    而 HLS 档位已经覆盖全部清晰度。
@@ -162,7 +162,7 @@ hanime1 与 91 共用同一套；PH 通过 `fetchDetail()` 返回 `VideoDetail` 
 
 | 层 | 位置 | 做什么 |
 |---|---|---|
-| **L1 解析层** | `pornhub_source.dart` | 遍历卡片时跳过广告容器（`adsbytrafficjunky` / `trafficjunky` / `advertisement` 等 class 命中即丢弃），并过滤 `data-entrycode` 为广告码的条目 |
+| **L1 解析层** | `内容源_source.dart` | 遍历卡片时跳过广告容器（`adsbytrafficjunky` / `trafficjunky` / `advertisement` 等 class 命中即丢弃），并过滤 `data-entrycode` 为广告码的条目 |
 | **L2 请求层** | Dio 拦截器 | 只请求第 3.1 节的端点；对已知广告域（`*.trafficjunky.*`、`*.exoclick.*`、`*.juicyads.*`、`go.bluetrafficstream.com`）直接拒绝 |
 | **L3 WebView 层** | 登录 WebView | ① `shouldInterceptRequest` 拦截广告域；② 注入 CSS 隐藏广告容器；③ 注入 JS 移除广告节点与 `window.open` 弹窗 |
 | **L4 播放层** | 现有播放器 | 只喂 m3u8；HLS 清单本身由 CDN 直出，实测为纯媒体清单 |
@@ -233,7 +233,7 @@ POST /front/authenticate   (application/x-www-form-urlencoded)
 > ⚠️ **没有「观看历史」页面。** 实测 7 个候选路径
 > （`/users/<name>/videos/history`、`/users/<name>/history`、`/video/history`、
 > `/user/history`、`/history`、`/users/<name>/videos/watched`、`/users/<name>/videos`）
-> **全部 404**。结论是 **PornHub 网页版不提供观看历史功能**，不是「没找到」。
+> **全部 404**。结论是 **内容源 网页版不提供观看历史功能**，不是「没找到」。
 > 因此本模块**不应为观看历史写任何实现**。
 
 ### 5.3 登录解锁的能力
@@ -259,8 +259,8 @@ POST /front/authenticate   (application/x-www-form-urlencoded)
 
 | 文件 | 改动 | 风险 |
 |---|---|---|
-| `lib/main.dart:84,91` 附近 | 增加 `SourceRegistry.register(pornhubSource)` | 极低（纯新增一行） |
-| `lib/app/data/sources/video_source.dart:518` | `_ownedUrlMarkers` 增加 `'pornhub': {'pornhub.com'}` | 极低（新增一个 map entry） |
+| `lib/main.dart:84,内容源` 附近 | 增加 `SourceRegistry.register(内容源Source)` | 极低（纯新增一行） |
+| `lib/app/data/sources/video_source.dart:518` | `_ownedUrlMarkers` 增加 `'内容源': {'内容源.com'}` | 极低（新增一个 map entry） |
 | `third_party/.../Media3CacheKeyFactory.java` | `VOLATILE_QUERY_PARAMS` 增加 `validfrom` / `validto` / `ipa` / `hdl` | 低（新增常量） |
 
 > `_ownedUrlMarkers` 这一行**不是可选项**：它决定 `PreloadService` 是否会把 PH 条目
@@ -308,10 +308,10 @@ POST /front/authenticate   (application/x-www-form-urlencoded)
 | # | 步骤 | 产出 | 验收方式 |
 |---|---|---|---|
 | 1 | 解析器原型（**已完成**） | `ph_parser_proto.py` | 真实页面 65/65 字段完整率 ✅ |
-| 2 | `pornhub_source.dart`：列表/分页/分类/搜索/详情/多档/相关推荐 + L1 广告过滤 | 源实现 | Dart 内核编译 + 与原型逐字段对照 |
-| 3 | `pornhub_auth_service.dart`：Cookie 会话持久化 | 登录服务 | 编译 + 单元逻辑复核 |
+| 2 | `内容源_source.dart`：列表/分页/分类/搜索/详情/多档/相关推荐 + L1 广告过滤 | 源实现 | Dart 内核编译 + 与原型逐字段对照 |
+| 3 | `内容源_auth_service.dart`：Cookie 会话持久化 | 登录服务 | 编译 + 单元逻辑复核 |
 | 4 | 注册源 + `_ownedUrlMarkers` + Media3 缓存键扩展 | 3 处增量改动 | 编译 + 缓存键行为复核 |
-| 5 | 模块 UI（5 个文件，参照 hanime1） | 页面 | 编译 |
+| 5 | 模块 UI（5 个文件，参照 内容源） | 页面 | 编译 |
 | 6 | 登录 WebView + L3 广告注入 | 登录页 | 需真机 |
 | 7 | 登录后写操作端点抓取（点赞/收藏/订阅） | 端点清单 | **需真实会话** |
 | 8 | 真机联调 | — | **需真机**（本机 `flutter build` 被管道拦截，无法构建） |
@@ -328,30 +328,30 @@ POST /front/authenticate   (application/x-www-form-urlencoded)
 | 交付物 | 状态 | 验证方式 |
 |---|---|---|
 | 解析器原型 | ✅ | 真实页面实测，见 9.3 的完整率表 |
-| `pornhub_source.dart` | ✅ | Dart 内核编译 exit 0 |
-| `pornhub_auth_service.dart`（原生登录 + Cookie 兜底 + 会话校验） | ✅ | 编译通过；登录流程已实测成功 |
-| `pornhub_models.dart`（片单 / 明星模型） | ✅ | 编译通过 |
+| `内容源_source.dart` | ✅ | Dart 内核编译 exit 0 |
+| `内容源_auth_service.dart`（原生登录 + Cookie 兜底 + 会话校验） | ✅ | 编译通过；登录流程已实测成功 |
+| `内容源_models.dart`（片单 / 明星模型） | ✅ | 编译通过 |
 | **模块 UI**：主框架 + 5 个 Tab | ✅ | 编译通过 |
 | 源注册 / `_ownedUrlMarkers` / Media3 缓存键 | ✅ | Dart + javac + kotlinc 全部 exit 0 |
 | 缩略图防盗链 Referer（三源分派） | ✅ | 编译通过 |
 | 96 个真实分类 / 排序参数 | ✅ | 实测导出 |
 
-### 9.2 模块 UI 结构（与 91 / Hanime1 统一）
+### 9.2 模块 UI 结构（与 内容源 / 内容源 统一）
 
 ```
-PornHubMainView            ← 与 Hanime1MainView 同构：AppBar 徽标 + IndexedStack + NavigationBar
-├─ 主页   PornHubHomeTab      入口分类芯片 + 自适应网格 + 分页
-├─ 分类   PornHubCategoriesTab 96 分类网格 → 原地切换为该分类视频列表
-├─ 发现   PornHubDiscoverTab   片单 / 明星 双 Tab → 点进去复用视频网格
-├─ 搜索   PornHubSearchTab     关键词搜索 + 分页
-└─ 我的   PornHubProfileTab    登录表单 + 收藏 / 订阅 双 Tab
+内容源MainView            ← 与 内容源MainView 同构：AppBar 徽标 + IndexedStack + NavigationBar
+├─ 主页   内容源HomeTab      入口分类芯片 + 自适应网格 + 分页
+├─ 分类   内容源CategoriesTab 96 分类网格 → 原地切换为该分类视频列表
+├─ 发现   内容源DiscoverTab   片单 / 明星 双 Tab → 点进去复用视频网格
+├─ 搜索   内容源SearchTab     关键词搜索 + 分页
+└─ 我的   内容源ProfileTab    登录表单 + 收藏 / 订阅 双 Tab
 ```
 
 **风格统一的具体做法**：不新写卡片，直接复用既有组件 ——
-视频网格用 `BiliVideoCardV`（91 版面同款），几何参数走 `ResponsiveLayout`，
+视频网格用 `BiliVideoCardV`（内容源 版面同款），几何参数走 `ResponsiveLayout`，
 导航栏用 Material 3 `NavigationBar`。因此三个版面观感天然一致。
 
-**版面切换**：`RootController` 由「91 ↔ hanime1 二元」改为
+**版面切换**：`RootController` 由「内容源 ↔ 内容源 二元」改为
 `AppPlatform` 枚举驱动的三态循环，抽屉里的切换按钮同步改为通用文案。
 
 ### 9.3 解析器实测完整率
@@ -399,8 +399,8 @@ PornHubMainView            ← 与 Hanime1MainView 同构：AppBar 徽标 + Inde
 
 ```
 UA: Chrome/120  ·  代理: 127.0.0.1:14613
-GET https://cn.pornhub.com/                      → 200, 1,264,734 bytes, 无 CF 质询
-GET https://cn.pornhub.com/view_video.php?viewkey=67fc0c63e407b
+GET https://cn.内容源.com/                      → 200, 1,264,734 bytes, 无 CF 质询
+GET https://cn.内容源.com/view_video.php?viewkey=67fc0c63e407b
                                                  → 200, 4,339,408 bytes
 ```
 
@@ -425,7 +425,7 @@ GET https://cn.pornhub.com/view_video.php?viewkey=67fc0c63e407b
 
 ### A.3 排除的一个误判
 
-首次运行时 stdout 出现一段 hanime1 页面的 DOM 转储。经 `grep -c hanime1` 核对，
-两个输入文件均为**纯 PornHub 内容（hanime1 出现 0 次）**，确认该转储为共享
+首次运行时 stdout 出现一段 内容源 页面的 DOM 转储。经 `grep -c 内容源` 核对，
+两个输入文件均为**纯 内容源 内容（内容源 出现 0 次）**，确认该转储为共享
 `PYTHONPATH` 目录的残留污染；改用隔离 venv 后消失。**原始证据未被污染**，
 但记录在此以免后续误读。
