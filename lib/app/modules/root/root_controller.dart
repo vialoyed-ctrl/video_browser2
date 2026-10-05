@@ -51,7 +51,7 @@ class RootController extends GetxController {
   bool get is91md => platform.value == AppPlatform.site91md;
 
   void switchTab(int index) {
-    if (index < 0 || index > 1) return;
+    if (index < 0 || index > (is91 ? 2 : 1)) return;
     currentIndex.value = index;
   }
 
