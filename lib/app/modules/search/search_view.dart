@@ -291,6 +291,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final retainedResults = _buildRetainedResults(context);
 
     return Scaffold(
       backgroundColor: controller.isHanime1
@@ -483,24 +484,7 @@ class _SearchViewState extends State<SearchView> {
                                 items: results.toList(growable: false),
                               )
                       else
-                        RetainedPageSliver(
-                          key: ValueKey(
-                            "${controller.keyword.value}:${controller.searchType.value}",
-                          ),
-                          items: List.of(results),
-                          page: controller.currentPage.value,
-                          footer: _buildPaginationBar(context),
-                          gridBuilder: (pageItems) => VideoGridSliver(
-                            items: pageItems,
-                            availableWidth: MediaQuery.sizeOf(context).width,
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            itemBuilder: (_, video) => BiliVideoCardV(
-                              video: video,
-                              onTap: () => AppNavigator.toPlayer(video),
-                              onDownload: () => _enqueue(video),
-                            ),
-                          ),
-                        ),
+                        retainedResults,
                     ],
                   ],
                 ),
@@ -509,8 +493,44 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
+  /// Flags and summaries update their own widgets without replacing result grids.
+  Widget _buildRetainedResults(BuildContext context, {bool hanime1 = false}) {
+    final footer = _buildPaginationBar(context);
+    return Obx(() {
+      final results = List<VideoItem>.of(controller.results);
+      final artistDirectory = controller.searchType.value == SearchType.authorId;
+      final usesPosterGrid = hanime1 && _hanime1UsesPosterGrid(controller);
+      return RetainedPageSliver(
+        key: ValueKey("${controller.keyword.value}:${controller.searchType.value}"),
+        items: results,
+        page: controller.currentPage.value,
+        footer: footer,
+        gridBuilder: (pageItems) => hanime1
+            ? artistDirectory
+                ? _Hanime1StudioGridSliver(
+                    items: pageItems,
+                    onTapItem: (studio) => controller.searchVideosForArtist(studio.title),
+                  )
+                : usesPosterGrid
+                    ? Hanime1PosterGridSliver(items: pageItems)
+                    : Hanime1VideoGridSliver(items: pageItems)
+            : VideoGridSliver(
+                items: pageItems,
+                availableWidth: MediaQuery.sizeOf(context).width,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                itemBuilder: (_, video) => BiliVideoCardV(
+                  video: video,
+                  onTap: () => AppNavigator.toPlayer(video),
+                  onDownload: () => _enqueue(video),
+                ),
+              ),
+      );
+    });
+  }
+
   /// Hanime1 的搜索页使用官网手机端结构；91 继续沿用下方原搜索视图。
   Widget _buildHanime1Search(BuildContext context) {
+    final retainedResults = _buildRetainedResults(context, hanime1: true);
     return Obx(() {
       final results = controller.results;
       final isLoading = controller.loading.value;
@@ -584,23 +604,7 @@ class _SearchViewState extends State<SearchView> {
                 ),
               )
             else ...[
-              RetainedPageSliver(
-                key: ValueKey(
-                  "${controller.keyword.value}:${controller.searchType.value}",
-                ),
-                items: List.of(results),
-                page: controller.currentPage.value,
-                footer: _buildPaginationBar(context),
-                gridBuilder: (pageItems) => artistDirectory
-                    ? _Hanime1StudioGridSliver(
-                        items: pageItems,
-                        onTapItem: (studio) =>
-                            controller.searchVideosForArtist(studio.title),
-                      )
-                    : _hanime1UsesPosterGrid(controller)
-                    ? Hanime1PosterGridSliver(items: pageItems)
-                    : Hanime1VideoGridSliver(items: pageItems),
-              ),
+              retainedResults,
             ],
           ],
         ),
