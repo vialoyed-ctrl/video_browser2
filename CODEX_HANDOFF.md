@@ -125,3 +125,15 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 - 本批报告：docs/refactor-list-modules-2026-10-10.md；摘要：docs/list-modules-profile-results-2026-10-10.json。回滚先bd80de6、再f0ae7e7；不能覆盖之前已完成工作。
 
 剩余优先级：异步分页分段边界 → 其余站点/账号/搜索列表职责与局部UI → 播放器状态/生命周期、可见首帧/Seek/弱网/长期内存 → 四站点完整回归。完整项目尚未完成，原源码快照仍保留。
+
+## 12. PornHub 异步翻页缺陷修复（2026-10-10）
+
+从7046392继续，先延迟响应回归和真机旧版三轮测量，再独立修复上一节遗留的提前page++导致页脚丢失。实现2061b49：请求页与已确认页分开；成功空追加保留既有分段且继续原source.page进度；成功跳页/刷新用替换代次重置，包括同页同ID。
+
+- 最终定向36通过，完整213通过、1原有跳过；lib/test分析0error、0warning、原7info。独立审查提出的同页替换问题已RED复现、修复并复审无剩余项。
+- 真机ARM64 Profile真实列表控件、同4卡片/三轮1秒等待：每轮卡片4→0、网格1→0；等待保留1页，成功保留1/2页。异常重试仍请求2。仅局部重建/分页证据，不代表整体FPS/播放器/长期内存。
+- 正式main.dart真实推荐21→105条/第5页，五页边界全部保留、loadingfalse/errornull。正常入口已保留数据恢复，最后91首页第1页41条、flagsfalse、pageErrornull、scroll0、Root=site91；网站返回条数不是固定42。
+- 正式输出/归档/手机APK SHA256一致：0A257428E7605C7805C2537D1764A248DE8718575CA48782100EDCA54CE8CAE0；临时构建号2005，pubspec不改。自建8202–8204转发和测量连接已关闭。
+- 报告docs/refactor-pornhub-append-2026-10-10.md；摘要docs/pornhub-append-profile-results-2026-10-10.json；执行/审查裁决docs/refactor-pornhub-append-execution-2026-10-10.md。回滚实现只revert2061b49；原快照及此前改动保留。
+
+下一批仍为其余模块/搜索/账号职责与局部UI → 播放器状态与生命周期、首帧/Seek/弱网/长期原生内存 → 四站点完整回归；不得宣称整个项目已完成。
