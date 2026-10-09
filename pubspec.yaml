@@ -59,6 +59,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  video_player_platform_interface: 6.9.0
 
 dependency_overrides:
   # Keep Flutter's video_player API and UI while enabling Media3 disk caching

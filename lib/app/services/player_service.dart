@@ -99,10 +99,13 @@ class PlayerService {
       unawaited(() async {
         try {
           await old.pause();
+        } catch (_) {
+          // A failed native pause must not prevent resource cleanup.
+        }
+        try {
           await old.dispose();
         } catch (_) {
-          // best-effort 清理：预热实例可能已被接管或释放，
-          // 失败无后果（引用已置空，GC 会回收）。静默是正确设计。
+          // Best-effort disposal: the warm slot has already relinquished ownership.
         }
       }());
     }
