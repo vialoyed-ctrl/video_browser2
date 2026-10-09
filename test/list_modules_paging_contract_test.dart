@@ -303,7 +303,8 @@ void main() {
       final next = controller.loadMore('/a');
       await controller.loadMore('/a');
       expect(source.arguments, [('/a', 1), ('/a', 2)]);
-      expect(controller.stateOf('/a').page, 2);
+      expect(controller.stateOf('/a').page, 1);
+      expect(controller.stateOf('/a').isLoadingMore.value, true);
       source.requests.last.complete(page(['a', 'b'], 2, more: false));
       await next;
       expect(controller.stateOf('/a').items.map((v) => v.id), [
@@ -461,4 +462,57 @@ void main() {
       expect(hanime.isLoadingSub.value, false);
     },
   );
+  test('PornHub pending append does not publish an unconfirmed page', () async {
+    final source = PornHubFixture();
+    final controller = PornHubController(source);
+    addTearDown(controller.onClose);
+    final state = controller.stateOf('/a');
+    state.items.add(item('first'));
+    state.page = 4;
+    var notifications = 0;
+    final pages = state.paging.page.listen((_) => notifications++);
+    addTearDown(pages.cancel);
+    final pending = controller.loadMore('/a');
+    await Future<void>.delayed(Duration.zero);
+    expect(source.arguments.single, ('/a', 5));
+    expect(state.items.single.id, 'first');
+    expect(state.isLoadingMore.value, true);
+    expect(state.page, 4);
+    expect(notifications, 0);
+    source.requests.last.complete(page(['second'], 5));
+    await pending;
+    await Future<void>.delayed(Duration.zero);
+    expect(state.page, 5);
+    expect(notifications, 1);
+    expect(state.items.map((v) => v.id), ['first', 'second']);
+  });
+  for (final fails in [false, true]) {
+    test(
+      'PornHub stale append ($fails) cannot replace newer jump or cleanup',
+      () async {
+        final source = PornHubFixture();
+        final controller = PornHubController(source);
+        addTearDown(controller.onClose);
+        final state = controller.stateOf('/a');
+        state.items.add(item('first'));
+        final old = controller.loadMore('/a');
+        final fresh = controller.jumpListPage('/a', 8);
+        if (fails) {
+          source.requests.first.completeError(StateError('stale'));
+        } else {
+          source.requests.first.complete(page(['stale'], 2));
+        }
+        await old;
+        expect(state.isLoading.value, true);
+        expect(state.error.value, null);
+        expect(state.items.single.id, 'first');
+        source.requests.last.complete(page(['jump'], 8));
+        await fresh;
+        expect(state.items.single.id, 'jump');
+        expect(state.page, 8);
+        expect(state.isLoading.value, false);
+        expect(state.isLoadingMore.value, false);
+      },
+    );
+  }
 }

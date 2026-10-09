@@ -179,6 +179,8 @@ class _PornHubRetainedGrid extends StatelessWidget {
         key: ValueKey(path),
         items: List.of(state.items),
         page: state.page,
+        preserveEmptyAppend: state.lastLoadWasAppend,
+        replacementGeneration: state.replacementGeneration,
         footer: footer,
         gridBuilder: (items) => SliverPornHubGrid(
           videos: items,

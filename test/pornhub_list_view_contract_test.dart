@@ -11,6 +11,7 @@ import 'package:video_browser/app/modules/pornhub/views/pornhub_video_list_tab.d
 import 'package:video_browser/app/services/preload_service.dart';
 import 'package:video_browser/app/services/user_service.dart';
 import 'package:video_browser/app/widgets/bili_video_card.dart';
+import 'package:video_browser/app/widgets/retained_page_sliver.dart';
 
 List<VideoItem> videos(String prefix, [int count = 4]) => List.generate(
   count,
@@ -212,4 +213,157 @@ void main() {
     expect(find.text('retry'), findsOneWidget);
     expect(builds, 0, reason: 'only the footer changes for a nonempty list');
   });
+  testWidgets(
+    'delayed append preserves old footer while waiting and adds a new page',
+    (tester) async {
+      final state = await mount(tester);
+      state.hasMore.value = true;
+      var builds = 0;
+      debugOnRebuildDirtyWidget = (element, _) {
+        if (element.widget is BiliVideoCardV) builds++;
+      };
+      final pending = controller.loadMore('/fixture');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(source.arguments.single, ('/fixture', 2));
+      expect(find.text('第 1 页'), findsOneWidget);
+      expect(find.text('第 2 页'), findsNothing);
+      expect(find.byType(BiliVideoCardV), findsNWidgets(4));
+      expect(
+        builds,
+        0,
+        reason: 'waiting for a new page only updates the footer',
+      );
+      source.requests.last.complete(
+        VideoPage(items: videos('second'), page: 2, hasMore: false),
+      );
+      await pending;
+      await tester.pumpAndSettle();
+      final scroll = tester
+          .widget<CustomScrollView>(find.byType(CustomScrollView))
+          .controller!;
+      scroll.jumpTo(scroll.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      expect(find.text('第 2 页'), findsOneWidget);
+      scroll.jumpTo(0);
+      await tester.pumpAndSettle();
+      expect(find.text('第 1 页'), findsOneWidget);
+    },
+  );
+  for (final throws in [false, true]) {
+    testWidgets(
+      'failed delayed append ($throws) preserves footer and retries same page',
+      (tester) async {
+        final state = await mount(tester);
+        state.hasMore.value = true;
+        final pending = controller.loadMore('/fixture');
+        await tester.pump();
+        expect(find.text('第 1 页'), findsOneWidget);
+        if (throws) {
+          source.requests.last.completeError(StateError('offline'));
+        } else {
+          source.requests.last.complete(
+            const VideoPage(
+              items: [],
+              page: 2,
+              hasMore: true,
+              summary: PornHubSource.requestFailureMessage,
+            ),
+          );
+        }
+        await pending;
+        await tester.pumpAndSettle();
+        expect(find.text('第 1 页'), findsOneWidget);
+        expect(find.text(state.error.value!), findsOneWidget);
+        await tester.tap(find.text(state.error.value!));
+        await tester.pump();
+        expect(source.arguments, [('/fixture', 2), ('/fixture', 2)]);
+        expect(find.text('第 1 页'), findsOneWidget);
+        source.requests.last.complete(
+          VideoPage(items: videos('retried'), page: 2, hasMore: false),
+        );
+        await tester.pumpAndSettle();
+        final scroll = tester
+            .widget<CustomScrollView>(find.byType(CustomScrollView))
+            .controller!;
+        scroll.jumpTo(scroll.position.maxScrollExtent);
+        await tester.pumpAndSettle();
+        expect(find.text('第 2 页'), findsOneWidget);
+      },
+    );
+  }
+  for (final scenario in [(false, 7), (true, 7), (false, 2), (true, 4)]) {
+    final (hasMore, targetPage) = scenario;
+    testWidgets(
+      'empty append ($hasMore) retains sections and jump to $targetPage resets them',
+      (tester) async {
+        final state = await mount(tester);
+        state.hasMore.value = true;
+        final append = controller.loadMore('/fixture');
+        source.requests.last.complete(
+          VideoPage(items: videos('second'), page: 2, hasMore: true),
+        );
+        await append;
+        await tester.pumpAndSettle();
+        List<int> footerPages() => tester
+            .widgetList<PageFooterScope>(
+              find.byType(PageFooterScope, skipOffstage: false),
+            )
+            .map((scope) => scope.page)
+            .toList();
+        expect(footerPages(), [1, 2]);
+        final emptyAppend = controller.loadMore('/fixture');
+        source.requests.last.complete(
+          VideoPage(items: const [], page: 3, hasMore: hasMore),
+        );
+        await emptyAppend;
+        await tester.pumpAndSettle();
+        expect(
+          state.page,
+          3,
+          reason: 'source progression still advances over empty pages',
+        );
+        expect(state.items.length, 8);
+        expect(
+          footerPages(),
+          [1, 2],
+          reason: 'an empty append must not relabel or remove loaded sections',
+        );
+        if (hasMore) {
+          final next = controller.loadMore('/fixture');
+          expect(source.arguments.last, ('/fixture', 4));
+          source.requests.last.completeError(StateError('offline'));
+          await next;
+          await tester.pumpAndSettle();
+          expect(state.page, 3);
+          expect(footerPages(), [1, 2]);
+          final retry = controller.loadMore('/fixture');
+          expect(source.arguments.last, ('/fixture', 4));
+          source.requests.last.complete(
+            VideoPage(items: videos('third'), page: 4, hasMore: false),
+          );
+          await retry;
+          await tester.pumpAndSettle();
+          expect(footerPages(), [1, 2, 4]);
+        } else {
+          final count = source.arguments.length;
+          await controller.loadMore('/fixture');
+          expect(source.arguments.length, count);
+        }
+        final unchangedItems = List<VideoItem>.of(state.items);
+        final jump = controller.jumpListPage('/fixture', targetPage);
+        source.requests.last.complete(
+          VideoPage(items: unchangedItems, page: targetPage, hasMore: false),
+        );
+        await jump;
+        await tester.pumpAndSettle();
+        expect(
+          footerPages(),
+          [targetPage],
+          reason:
+              'a jump replaces sections even if the response has identical IDs',
+        );
+      },
+    );
+  }
 }
