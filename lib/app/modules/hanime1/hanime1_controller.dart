@@ -201,8 +201,9 @@ class Hanime1Controller extends GetxController {
       if (isClosed || !rankingPaging.isCurrent(request)) return;
       rankingError.value = '排行加载失败，请重试';
     } finally {
-      if (!isClosed && rankingPaging.isCurrent(request))
+      if (!isClosed && rankingPaging.isCurrent(request)) {
         isLoadingRanking.value = false;
+      }
     }
   }
 
@@ -262,8 +263,9 @@ class Hanime1Controller extends GetxController {
       if (isClosed || !subscriptionsPaging.isCurrent(request)) return;
       subscriptionsError.value = '订阅加载失败，请重试';
     } finally {
-      if (!isClosed && subscriptionsPaging.isCurrent(request))
+      if (!isClosed && subscriptionsPaging.isCurrent(request)) {
         isLoadingSub.value = false;
+      }
     }
   }
 

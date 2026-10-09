@@ -460,6 +460,5 @@ void main() {
       expect(porn.stateOf('/b').items, isEmpty);
       expect(hanime.isLoadingSub.value, false);
     },
-    tags: 'migration',
   );
 }
