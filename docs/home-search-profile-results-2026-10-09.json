@@ -1,0 +1,121 @@
+{
+  "device": "PMB110 / Android16 / ARM64",
+  "base": "13bf3c0",
+  "stateCommit": "b7d7664",
+  "uiCommit": "f92af1a",
+  "testFixCommit": "fdac8c7",
+  "tests": {
+    "baselinePassed": 151,
+    "afterStatePassed": 161,
+    "afterUiPassed": 177,
+    "existingSkipped": 1,
+    "analyzerErrors": 0,
+    "analyzerWarnings": 0,
+    "originalInfo": 7
+  },
+  "neutral": {
+    "before": {
+      "initial": {
+        "loading": false,
+        "items": 4
+      },
+      "toggles": 10,
+      "cardBuilds": 40,
+      "gridBuilds": 10,
+      "observerBuilds": 40,
+      "timelineEvents": 26531
+    },
+    "after": {
+      "initial": {
+        "loading": false,
+        "items": 4
+      },
+      "toggles": 10,
+      "cardBuilds": 0,
+      "gridBuilds": 0,
+      "observerBuilds": 10,
+      "timelineEvents": 15608
+    }
+  },
+  "normalApp": {
+    "home-before": {
+      "actions": 20,
+      "frames": 2568,
+      "elapsedMs": 22529,
+      "buildP95Ms": 1.563,
+      "rasterP95Ms": 7.971,
+      "afterGcDartHeapBytes": 23258992
+    },
+    "home-before-repeat": {
+      "actions": 20,
+      "frames": 2581,
+      "elapsedMs": 22617,
+      "buildP95Ms": 1.572,
+      "rasterP95Ms": 8.007,
+      "afterGcDartHeapBytes": 24134848
+    },
+    "search-before": {
+      "actions": 10,
+      "frames": 792,
+      "elapsedMs": 18948,
+      "buildP95Ms": 3.753,
+      "rasterP95Ms": 13.507,
+      "afterGcDartHeapBytes": 26502816
+    },
+    "search-before-repeat": {
+      "actions": 10,
+      "frames": 584,
+      "elapsedMs": 17843,
+      "buildP95Ms": 7.621,
+      "rasterP95Ms": 13.17,
+      "afterGcDartHeapBytes": 27288704
+    },
+    "home-after": {
+      "actions": 20,
+      "frames": 2627,
+      "elapsedMs": 22789,
+      "buildP95Ms": 1.332,
+      "rasterP95Ms": 7.55,
+      "afterGcDartHeapBytes": 24141776
+    },
+    "home-after-repeat": {
+      "actions": 20,
+      "frames": 2602,
+      "elapsedMs": 22515,
+      "buildP95Ms": 1.305,
+      "rasterP95Ms": 6.603,
+      "afterGcDartHeapBytes": 24149824
+    },
+    "search-after": {
+      "actions": 10,
+      "frames": 451,
+      "elapsedMs": 18040,
+      "buildP95Ms": 10.333,
+      "rasterP95Ms": 12.479,
+      "afterGcDartHeapBytes": 27470512
+    },
+    "search-after-repeat": {
+      "actions": 10,
+      "frames": 597,
+      "elapsedMs": 17359,
+      "buildP95Ms": 6.054,
+      "rasterP95Ms": 13.484,
+      "afterGcDartHeapBytes": 26983072
+    },
+    "paging-after": {
+      "actions": 8,
+      "frames": 1392,
+      "elapsedMs": 12444,
+      "buildP95Ms": 1.539,
+      "rasterP95Ms": 7.542,
+      "afterGcDartHeapBytes": 31141392
+    }
+  },
+  "limits": [
+    "Neutral fixture has four unchanged cards and ten loading-flag toggles.",
+    "Neutral before is ARM64-only APK; after is universal APK executing the same ARM64 Profile runtime.",
+    "Normal app samples include live network, keyboard and rendering variability; single samples do not establish global performance improvement.",
+    "Dart GC heap snapshots are not native/GPU memory or a long-run leak measurement.",
+    "The live search endpoint showed the same network-failure/retry UI before and after; these samples do not validate successful live search results or its result-grid performance."
+  ]
+}
