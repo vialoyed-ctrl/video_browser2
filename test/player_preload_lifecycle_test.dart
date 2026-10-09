@@ -14,6 +14,10 @@ class _NativePlayers extends VideoPlayerPlatform {
   final subscriptionsCanceled = <int>[];
   final events = <int, StreamController<VideoEvent>>{};
   final failPauseFor = <int>{};
+  bool autoInitialize = true;
+  final firstListenerReady = Completer<void>();
+  final firstCreationStarted = Completer<void>();
+  Completer<void>? creationGate;
   int nextId = 0;
 
   @override
@@ -22,24 +26,33 @@ class _NativePlayers extends VideoPlayerPlatform {
   @override
   Future<int> createWithOptions(VideoCreationOptions options) async {
     final id = ++nextId;
+    if (!firstCreationStarted.isCompleted) firstCreationStarted.complete();
+    await creationGate?.future;
     active.add(id);
     return id;
   }
 
   @override
   Stream<VideoEvent> videoEventsFor(int playerId) {
+    // The Android implementation rejects events for an already released ID.
+    if (!active.contains(playerId)) throw StateError('Player already released');
     final stream = StreamController<VideoEvent>(
       onCancel: () => subscriptionsCanceled.add(playerId),
     );
     events[playerId] = stream;
-    stream.add(
+    if (!firstListenerReady.isCompleted) firstListenerReady.complete();
+    if (autoInitialize) initializePlayer(playerId);
+    return stream.stream;
+  }
+
+  void initializePlayer(int playerId) {
+    events[playerId]!.add(
       VideoEvent(
         eventType: VideoEventType.initialized,
         duration: const Duration(minutes: 2),
         size: const Size(640, 360),
       ),
     );
-    return stream.stream;
   }
 
   @override
@@ -95,6 +108,9 @@ void main() {
   });
 
   tearDown(() async {
+    if (native.creationGate != null && !native.creationGate!.isCompleted) {
+      native.creationGate!.complete();
+    }
     native.failPauseFor.clear();
     service.clearPreplay();
     await _drainCleanup();
@@ -162,5 +178,127 @@ void main() {
     expect(native.released, isEmpty);
     await taken.dispose();
     expect(native.active, isEmpty);
+  });
+
+  test(
+    'canceling before initialized settles preOpen without a native ready event',
+    () async {
+      native.autoInitialize = false;
+      final opening = service.preOpen(_item('pending-clear'));
+      await native.firstListenerReady.future;
+
+      service.clearPreplay();
+      await _drainCleanup();
+
+      expect(native.active, isEmpty);
+      expect(native.subscriptionsCanceled, [1]);
+      await expectLater(
+        opening.timeout(const Duration(milliseconds: 100)),
+        completes,
+      );
+    },
+  );
+
+  test('replacing a pending warm player settles the old task and preserves the new slot', () async {
+    native.autoInitialize = false;
+    final oldOpening = service.preOpen(_item('pending-old'));
+    await native.firstListenerReady.future;
+    native.autoInitialize = true;
+    final replacement = _item('pending-new');
+
+    await service.preOpen(replacement);
+    await _drainCleanup();
+
+    expect(native.active, {2});
+    expect(native.subscriptionsCanceled, [1]);
+    expect(service.isPreplaying(replacement), isTrue);
+    await expectLater(
+      oldOpening.timeout(const Duration(milliseconds: 100)),
+      completes,
+    );
+  });
+
+  test('taking a pending warm controller settles service work but leaves initialization to its owner', () async {
+    native.autoInitialize = false;
+    final item = _item('pending-take');
+    final opening = service.preOpen(item);
+    await native.firstListenerReady.future;
+
+    final taken = service.takePreloadedController(item);
+    expect(taken, isNotNull);
+    try {
+      service.clearPreplay();
+      await _drainCleanup();
+      expect(native.active, {1});
+      expect(native.subscriptionsCanceled, isEmpty);
+      expect(taken!.value.isInitialized, isFalse);
+      await expectLater(
+        opening.timeout(const Duration(milliseconds: 100)),
+        completes,
+      );
+      native.initializePlayer(1);
+      await _drainCleanup();
+      expect(taken.value.isInitialized, isTrue);
+    } finally {
+      await taken!.dispose();
+    }
+  });
+
+  test('repeated touch of the same pending item keeps its initialization and ownership', () async {
+    native.autoInitialize = false;
+    final item = _item('pending-repeat');
+    final opening = service.preOpen(item);
+    await native.firstListenerReady.future;
+
+    await service.preOpen(item);
+    expect(native.active, {1});
+    expect(native.released, isEmpty);
+    native.initializePlayer(1);
+    await opening;
+    expect(service.isPreplaying(item), isTrue);
+  });
+
+  test(
+    'native initialization failure clears only its owned warm controller',
+    () async {
+      native.autoInitialize = false;
+      final opening = service.preOpen(_item('pending-error'));
+      await native.firstListenerReady.future;
+
+      native.events[1]!.addError(
+        PlatformException(
+          code: 'initialize_failed',
+          message: 'Fixture failure',
+        ),
+      );
+      await opening;
+      await _drainCleanup();
+
+      expect(native.active, isEmpty);
+      expect(native.released, [1]);
+      expect(native.subscriptionsCanceled, [1]);
+      expect(service.currentOpeningItem, isNull);
+    },
+  );
+
+  test('canceling during native creation settles service work and releases the late-created player', () async {
+    final gate = Completer<void>();
+    native.creationGate = gate;
+    final opening = service.preOpen(_item('pending-create'));
+    await native.firstCreationStarted.future;
+
+    service.clearPreplay();
+    try {
+      await expectLater(
+        opening.timeout(const Duration(milliseconds: 100)),
+        completes,
+      );
+    } finally {
+      gate.complete();
+      await _drainCleanup();
+    }
+    expect(native.active, isEmpty);
+    expect(native.released, [1]);
+    expect(service.currentOpeningItem, isNull);
   });
 }

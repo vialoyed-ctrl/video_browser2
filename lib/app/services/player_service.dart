@@ -27,6 +27,7 @@ class PlayerService {
   bool get usesNativeMediaCache => Platform.isAndroid;
 
   VideoPlayerController? _preloadedController;
+  Completer<void>? _preloadedOwnershipEnded;
   String? _preloadedUrl;
   VideoItem? _preloadedItem;
   DateTime? _preOpenTime;
@@ -71,6 +72,7 @@ class PlayerService {
       // preOpen call must not publish another hidden controller afterward.
       _preOpenGeneration++;
       final c = _preloadedController;
+      _endPreloadedOwnership();
       _preloadedController = null;
       _preloadedUrl = null;
       _preloadedItem = null;
@@ -92,8 +94,15 @@ class PlayerService {
     _preOpenTime = null;
   }
 
+  void _endPreloadedOwnership() {
+    final ended = _preloadedOwnershipEnded;
+    _preloadedOwnershipEnded = null;
+    ended?.complete();
+  }
+
   void _disposePreloaded() {
     final old = _preloadedController;
+    _endPreloadedOwnership();
     _preloadedController = null;
     if (old != null) {
       unawaited(() async {
@@ -336,10 +345,18 @@ class PlayerService {
         item: item,
       );
       _preloadedController = controller;
+      final ownershipEnded = Completer<void>();
+      _preloadedOwnershipEnded = ownershipEnded;
       final timer = Stopwatch()..start();
 
       try {
-        await controller.initialize();
+        // Disposing before the ready event cancels its listener, so initialize()
+        // may never finish. Stop this service's wait when ownership ends; the
+        // transferred controller still initializes independently for its owner.
+        await Future.any<void>([
+          controller.initialize(),
+          ownershipEnded.future,
+        ]);
         if (generation != _preOpenGeneration) {
           // The controller may already have been transferred to a player or
           // disposed by a newer preOpen request. Only clean it up while this
