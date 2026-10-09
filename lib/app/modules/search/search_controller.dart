@@ -14,6 +14,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../core/app_logger.dart';
+import '../../core/paging/paged_list_state.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/video_source.dart';
 import '../../services/preload_service.dart';
@@ -56,16 +57,17 @@ class SearchController extends GetxController {
   final RxBool showFilters = true.obs;
 
   // 分页状态（对齐官网标准页码）
-  final RxInt currentPage = 1.obs;
-  final RxInt totalPages = 1.obs;
-  final RxInt totalItems = 0.obs;
-  final RxBool pageLoading = false.obs;
+  final paging = PagedListState<VideoItem>();
+  RxInt get currentPage => paging.page;
+  RxInt get totalPages => paging.totalPages;
+  RxInt get totalItems => paging.totalItems;
+  RxBool get pageLoading => paging.loadingPage;
   final TextEditingController jumpPageInput = TextEditingController();
 
-  final RxList<VideoItem> results = <VideoItem>[].obs;
-  final RxBool loading = false.obs;
-  final RxBool hasMore = true.obs;
-  final RxnString error = RxnString();
+  RxList<VideoItem> get results => paging.items;
+  RxBool get loading => paging.loadingFirst;
+  RxBool get hasMore => paging.hasMore;
+  RxnString get error => paging.error;
   int? _failedPage;
   bool _failedAppend = false;
 
@@ -78,7 +80,6 @@ class SearchController extends GetxController {
   Timer? _debounce;
   bool _inFlight = false;
   bool _pendingSearch = false;
-  int _searchRequestId = 0;
 
   // 选项常量（严格按照官网，分类排除论坛）
   static const List<(String, String)> sortOptions = [
@@ -283,7 +284,7 @@ class SearchController extends GetxController {
 
   @override
   void onClose() {
-    _searchRequestId++;
+    paging.invalidateRequests();
     _debounce?.cancel();
     input.dispose();
     jumpPageInput.dispose();
@@ -526,7 +527,7 @@ class SearchController extends GetxController {
     }
     // A newly selected filter must not wait for the previous page's timeout.
     // Only the latest request may update the visible results.
-    final currentRequestId = ++_searchRequestId;
+    final currentRequestId = paging.beginRequest();
     pageLoading.value = false;
 
     if (!hasAnyCondition && !(isHanime1 && allowEmptyHanime1)) {
@@ -557,7 +558,7 @@ class SearchController extends GetxController {
         page: 1,
         pageSize: pageSize,
       );
-      if (currentRequestId != _searchRequestId) return;
+      if (!paging.isCurrent(currentRequestId)) return;
       results.assignAll(result.items);
       _preloadResults(result.items);
       // 如果当前是作者模式，不覆盖搜到的作者列表
@@ -574,7 +575,7 @@ class SearchController extends GetxController {
         scroll.jumpTo(0);
       }
     } catch (e) {
-      if (currentRequestId != _searchRequestId) return;
+      if (!paging.isCurrent(currentRequestId)) return;
       // 区分「站点限流」与「网络故障」：前者等一会儿重试即可恢复，后者要查网络。
       // 数据源在质询未解除时会抛出带此标识的 DioException，不再静默返回空列表。
       final isChallenge =
@@ -591,7 +592,7 @@ class SearchController extends GetxController {
       summaryText.value = null;
       hasMore.value = false;
     } finally {
-      if (currentRequestId == _searchRequestId) {
+      if (paging.isCurrent(currentRequestId)) {
         loading.value = false;
         _inFlight = false;
         if (_pendingSearch) {
@@ -628,7 +629,7 @@ class SearchController extends GetxController {
     if (page == currentPage.value && results.isNotEmpty) return;
 
     _inFlight = true;
-    final currentRequestId = ++_searchRequestId;
+    final currentRequestId = paging.beginRequest();
     pageLoading.value = true;
     error.value = null;
 
@@ -638,7 +639,7 @@ class SearchController extends GetxController {
         page: page,
         pageSize: pageSize,
       );
-      if (currentRequestId != _searchRequestId) return;
+      if (!paging.isCurrent(currentRequestId)) return;
       if (append) {
         results.addAll(result.items);
       } else {
@@ -670,12 +671,12 @@ class SearchController extends GetxController {
         );
       }
     } catch (e) {
-      if (currentRequestId != _searchRequestId) return;
+      if (!paging.isCurrent(currentRequestId)) return;
       _failedPage = page;
       _failedAppend = append;
       error.value = '加载第 $page 页失败，请重试';
     } finally {
-      if (currentRequestId == _searchRequestId) {
+      if (paging.isCurrent(currentRequestId)) {
         pageLoading.value = false;
         _inFlight = false;
       }

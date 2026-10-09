@@ -4,6 +4,7 @@ library;
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
+import '../../core/paging/paged_list_state.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/site91_source.dart';
 import '../../data/sources/site91md_source.dart';
@@ -20,14 +21,15 @@ class HomeController extends GetxController {
 
   static const int pageSize = 12;
 
-  final RxList<VideoItem> videos = <VideoItem>[].obs;
-  final RxBool loadingFirst = true.obs;
-  final RxBool loadingMore = false.obs;
-  final RxBool hasMore = true.obs;
-  final RxInt currentPage = 1.obs;
+  final paging = PagedListState<VideoItem>(initiallyLoading: true);
+  RxList<VideoItem> get videos => paging.items;
+  RxBool get loadingFirst => paging.loadingFirst;
+  RxBool get loadingMore => paging.loadingPage;
+  RxBool get hasMore => paging.hasMore;
+  RxInt get currentPage => paging.page;
   int? _failedJumpPage;
-  final RxnString error = RxnString();
-  final RxnString loadMoreError = RxnString();
+  RxnString get error => paging.error;
+  RxnString get loadMoreError => paging.pageError;
   final RxList<VideoCategory> site91mdCategories = <VideoCategory>[].obs;
   final RxBool loadingSite91mdCategories = false.obs;
   final RxnString site91mdCategoriesError = RxnString();
@@ -77,7 +79,6 @@ class HomeController extends GetxController {
 
   int _page = 0;
   bool _inFlight = false;
-  int _firstPageGeneration = 0;
   int _keywordGeneration = 0;
 
   String get sourceName => _source.value.displayName;
@@ -150,7 +151,7 @@ class HomeController extends GetxController {
   @override
   void onClose() {
     _navigationGeneration++;
-    _firstPageGeneration++;
+    paging.invalidateRequests();
     _keywordGeneration++;
     scroll.dispose();
     super.onClose();
@@ -173,7 +174,7 @@ class HomeController extends GetxController {
   /// 加载首屏数据（清空历史去重记录）
   Future<void> loadFirstPage({bool supersede = false, int page = 1}) async {
     if (_inFlight && !supersede) return;
-    final generation = ++_firstPageGeneration;
+    final generation = paging.beginRequest();
     final source = _source.value;
     final channel = currentChannel.value;
     final categoryPath = currentCategory.value?.path;
@@ -192,7 +193,7 @@ class HomeController extends GetxController {
         pageSize: pageSize,
       );
 
-      if (generation != _firstPageGeneration) return;
+      if (!paging.isCurrent(generation)) return;
       _seenVideoIds.clear();
       final newItems = result.items
           .where((v) => _seenVideoIds.add(v.id))
@@ -207,7 +208,7 @@ class HomeController extends GetxController {
         scroll.jumpTo(0);
       }
     } catch (e) {
-      if (generation == _firstPageGeneration) {
+      if (paging.isCurrent(generation)) {
         if (videos.isEmpty) {
           error.value = '内容加载失败：$e';
         } else {
@@ -216,7 +217,7 @@ class HomeController extends GetxController {
         }
       }
     } finally {
-      if (generation == _firstPageGeneration) {
+      if (paging.isCurrent(generation)) {
         loadingFirst.value = false;
         _inFlight = false;
       }
@@ -227,7 +228,7 @@ class HomeController extends GetxController {
   Future<void> loadMore() async {
     if (_inFlight || !hasMore.value || loadingFirst.value) return;
     _inFlight = true;
-    final generation = _firstPageGeneration;
+    final generation = paging.requestGeneration;
     final source = _source.value;
     final channel = currentChannel.value;
     final categoryPath = currentCategory.value?.path;
@@ -243,7 +244,7 @@ class HomeController extends GetxController {
         pageSize: pageSize,
       );
 
-      if (generation != _firstPageGeneration) return;
+      if (!paging.isCurrent(generation)) return;
       final newItems = result.items
           .where((v) => _seenVideoIds.add(v.id))
           .toList();
@@ -267,11 +268,11 @@ class HomeController extends GetxController {
         }
       }
     } catch (e) {
-      if (generation == _firstPageGeneration) {
+      if (paging.isCurrent(generation)) {
         loadMoreError.value = '下一页加载失败，请重试';
       }
     } finally {
-      if (generation == _firstPageGeneration) {
+      if (paging.isCurrent(generation)) {
         loadingMore.value = false;
         _inFlight = false;
       }
