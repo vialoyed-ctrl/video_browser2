@@ -19,7 +19,7 @@ import 'package:get/get.dart';
 
 import '../../core/app_logger.dart';
 import '../../core/app_theme.dart';
-import '../../core/responsive_utils.dart';
+import '../../widgets/video_grid_sliver.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/video_source.dart';
 import '../../routes/app_navigator.dart';
@@ -484,48 +484,14 @@ class _SearchViewState extends State<SearchView> {
                           items: List.of(results),
                           page: controller.currentPage.value,
                           footer: _buildPaginationBar(context),
-                          gridBuilder: (pageItems) => SliverPadding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            sliver: Builder(
-                              builder: (context) {
-                                final screenWidth = MediaQuery.sizeOf(context)
-                                    .width;
-                                final columnCount =
-                                    ResponsiveLayout.gridColumnCount(
-                                      screenWidth,
-                                    );
-                                final columnWidth =
-                                    (screenWidth - 16 - (columnCount - 1) * 6) /
-                                    columnCount;
-                                final childAspectRatio =
-                                    ResponsiveLayout.cardAspectRatio(
-                                      columnWidth,
-                                    );
-
-                                return SliverGrid(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: columnCount,
-                                        crossAxisSpacing: 6,
-                                        mainAxisSpacing: 6,
-                                        childAspectRatio: childAspectRatio,
-                                      ),
-                                  delegate: SliverChildBuilderDelegate((
-                                    context,
-                                    index,
-                                  ) {
-                                    final video = pageItems[index];
-                                    return BiliVideoCardV(
-                                      video: video,
-                                      onTap: () => AppNavigator.toPlayer(video),
-                                      onDownload: () => _enqueue(video),
-                                    );
-                                  }, childCount: pageItems.length),
-                                );
-                              },
+                          gridBuilder: (pageItems) => VideoGridSliver(
+                            items: pageItems,
+                            availableWidth: MediaQuery.sizeOf(context).width,
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            itemBuilder: (_, video) => BiliVideoCardV(
+                              video: video,
+                              onTap: () => AppNavigator.toPlayer(video),
+                              onDownload: () => _enqueue(video),
                             ),
                           ),
                         ),
