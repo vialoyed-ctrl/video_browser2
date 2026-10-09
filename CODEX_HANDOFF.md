@@ -111,3 +111,17 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 - 全部测试/前后与交替帧样本、真实分页状态、限制、回滚顺序和下一批任务见 docs/refactor-home-search-2026-10-09.md；量化摘要 docs/home-search-profile-results-2026-10-09.json。
 
 继续按该报告推进独立站点模块与播放器，不重复本批迁移；完整架构统一及四站点全面回归仍未完成。源码快照仍保留，不能整目录覆盖。
+
+## 11. 独立站点列表架构更新（2026-10-10）
+
+从252fbe9继续，已迁移Hanime1排行/订阅与PornHub推荐/最热的公共分页状态，并拆分PornHub内容/网格/页脚订阅。旧Rx接口、订阅初始hasMore=false、重复追加、各站点游标/请求策略、路径缓存/账号失效、原布局与播放器缓存均保留。
+
+- 状态迁移f0ae7e7；UI局部订阅bd80de6；原有下载角标、播放器与Home/Search修复不改。
+- 全测203通过、1原有跳过；lib/test分析0error、0warning、原7info；独立只读审查无本批新Critical/Important/Minor项。
+- 同一真机Profile实际PornHub列表4个中性卡片、10次加载切换：卡片重建40→0，网格10→0。仅此局部证据，不等于整体FPS、起播/Seek或长期内存提升。
+- 正式Profile真实界面：PornHub推荐21→42项第2页，最热31项与最多观看28项第1页分别缓存；Hanime排行第2页118项/总363页，订阅60→120项第2页/总19页。加载标志false、错误null。没有改登录或清除数据。
+- 审查发现继承风险：PornHub网络回复前page++，RetainedPageSliver在页变/条目未增长时可清分段；原实现也会在loadingMore时重建。同步追加测试不覆盖此等待帧。本批保持原语义，下一批先延迟响应复现并单独修复，不能宣称真实异步页段保留已解决。
+- 正式main.dart ARM64 Profile已恢复，手机回到91第1页42项、加载false、pageError=null、滚动0。正式输出/归档/手机已安装APK SHA256一致：45126F3DF6C86F319C9FD9677CEDDBE972E1EBE3FE5F50BB0DE90C1BBAEB3B8A。pubspec不改，临时构建号2004，自建8199–8201转发关闭。
+- 本批报告：docs/refactor-list-modules-2026-10-10.md；摘要：docs/list-modules-profile-results-2026-10-10.json。回滚先bd80de6、再f0ae7e7；不能覆盖之前已完成工作。
+
+剩余优先级：异步分页分段边界 → 其余站点/账号/搜索列表职责与局部UI → 播放器状态/生命周期、可见首帧/Seek/弱网/长期内存 → 四站点完整回归。完整项目尚未完成，原源码快照仍保留。
