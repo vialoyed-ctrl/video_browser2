@@ -18,6 +18,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import '../../core/app_logger.dart';
+import '../../core/paging/paged_list_state.dart';
 import '../../data/models/pornhub_models.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/pornhub_source.dart';
@@ -1142,12 +1143,16 @@ class PornHubController extends GetxController {
 
 /// 某个路径下的列表分页状态。
 class PornHubListState {
-  final RxList<VideoItem> items = <VideoItem>[].obs;
-  final RxBool isLoading = false.obs;
-  final RxBool isLoadingMore = false.obs;
-  final RxBool hasMore = true.obs;
-  final RxnString error = RxnString();
-  int page = 1;
+  final paging = PagedListState<VideoItem>();
+  RxList<VideoItem> get items => paging.items;
+  RxBool get isLoading => paging.loadingFirst;
+  RxBool get isLoadingMore => paging.loadingPage;
+  RxBool get hasMore => paging.hasMore;
+  RxnString get error => paging.error;
+  int get page => paging.page.value;
+  set page(int value) => paging.page.value = value;
+
+  // Keep the controller's existing writable request epoch and retry policy.
   int request = 0;
 }
 

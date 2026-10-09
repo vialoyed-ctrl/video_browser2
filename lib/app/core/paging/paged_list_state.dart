@@ -5,8 +5,9 @@ import 'package:get/get.dart';
 /// Controllers retain their source-specific fetch, merge, retry and scroll
 /// policies. Flags and request epochs never implicitly notify the item list.
 class PagedListState<T> {
-  PagedListState({bool initiallyLoading = false})
-    : loadingFirst = initiallyLoading.obs;
+  PagedListState({bool initiallyLoading = false, bool initiallyHasMore = true})
+    : loadingFirst = initiallyLoading.obs,
+      hasMore = initiallyHasMore.obs;
 
   final RxList<T> items = <T>[].obs;
   final RxInt page = 1.obs;
@@ -14,7 +15,7 @@ class PagedListState<T> {
   final RxInt totalItems = 0.obs;
   final RxBool loadingFirst;
   final RxBool loadingPage = false.obs;
-  final RxBool hasMore = true.obs;
+  final RxBool hasMore;
   final RxnString error = RxnString();
   final RxnString pageError = RxnString();
 
