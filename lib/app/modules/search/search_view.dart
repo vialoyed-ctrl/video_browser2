@@ -60,7 +60,13 @@ class _Hanime1PinnedHeader extends SliverPersistentHeaderDelegate {
     BuildContext context,
     double shrinkOffset,
     bool overlapsContent,
-  ) => child;
+  ) => SizedBox(
+    height: height,
+    child: Align(
+      alignment: Alignment.topCenter,
+      child: SizedBox(width: double.infinity, child: child),
+    ),
+  );
 
   @override
   bool shouldRebuild(covariant _Hanime1PinnedHeader oldDelegate) =>
