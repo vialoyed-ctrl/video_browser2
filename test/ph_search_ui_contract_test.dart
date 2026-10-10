@@ -50,6 +50,66 @@ void main() {
 
   PornHubListFooter footer(WidgetTester tester) =>
       tester.widgetList<PornHubListFooter>(find.byType(PornHubListFooter)).last;
+  testWidgets(
+    'ph ignored empty submit cannot reset scroll during pending refresh',
+    (tester) async {
+      await mount(tester, 'videos');
+      footer(tester).onLoadMore!();
+      source.requests.last.complete(
+        PornHubBrowseData(
+          videos: List.generate(
+            20,
+            (i) => VideoItem(
+              id: 'long-$i',
+              title: 'Fixture long $i',
+              author: '',
+              hlsUrl: '',
+            ),
+          ),
+          hasMore: true,
+        ),
+      );
+      await tester.pumpAndSettle();
+      final scroll = tester
+          .widget<CustomScrollView>(find.byType(CustomScrollView))
+          .controller!;
+      scroll.jumpTo(150);
+      await tester.pumpAndSettle();
+      final before = scroll.position.pixels;
+      expect(before, greaterThan(0));
+      final refresh = tester
+          .widget<RefreshIndicator>(find.byType(RefreshIndicator))
+          .onRefresh();
+      await tester.pump();
+      final requests = source.requests.length;
+      await tester.enterText(find.byType(TextField), '');
+      await tester.tap(find.byTooltip('搜索'));
+      await tester.pump();
+      expect(source.requests.length, requests);
+      expect(scroll.position.pixels, closeTo(before, .01));
+      source.requests.last.complete(phSearchResponse('videos', 'refreshed'));
+      await refresh;
+      await tester.pumpAndSettle();
+    },
+  );
+  testWidgets('ph nonempty source total renders the numeric count', (
+    tester,
+  ) async {
+    await mount(tester, 'videos');
+    final refresh = tester
+        .widget<RefreshIndicator>(find.byType(RefreshIndicator))
+        .onRefresh();
+    source.requests.last.complete(
+      PornHubBrowseData(
+        videos: phSearchResponse('videos', 'total').videos,
+        hasMore: true,
+        total: 123,
+      ),
+    );
+    await refresh;
+    await tester.pumpAndSettle();
+    expect(find.text('官网共 123 条 · 已加载 4 条'), findsOneWidget);
+  });
   for (final kind in ['videos', 'clips', 'creators', 'playlists']) {
     testWidgets('original ph $kind search geometry', (tester) async {
       await mount(tester, kind);
