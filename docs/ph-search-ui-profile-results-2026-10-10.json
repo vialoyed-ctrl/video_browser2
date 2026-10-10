@@ -1,0 +1,2209 @@
+{
+  "baseline": "9daed0f",
+  "implementation": "8f61602",
+  "tests": {
+    "baseline_pass": 246,
+    "final_pass": 268,
+    "existing_skip": 1,
+    "targeted_pass": 22,
+    "analyzer_errors": 0,
+    "analyzer_warnings": 0,
+    "existing_info": 7
+  },
+  "device": "PMB110 Android16 ARM64 120Hz",
+  "pixel_comparison": [
+    {
+      "mode": "videos",
+      "crop": [
+        0,
+        160,
+        1440,
+        3088
+      ],
+      "changedBox": null
+    },
+    {
+      "mode": "clips",
+      "crop": [
+        0,
+        160,
+        1440,
+        3088
+      ],
+      "changedBox": null
+    },
+    {
+      "mode": "creators",
+      "crop": [
+        0,
+        160,
+        1440,
+        3088
+      ],
+      "changedBox": null
+    },
+    {
+      "mode": "playlists",
+      "crop": [
+        0,
+        160,
+        1440,
+        3088
+      ],
+      "changedBox": null
+    }
+  ],
+  "apk_hashes": [
+    {
+      "Path": "E:\\projects\\video_browser2\\build\\app\\outputs\\flutter-apk\\app-profile.apk",
+      "Hash": "22E61769DFDF8B21FDF0FC8D920E9BE28E2B09E5CC62B412AFD61C71EB1917EB"
+    },
+    {
+      "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\ph-search-ui\\formal-after.apk",
+      "Hash": "22E61769DFDF8B21FDF0FC8D920E9BE28E2B09E5CC62B412AFD61C71EB1917EB"
+    },
+    {
+      "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\ph-search-ui\\installed-final.apk",
+      "Hash": "22E61769DFDF8B21FDF0FC8D920E9BE28E2B09E5CC62B412AFD61C71EB1917EB"
+    }
+  ],
+  "formal": {
+    "search-first": [
+      {
+        "_element": {
+          "kind": "StatefulElement",
+          "length": 16
+        },
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 31
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_kind": {
+          "value": "videos",
+          "kind": "_OneByteString",
+          "length": 6
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_page": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 31
+        },
+        "_cachedResults": {
+          "kind": "RetainedPageSliver",
+          "length": 8
+        }
+      }
+    ],
+    "search-appended": [
+      {
+        "_element": {
+          "kind": "StatefulElement",
+          "length": 16
+        },
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 116
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_kind": {
+          "value": "videos",
+          "kind": "_OneByteString",
+          "length": 6
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_page": {
+          "value": "4",
+          "kind": "_Smi"
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 116
+        },
+        "_cachedResults": {
+          "kind": "RetainedPageSliver",
+          "length": 8
+        }
+      }
+    ],
+    "search-retained": {
+      "states": [
+        {
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "31"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "73"
+                },
+                {
+                  "name": "page",
+                  "value": "2"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "116"
+                },
+                {
+                  "name": "page",
+                  "value": "3"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        },
+        {
+          "path": "ALL:false",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "35"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        },
+        {
+          "path": "/recommended?o=time",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "21"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        },
+        {
+          "path": "/video?o=ht",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "31"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        },
+        {
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "17"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        }
+      ],
+      "footers": [
+        {
+          "page": "3",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "false"
+        },
+        {
+          "page": "2",
+          "active": "false"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        }
+      ]
+    },
+    "clips": [
+      {
+        "_element": {
+          "kind": "StatefulElement",
+          "length": 16
+        },
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 21
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_kind": {
+          "value": "clips",
+          "kind": "_OneByteString",
+          "length": 5
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_page": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 21
+        },
+        "_cachedResults": {
+          "kind": "RetainedPageSliver",
+          "length": 8
+        }
+      }
+    ],
+    "creators": [
+      {
+        "_element": {
+          "kind": "StatefulElement",
+          "length": 16
+        },
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 48
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_kind": {
+          "value": "creators",
+          "kind": "_OneByteString",
+          "length": 8
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_page": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 48
+        },
+        "_cachedResults": {
+          "kind": "SliverList",
+          "length": 3
+        }
+      }
+    ],
+    "playlists": [
+      {
+        "_element": {
+          "kind": "StatefulElement",
+          "length": 16
+        },
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 36
+        },
+        "_kind": {
+          "value": "playlists",
+          "kind": "_OneByteString",
+          "length": 9
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_page": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_cachedResults": {
+          "kind": "SliverPadding",
+          "length": 4
+        }
+      }
+    ],
+    "search-closed": [
+      {
+        "_element": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 36
+        },
+        "_kind": {
+          "value": "playlists",
+          "kind": "_OneByteString",
+          "length": 9
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_page": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_cachedResults": {
+          "kind": "SliverPadding",
+          "length": 4
+        }
+      }
+    ],
+    "final-home": [
+      {
+        "class": "HomeController",
+        "fields": [
+          {
+            "name": "paging",
+            "kind": "PagedListState",
+            "length": 10
+          },
+          {
+            "name": "scroll",
+            "kind": "ScrollController",
+            "length": 10
+          }
+        ],
+        "state": [
+          {
+            "name": "items",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_value",
+                "kind": "_GrowableList",
+                "length": 41
+              }
+            ]
+          },
+          {
+            "name": "page",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "1",
+                "kind": "_Smi"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "loadingFirst",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "false",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "loadingPage",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "false",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "hasMore",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "true",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "pageError",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "null",
+                "kind": "Null"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "202.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "608.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "360.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "3592.175",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "608.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "144.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "216.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "609.0",
+            "kind": "_Double"
+          }
+        ]
+      }
+    ],
+    "final-root": [
+      {
+        "class": "PornHubController",
+        "currentTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "paths": [
+          {
+            "path": "/recommended?o=time",
+            "state": {
+              "items": {
+                "kind": "_GrowableList",
+                "length": 21
+              },
+              "page": {
+                "value": "1",
+                "kind": "_Smi"
+              },
+              "totalPages": {
+                "value": "1",
+                "kind": "_Smi"
+              },
+              "loadingFirst": {
+                "value": "false",
+                "kind": "bool"
+              },
+              "loadingPage": {
+                "value": "false",
+                "kind": "bool"
+              },
+              "hasMore": {
+                "value": "true",
+                "kind": "bool"
+              },
+              "error": {
+                "value": "null",
+                "kind": "Null"
+              }
+            }
+          },
+          {
+            "path": "/video?o=ht",
+            "state": {
+              "items": {
+                "kind": "_GrowableList",
+                "length": 31
+              },
+              "page": {
+                "value": "1",
+                "kind": "_Smi"
+              },
+              "totalPages": {
+                "value": "1",
+                "kind": "_Smi"
+              },
+              "loadingFirst": {
+                "value": "false",
+                "kind": "bool"
+              },
+              "loadingPage": {
+                "value": "false",
+                "kind": "bool"
+              },
+              "hasMore": {
+                "value": "true",
+                "kind": "bool"
+              },
+              "error": {
+                "value": "null",
+                "kind": "Null"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "class": "Hanime1Controller",
+        "currentTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "homeData": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "isLoadingHome": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "homeError": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "currentRankTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "rankingPaging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 0
+          },
+          "page": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "subscriptionsPaging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 0
+          },
+          "page": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "site91",
+          "kind": "_OneByteString",
+          "length": 6
+        }
+      }
+    ]
+  },
+  "before": [
+    {
+      "mode": "videos",
+      "cycles": [
+        {
+          "reset": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 4,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 4,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 4,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        }
+      ]
+    },
+    {
+      "mode": "clips",
+      "cycles": [
+        {
+          "reset": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 4,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 4,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 4,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        }
+      ]
+    },
+    {
+      "mode": "creators",
+      "cycles": [
+        {
+          "reset": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 4,
+            "SliverGrid": 0,
+            "SliverList": 1
+          }
+        },
+        {
+          "reset": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 4,
+            "SliverGrid": 0,
+            "SliverList": 1
+          }
+        },
+        {
+          "reset": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 4,
+            "SliverGrid": 0,
+            "SliverList": 1
+          }
+        }
+      ]
+    },
+    {
+      "mode": "playlists",
+      "cycles": [
+        {
+          "reset": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 4,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 4,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 4,
+            "ListTile": 0,
+            "SliverGrid": 1,
+            "SliverList": 0
+          }
+        }
+      ]
+    }
+  ],
+  "before_success_append": {
+    "waiting": {
+      "mode": "videos",
+      "page": 1,
+      "items": 4,
+      "requestPage": 2,
+      "loading": true,
+      "error": null,
+      "mountedCards": 4,
+      "footers": [
+        {
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    "success": {
+      "mode": "videos",
+      "page": 2,
+      "items": 8,
+      "requestPage": 2,
+      "loading": false,
+      "error": null,
+      "mountedCards": 8,
+      "footers": [
+        {
+          "page": 1,
+          "active": false
+        },
+        {
+          "page": 2,
+          "active": true
+        }
+      ]
+    }
+  },
+  "after": [
+    {
+      "mode": "videos",
+      "cycles": [
+        {
+          "reset": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "videos",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        }
+      ]
+    },
+    {
+      "mode": "clips",
+      "cycles": [
+        {
+          "reset": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "waiting": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "failure": {
+            "mode": "clips",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        }
+      ]
+    },
+    {
+      "mode": "creators",
+      "cycles": [
+        {
+          "reset": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "creators",
+            "page": 1,
+            "items": 4,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        }
+      ]
+    },
+    {
+      "mode": "playlists",
+      "cycles": [
+        {
+          "reset": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        },
+        {
+          "reset": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 1,
+            "loading": false,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "waiting": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": true,
+            "error": null,
+            "mountedCards": 4,
+            "footers": []
+          },
+          "failure": {
+            "mode": "playlists",
+            "page": 1,
+            "items": null,
+            "requestPage": 2,
+            "loading": false,
+            "error": "网络请求失败，请检查网络后重试",
+            "mountedCards": 4,
+            "footers": []
+          },
+          "build_counts": {
+            "BiliVideoCardV": 0,
+            "PornHubPlaylistCard": 0,
+            "ListTile": 0,
+            "SliverGrid": 0,
+            "SliverList": 0
+          }
+        }
+      ]
+    }
+  ],
+  "after_success_append": {
+    "waiting": {
+      "mode": "videos",
+      "page": 1,
+      "items": 4,
+      "requestPage": 2,
+      "loading": true,
+      "error": null,
+      "mountedCards": 4,
+      "footers": [
+        {
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    "success": {
+      "mode": "videos",
+      "page": 2,
+      "items": 8,
+      "requestPage": 2,
+      "loading": false,
+      "error": null,
+      "mountedCards": 8,
+      "footers": [
+        {
+          "page": 1,
+          "active": false
+        },
+        {
+          "page": 2,
+          "active": true
+        }
+      ]
+    }
+  },
+  "engine_hashes": {
+    "before": "8ff2f86d1ac342962699180de16fa66e59f4302392f6af4bc6196b6055c28398",
+    "after": "8ff2f86d1ac342962699180de16fa66e59f4302392f6af4bc6196b6055c28398"
+  },
+  "limits": [
+    "Result rebuild counts are not overall FPS, first frame, seek, or native leak measurements.",
+    "Playlist telemetry items=null reflects original header; probe has four mounted playlist cards. Formal 36 returned playlists filtered to zero matching 2026.",
+    "Pixel comparison excludes top160 and bottom112 pixels. Goldens use Ahem font.",
+    "Closed route _element=null does not prove garbage collection.",
+    "Unsupported append sampler invocation captured idle and is excluded. Correct page scenario performed11 actions and31->73->116 entries."
+  ]
+}

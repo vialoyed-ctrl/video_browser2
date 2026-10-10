@@ -174,3 +174,12 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 - 报告docs/refactor-md-search-ui-2026-10-10.md；摘要docs/md-search-ui-profile-results-2026-10-10.json；执行/审查裁决docs/refactor-md-search-ui-execution-2026-10-10.md。只revertfead00d可撤销实现，binary patch已反向检查。原源码快照和前阶段保留。
 
 剩余PornHub搜索/其他列表及账号职责/UI、各模块空追加/同前缀替换边界、播放器首帧/Seek/弱网/长期原生内存与四站点完整回归。整个项目尚未完成，不重复本批优化。
+
+
+## 16. PornHub独立搜索UI局部刷新（2026-10-10）
+
+实现8f61602；四种结果快照及页脚独立刷新，路径/过滤/请求/播放器保留。新增22契约和四原golden；最终268通过/1原跳过，分析0error/0warning/原7info；独立复审无剩余项。真机四模式各三轮：视频/片单卡片36→0、创作者行12→0、网格/列表12→0，裁剪像素无差异，只是局部构建证据。
+
+正式2026视频31→73→116条、三页保留；切片21、创作者48、片单接口36但原过滤0匹配。正常2009保留数据恢复91首页41/第1页、flagsfalse/errornull/scroll0、Rootsite91。三APK SHA256：22E61769DFDF8B21FDF0FC8D920E9BE28E2B09E5CC62B412AFD61C71EB1917EB。attach与三自建转发关闭。
+
+报告docs/refactor-ph-search-ui-2026-10-10.md，摘要及执行同名阶段文档。可单独revert8f61602。原快照与以前批次保留；后续分页边界、独立路由职责、播放器首帧/Seek/弱网/长期原生内存和四站点综合回归继续执行，完整项目尚未完成。
