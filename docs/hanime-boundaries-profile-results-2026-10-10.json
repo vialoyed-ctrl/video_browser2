@@ -1,0 +1,1304 @@
+{
+  "baseline": "590e7df",
+  "implementation": "0a370ac",
+  "tests": {
+    "new_actual_ui_cases": 4,
+    "targeted_pass": 41,
+    "final_pass": 272,
+    "existing_skip": 1,
+    "analyzer_errors": 0,
+    "analyzer_warnings": 0,
+    "existing_info": 7
+  },
+  "before": [
+    {
+      "mode": "ranking",
+      "scenario": "empty",
+      "first": {
+        "mode": "ranking",
+        "page": 1,
+        "items": 4,
+        "requestPage": 1,
+        "loading": false,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "second": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "waiting": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 3,
+        "loading": true,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "completed": {
+        "mode": "ranking",
+        "page": 3,
+        "items": 8,
+        "requestPage": 3,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 3,
+            "active": true
+          }
+        ]
+      }
+    },
+    {
+      "mode": "ranking",
+      "scenario": "replace",
+      "first": {
+        "mode": "ranking",
+        "page": 1,
+        "items": 4,
+        "requestPage": 1,
+        "loading": false,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "second": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "waiting": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": true,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "completed": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    },
+    {
+      "mode": "subscriptions",
+      "scenario": "empty",
+      "first": {
+        "mode": "subscriptions",
+        "page": 1,
+        "items": 4,
+        "requestPage": 1,
+        "loading": false,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "second": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "waiting": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 3,
+        "loading": true,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "completed": {
+        "mode": "subscriptions",
+        "page": 3,
+        "items": 8,
+        "requestPage": 3,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 3,
+            "active": true
+          }
+        ]
+      }
+    },
+    {
+      "mode": "subscriptions",
+      "scenario": "replace",
+      "first": {
+        "mode": "subscriptions",
+        "page": 1,
+        "items": 4,
+        "requestPage": 1,
+        "loading": false,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "second": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "waiting": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": true,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "completed": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    }
+  ],
+  "after": [
+    {
+      "mode": "ranking",
+      "scenario": "empty",
+      "first": {
+        "mode": "ranking",
+        "page": 1,
+        "items": 4,
+        "requestPage": 1,
+        "loading": false,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "second": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "waiting": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 3,
+        "loading": true,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "completed": {
+        "mode": "ranking",
+        "page": 3,
+        "items": 8,
+        "requestPage": 3,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    },
+    {
+      "mode": "ranking",
+      "scenario": "replace",
+      "first": {
+        "mode": "ranking",
+        "page": 1,
+        "items": 4,
+        "requestPage": 1,
+        "loading": false,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "second": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "waiting": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": true,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "completed": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    },
+    {
+      "mode": "subscriptions",
+      "scenario": "empty",
+      "first": {
+        "mode": "subscriptions",
+        "page": 1,
+        "items": 4,
+        "requestPage": 1,
+        "loading": false,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "second": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "waiting": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 3,
+        "loading": true,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "completed": {
+        "mode": "subscriptions",
+        "page": 3,
+        "items": 8,
+        "requestPage": 3,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    },
+    {
+      "mode": "subscriptions",
+      "scenario": "replace",
+      "first": {
+        "mode": "subscriptions",
+        "page": 1,
+        "items": 4,
+        "requestPage": 1,
+        "loading": false,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "second": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "waiting": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": true,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      },
+      "completed": {
+        "mode": "subscriptions",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    }
+  ],
+  "formal": {
+    "formal-ranking-after": [
+      {
+        "class": "PornHubController",
+        "currentTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "paths": []
+      },
+      {
+        "class": "Hanime1Controller",
+        "currentTabIndex": {
+          "value": "1",
+          "kind": "_Smi"
+        },
+        "homeData": {
+          "kind": "Hanime1HomeData",
+          "length": 4
+        },
+        "isLoadingHome": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "homeError": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "currentRankTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "rankingPaging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 118
+          },
+          "page": {
+            "value": "2",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "363",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "subscriptionsPaging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 0
+          },
+          "page": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "hanime1",
+          "kind": "_OneByteString",
+          "length": 7
+        }
+      }
+    ],
+    "formal-ranking-sections": {
+      "states": [
+        {
+          "path": "0",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "59"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "118"
+                },
+                {
+                  "name": "page",
+                  "value": "2"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        }
+      ],
+      "footers": [
+        {
+          "page": "1",
+          "active": "false"
+        },
+        {
+          "page": "2",
+          "active": "true"
+        }
+      ]
+    },
+    "formal-subscriptions-after": [
+      {
+        "class": "PornHubController",
+        "currentTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "paths": []
+      },
+      {
+        "class": "Hanime1Controller",
+        "currentTabIndex": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "homeData": {
+          "kind": "Hanime1HomeData",
+          "length": 4
+        },
+        "isLoadingHome": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "homeError": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "currentRankTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "rankingPaging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 118
+          },
+          "page": {
+            "value": "2",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "363",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "subscriptionsPaging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 120
+          },
+          "page": {
+            "value": "2",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "19",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "hanime1",
+          "kind": "_OneByteString",
+          "length": 7
+        }
+      }
+    ],
+    "formal-subscriptions-sections": {
+      "states": [
+        {
+          "path": "0",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "59"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "118"
+                },
+                {
+                  "name": "page",
+                  "value": "2"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        },
+        {
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "60"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "120"
+                },
+                {
+                  "name": "page",
+                  "value": "2"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        }
+      ],
+      "footers": [
+        {
+          "page": "2",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "false"
+        },
+        {
+          "page": "1",
+          "active": "false"
+        },
+        {
+          "page": "2",
+          "active": "true"
+        }
+      ]
+    },
+    "formal-final-home": [
+      {
+        "class": "HomeController",
+        "fields": [
+          {
+            "name": "paging",
+            "kind": "PagedListState",
+            "length": 12
+          },
+          {
+            "name": "scroll",
+            "kind": "ScrollController",
+            "length": 10
+          }
+        ],
+        "state": [
+          {
+            "name": "items",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_value",
+                "kind": "_GrowableList",
+                "length": 41
+              }
+            ]
+          },
+          {
+            "name": "page",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "1",
+                "kind": "_Smi"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "loadingFirst",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "false",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "loadingPage",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "false",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "hasMore",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "true",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "pageError",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "null",
+                "kind": "Null"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "202.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "608.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "144.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "3620.7749999999996",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "608.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "360.0",
+            "kind": "_Double"
+          }
+        ]
+      }
+    ],
+    "formal-final-root": [
+      {
+        "class": "PornHubController",
+        "currentTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "paths": []
+      },
+      {
+        "class": "Hanime1Controller",
+        "currentTabIndex": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "homeData": {
+          "kind": "Hanime1HomeData",
+          "length": 4
+        },
+        "isLoadingHome": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "homeError": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "currentRankTabIndex": {
+          "value": "0",
+          "kind": "_Smi"
+        },
+        "rankingPaging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 118
+          },
+          "page": {
+            "value": "2",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "363",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "subscriptionsPaging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 120
+          },
+          "page": {
+            "value": "2",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "19",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "site91",
+          "kind": "_OneByteString",
+          "length": 6
+        }
+      }
+    ]
+  },
+  "apk_hashes": [
+    {
+      "Path": "E:\\projects\\video_browser2\\build\\app\\outputs\\flutter-apk\\app-profile.apk",
+      "Hash": "C8B9732D46B536D04C11051203E99A754A800ED67F77D1CAD4B2B5A62238A94B"
+    },
+    {
+      "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\hanime-boundaries\\formal-after.apk",
+      "Hash": "C8B9732D46B536D04C11051203E99A754A800ED67F77D1CAD4B2B5A62238A94B"
+    },
+    {
+      "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\hanime-boundaries\\installed-final.apk",
+      "Hash": "C8B9732D46B536D04C11051203E99A754A800ED67F77D1CAD4B2B5A62238A94B"
+    }
+  ],
+  "limits": [
+    "Boundary correctness, no FPS/native-memory performance claim.",
+    "Actual websites returned nonempty append; rare empty/same-prefix scenarios use real controls and neutral deferred external fixtures.",
+    "Closed metadata assertions catch accepted late replies; final closing items assertion only checks first ID, optional full-list tightening not blocking.",
+    "Original selected-rank key remount and route-unmount restoration remain unchanged."
+  ]
+}
