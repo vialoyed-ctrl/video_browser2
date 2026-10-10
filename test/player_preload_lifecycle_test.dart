@@ -14,6 +14,7 @@ class _NativePlayers extends VideoPlayerPlatform {
   final subscriptionsCanceled = <int>[];
   final events = <int, StreamController<VideoEvent>>{};
   final failPauseFor = <int>{};
+  final heldPauseFor = <int, Completer<void>>{};
   bool autoInitialize = true;
   final firstListenerReady = Completer<void>();
   final firstCreationStarted = Completer<void>();
@@ -66,6 +67,8 @@ class _NativePlayers extends VideoPlayerPlatform {
     if (failPauseFor.contains(playerId)) {
       throw PlatformException(code: 'pause_failed');
     }
+    final held = heldPauseFor[playerId];
+    if (held != null) await held.future;
   }
 
   @override
@@ -111,6 +114,9 @@ void main() {
     if (native.creationGate != null && !native.creationGate!.isCompleted) {
       native.creationGate!.complete();
     }
+    for (final gate in native.heldPauseFor.values) {
+      if (!gate.isCompleted) gate.complete();
+    }
     native.failPauseFor.clear();
     service.clearPreplay();
     await _drainCleanup();
@@ -118,6 +124,38 @@ void main() {
     VideoPlayerPlatform.instance = previous;
   });
 
+  for (final operation in ['clear', 'replace']) {
+    test(
+      '$operation disposes warm player despite an unresponsive pause',
+      () async {
+        await service.preOpen(_item('held-old'));
+        final gate = Completer<void>();
+        native.heldPauseFor[1] = gate;
+        try {
+          if (operation == 'clear') {
+            service.clearPreplay();
+          } else {
+            await service.preOpen(_item('held-new'));
+          }
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          expect(
+            native.released,
+            contains(1),
+            reason: 'An unanswered pause must not block disposing a paused warm instance',
+          );
+          expect(native.subscriptionsCanceled, contains(1));
+          expect(native.active, operation == 'clear' ? isEmpty : {2});
+          expect(
+            service.currentOpeningItem?.id,
+            operation == 'clear' ? null : _item('held-new').id,
+          );
+        } finally {
+          if (!gate.isCompleted) gate.complete();
+          await _drainCleanup();
+        }
+      },
+    );
+  }
   test(
     'clear releases the native player and listener even when pause fails',
     () async {

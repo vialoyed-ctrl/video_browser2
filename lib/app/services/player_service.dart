@@ -106,11 +106,9 @@ class PlayerService {
     _preloadedController = null;
     if (old != null) {
       unawaited(() async {
-        try {
-          await old.pause();
-        } catch (_) {
-          // A failed native pause must not prevent resource cleanup.
-        }
+        // This slot only owns warm controllers, which never play. A taken
+        // controller is removed from the slot before its owner can play it.
+        // Dispose directly so an unanswered pause cannot block native release.
         try {
           await old.dispose();
         } catch (_) {
