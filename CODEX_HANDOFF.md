@@ -162,3 +162,15 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 - 报告docs/refactor-hanime-list-ui-2026-10-10.md；摘要docs/hanime-list-ui-profile-results-2026-10-10.json；审查裁决docs/refactor-hanime-list-ui-execution-2026-10-10.md。实现可单独revert5433ee2；交付binary patch已反向检查。
 
 剩余：其余站点搜索/列表与账号职责/UI；Hanime空追加/相同前缀替换独立测试；播放器真实首帧/Seek/弱网/长期原生内存及四站点完整回归。不要重复本批拆分，整个项目尚未完成。
+
+## 15. 91麻豆独立搜索UI局部刷新（2026-10-10）
+
+从7c7e848继续，实现fead00d，仅Site91MdSearchView复用未变结果快照/widget并独立页脚AnimatedBuilder；原route-local控制器、默认pageSize12、解析/播放器/下载回调、响应式几何保持。清空丢弃widget和条目缓存。
+
+- 修改前238/1，等待RED旧4卡片重建；新增8项实际控件契约和原400/800golden，最终246通过、1原有跳过，分析0error/0warning/原7info。审查cache-clear/同ID元数据两Minor处理、复审无剩余项。
+- 同真机ARM64 Profile三轮4卡片等待：卡片12→0、网格3→0；失败保留第1页，成功追加8项且1/2页保留。截图裁剪区域无差异，只是局部重建证据，不是FPS/播放器/长期内存提升。
+- 正式官网2026搜索成功1项、第1页/hasMorefalse；无下一页，真实追加未验收。实际清空后缓存list0/widgetnull，返回controllerdisposedtrue，不能称对象已GC或无原生泄漏。
+- 已保留数据恢复正常main.dart、91首页41条/第1页、flagsfalse/errornull/scroll0、Root=site91。构建号2008，pubspec不改；输出/归档/手机APK一致：23DCEA867384FB7B42CE33DCCE3C31D2E90DA4FC6AD426156D55F81F0DB9CB2F。attach/自建转发全关闭、forward空。
+- 报告docs/refactor-md-search-ui-2026-10-10.md；摘要docs/md-search-ui-profile-results-2026-10-10.json；执行/审查裁决docs/refactor-md-search-ui-execution-2026-10-10.md。只revertfead00d可撤销实现，binary patch已反向检查。原源码快照和前阶段保留。
+
+剩余PornHub搜索/其他列表及账号职责/UI、各模块空追加/同前缀替换边界、播放器首帧/Seek/弱网/长期原生内存与四站点完整回归。整个项目尚未完成，不重复本批优化。
