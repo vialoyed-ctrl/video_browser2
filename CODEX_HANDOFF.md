@@ -201,3 +201,8 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 真机四模式十二窗口仍0卡片/行/网格重建，四裁剪像素无差异。正常2011实际视频31/74/117三页、切片8/创作者48/片单36-filter1；退出disposedtrue不代表GC。恢复91首页41/第1页/scroll0/Rootsite91，三APK一致2F8019EE51189B92C5A228C1A867135D1339220633EE6489FA581FF9BBD767E0；detach与6189/11614关闭。报告docs/refactor-ph-search-controller-2026-10-10.md、摘要及docs/superpowers计划ledger。可单独revertf86ed8d；原快照和以前阶段保留。
 
 继续播放器释放/切换等待边界、剩余路由与分页、首帧/Seek/弱网/native长期内存及四站点完整回归；完整项目尚未完成。
+
+
+## 19. 预热释放等待边界（2026-10-10）
+
+实现baa1c94；移除仅预热slot的冗余pause等待。真实Android故障对照旧六轮超1s，新清空81–92ms、替换248–397ms，终态active为空。12生命周期、完整286通过/1原跳过、原7info；审查无阻断，LF修正。正式2012恢复91首页41/第1页/scroll0，三APK一致；临时服务/映射关闭。详见docs/refactor-warm-disposal-2026-10-10.md及warm-disposal-profile-results-2026-10-10.json。不声称FPS/首帧/长期native泄漏改善，完整项目仍继续。
