@@ -149,3 +149,16 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 - 报告docs/refactor-search-ui-2026-10-10.md；摘要docs/search-ui-profile-results-2026-10-10.json；执行与审查裁决docs/refactor-search-ui-execution-2026-10-10.md。回滚实现先883821d、再bd2850d；可只撤销订阅优化而保留尺寸修复。原快照、此前报告和实现保留。
 
 下一批：其余独立站点搜索/列表及账号职责与UI → 播放器状态/生命周期及真实首帧、Seek、弱网、长期原生内存 → 四站点完整回归。整个项目尚未完成，不重复公共分页状态和本批搜索订阅拆分。
+
+## 14. Hanime 排行与订阅UI局部刷新（2026-10-10）
+
+从256a467继续，实现5433ee2：实际排行/订阅结果区与页脚分别订阅，保留原排名键、制作方参数、网格边距、登录提示、翻页和刷新。控制器/解析/播放器不改，原快照及此前阶段保留。
+
+- 旧测试226/1；新增12项实际控件契约与3张原布局golden，最终238通过、1原有跳过；分析0error/0warning/原7info。审查的页脚total/hasMore覆盖缺口补齐，复审无剩余项。
+- 真机ARM64 Profile，排行/订阅/未登录订阅各三轮固定4卡片等待：卡片36→0，实际SliverList9→0；外层与页脚Obx仍刷新。截图比较区域无差异，顶部裁剪含部分探针控件，不能称整屏等价。
+- 正式实际排行59→118/第2页/总363页、订阅60→120/第2页/总19页，两个页段分别保留，加载false/errornull。恢复91首页第1页41项、scroll0、Root=site91，账号/数据保留。
+- 构建号2007，pubspec不改；输出/归档/手机APK SHA256：9DBC01F26E3275258EA1691A9CD776B490D32C87AAC38859515C0E204E33CF6D。测量已detach，final forward为空。
+- 发现DDS历史Flutter.Frame重放，原正式滑动帧统计不作FPS/p95证据；独立clearVMTimeline构建计数有效。新增时间窗采集器，旧RED/新GREEN契约及真机226帧时间窗校验通过。
+- 报告docs/refactor-hanime-list-ui-2026-10-10.md；摘要docs/hanime-list-ui-profile-results-2026-10-10.json；审查裁决docs/refactor-hanime-list-ui-execution-2026-10-10.md。实现可单独revert5433ee2；交付binary patch已反向检查。
+
+剩余：其余站点搜索/列表与账号职责/UI；Hanime空追加/相同前缀替换独立测试；播放器真实首帧/Seek/弱网/长期原生内存及四站点完整回归。不要重复本批拆分，整个项目尚未完成。

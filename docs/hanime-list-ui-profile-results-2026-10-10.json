@@ -1,0 +1,1208 @@
+{
+  "date": "2026-10-10",
+  "baseline": "256a4671d644eb3afa287e8640ddc6e00dc9a43d",
+  "implementation": "5433ee2daf5009ee1a8b2a173985dc997e5125aa",
+  "tests": {
+    "beforePassed": 226,
+    "afterPassed": 238,
+    "existingSkipped": 1,
+    "targetedPassed": 12,
+    "analyzerErrors": 0,
+    "analyzerWarnings": 0,
+    "existingInfo": 7
+  },
+  "device": {
+    "model": "PMB110",
+    "android": 16,
+    "mode": "ARM64 Profile",
+    "display": [
+      1440,
+      3200
+    ],
+    "refreshHz": 120,
+    "probeEngineSha256": {
+      "before": "8ff2f86d1ac342962699180de16fa66e59f4302392f6af4bc6196b6055c28398",
+      "after": "8ff2f86d1ac342962699180de16fa66e59f4302392f6af4bc6196b6055c28398"
+    }
+  },
+  "before": {
+    "modes": [
+      {
+        "mode": "ranking",
+        "cycles": [
+          {
+            "reset": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "排行加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8191
+          },
+          {
+            "reset": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "排行加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8186
+          },
+          {
+            "reset": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "排行加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8098
+          }
+        ]
+      },
+      {
+        "mode": "subscriptions",
+        "cycles": [
+          {
+            "reset": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8150
+          },
+          {
+            "reset": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8096
+          },
+          {
+            "reset": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8189
+          }
+        ]
+      },
+      {
+        "mode": "logged-out",
+        "cycles": [
+          {
+            "reset": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8143
+          },
+          {
+            "reset": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8081
+          },
+          {
+            "reset": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 4,
+              "Hanime1VideoGridSliver": 1,
+              "SliverList": 1,
+              "Obx": 1
+            },
+            "timelineEvents": 8196
+          }
+        ]
+      }
+    ],
+    "successRanking": {
+      "waiting": {
+        "mode": "ranking",
+        "page": 1,
+        "items": 4,
+        "requestPage": 2,
+        "loading": true,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "success": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "modes": [
+      {
+        "mode": "ranking",
+        "cycles": [
+          {
+            "reset": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "排行加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7819
+          },
+          {
+            "reset": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "排行加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7713
+          },
+          {
+            "reset": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "ranking",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "排行加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7793
+          }
+        ]
+      },
+      {
+        "mode": "subscriptions",
+        "cycles": [
+          {
+            "reset": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7814
+          },
+          {
+            "reset": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7708
+          },
+          {
+            "reset": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "subscriptions",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7806
+          }
+        ]
+      },
+      {
+        "mode": "logged-out",
+        "cycles": [
+          {
+            "reset": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7862
+          },
+          {
+            "reset": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7923
+          },
+          {
+            "reset": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "mode": "logged-out",
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "订阅加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "Hanime1CardH": 0,
+              "Hanime1VideoGridSliver": 0,
+              "SliverList": 0,
+              "Obx": 2
+            },
+            "timelineEvents": 7919
+          }
+        ]
+      }
+    ],
+    "successRanking": {
+      "waiting": {
+        "mode": "ranking",
+        "page": 1,
+        "items": 4,
+        "requestPage": 2,
+        "loading": true,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "success": {
+        "mode": "ranking",
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    }
+  },
+  "pixels": [
+    {
+      "mode": "ranking",
+      "crop": [
+        0,
+        160,
+        1440,
+        3088
+      ],
+      "changedBox": null
+    },
+    {
+      "mode": "subscriptions",
+      "crop": [
+        0,
+        160,
+        1440,
+        3088
+      ],
+      "changedBox": null
+    },
+    {
+      "mode": "logged-out",
+      "crop": [
+        0,
+        160,
+        1440,
+        3088
+      ],
+      "changedBox": null
+    }
+  ],
+  "formal": {
+    "ranking": {
+      "beforeItems": 59,
+      "afterItems": 118,
+      "page": 2,
+      "totalPages": 363,
+      "retainedEnds": [
+        [
+          1,
+          59
+        ],
+        [
+          2,
+          118
+        ]
+      ]
+    },
+    "subscriptions": {
+      "beforeItems": 60,
+      "afterItems": 120,
+      "page": 2,
+      "totalPages": 19,
+      "retainedEnds": [
+        [
+          1,
+          60
+        ],
+        [
+          2,
+          120
+        ]
+      ]
+    },
+    "finalHome": {
+      "source": "site91",
+      "items": 41,
+      "page": 1,
+      "loadingFirst": false,
+      "loadingPage": false,
+      "error": null,
+      "scrollPixels": 0
+    },
+    "buildNumber": 2007,
+    "apkSha256": "9DBC01F26E3275258EA1691A9CD776B490D32C87AAC38859515C0E204E33CF6D",
+    "installedOutputArchiveMatch": true,
+    "accountDataPreserved": true,
+    "measurementDetached": true,
+    "adbForwardsRemaining": []
+  },
+  "frameCollectorValidation": {
+    "nodeContractPassed": 1,
+    "drawerActions": 2,
+    "frames": 226,
+    "captureWindow": {
+      "startMicros": 76305414171,
+      "endMicros": 76311091841
+    },
+    "allFramesInsideWindow": true,
+    "idleFrames": 0
+  },
+  "limits": [
+    "Local widget build counts do not prove overall FPS or player performance.",
+    "Historical DDS Flutter.Frame replay invalidates original formal-scroll frame statistics; these are excluded.",
+    "Device pixel crop excludes y<160 including part of probe top controls; not full-screen equivalence.",
+    "No long-term native-memory, first-frame, seek, weak-network or complete four-site acceptance."
+  ]
+}
