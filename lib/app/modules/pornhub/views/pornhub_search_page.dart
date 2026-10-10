@@ -1,6 +1,7 @@
 import '../../../widgets/retained_page_sliver.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -42,6 +43,11 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
   String? _error;
   int _page = 1, _request = 0;
   int? _total;
+  final _footerRevision = ValueNotifier(0);
+  List<Object> _resultSnapshot = const [];
+  String? _resultKind;
+  int? _resultPage;
+  Widget? _cachedResults;
   PornHubSource get _source => SourceRegistry.byId('pornhub') as PornHubSource;
   @override
   void initState() {
@@ -72,6 +78,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
   @override
   void dispose() {
     _request++;
+    _footerRevision.dispose();
     _input.dispose();
     _scroll.dispose();
     super.dispose();
@@ -119,7 +126,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
 
   void _selectKind(String kind) {
     if (kind == _kind) return;
-    setState(() {
+    _updateView(() {
       _kind = kind;
       _filters.clear();
       _groups = [];
@@ -135,7 +142,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
     if (!reset && (_loading || !_hasMore)) return;
     final request = ++_request, page = reset ? (targetPage ?? 1) : _page;
     final path = _path, kind = _kind;
-    setState(() {
+    _updateView(() {
       _loading = true;
       _error = null;
       _started = true;
@@ -151,7 +158,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
     try {
       final result = await _source.fetchBrowse(path, page: page, kind: kind);
       if (!mounted || request != _request) return;
-      setState(() {
+      _updateView(() {
         if (reset) {
           _videos.clear();
           _creators.clear();
@@ -172,7 +179,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
       });
     } catch (_) {
       if (mounted && request == _request) {
-        setState(() {
+        _updateView(() {
           _loading = false;
           _error = PornHubSource.requestFailureMessage;
         });
@@ -506,97 +513,119 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                             ),
                           )
                         else ...[
-                          if (_kind == 'videos' || _kind == 'clips')
-                            RetainedPageSliver(
-                              items: List.of(_videos),
-                              page: (_page - 1).clamp(1, 2147483647),
-                              footer: PornHubListFooter(
-                                currentPage: (_page - 1).clamp(1, 2147483647),
-                                onJump: (page) =>
-                                    _load(reset: true, targetPage: page),
-                                isLoadingMore: _loading,
-                                hasMore: _hasMore,
-                                errorText: _error,
-                                isEmpty: count == 0,
-                                emptyHint: _kind == 'playlists'
-                                    ? '已获取片单没有匹配项，可继续加载下一页'
-                                    : '没有找到匹配结果',
-                                onLoadMore: () => _load(reset: false),
-                              ),
-                              gridBuilder: (pageItems) => SliverPornHubGrid(
-                                videos: pageItems,
-                                onDownload: enqueuePornHubDownload,
-                              ),
-                            ),
-                          if (_kind == 'creators')
-                            SliverList.builder(
-                              itemCount: _creators.length,
-                              itemBuilder: (_, index) {
-                                final creator = _creators[index];
-                                return ListTile(
-                                  leading: _cover(creator.avatarUrl),
-                                  title: Text(creator.name),
-                                  trailing: const Icon(Icons.chevron_right),
-                                  onTap: () => Get.to<void>(
-                                    () => PornHubCreatorPage(
-                                      name: creator.name,
-                                      path: creator.path,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          if (_kind == 'playlists')
-                            SliverPadding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 8,
-                              ),
-                              sliver: SliverGrid.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 1.15,
-                                      crossAxisSpacing: 8,
-                                      mainAxisSpacing: 8,
-                                    ),
-                                itemCount: visiblePlaylists.length,
-                                itemBuilder: (_, index) {
-                                  final playlist = visiblePlaylists[index];
-                                  return PornHubPlaylistCard(
-                                    playlist: playlist,
-                                    onTap: () => Get.to<void>(
-                                      () => PornHubBrowsePage(
-                                        title: playlist.title,
-                                        path: playlist.url,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
+                          _buildResults(visiblePlaylists),
                           if (_kind != 'videos' && _kind != 'clips')
-                            SliverToBoxAdapter(
-                              child: PornHubListFooter(
-                                currentPage: (_page - 1).clamp(1, 2147483647),
-                                onJump: (page) =>
-                                    _load(reset: true, targetPage: page),
-                                isLoadingMore: _loading,
-                                hasMore: _hasMore,
-                                errorText: _error,
-                                isEmpty: count == 0,
-                                emptyHint: _kind == 'playlists'
-                                    ? '已获取片单没有匹配项，可继续加载下一页'
-                                    : '没有找到匹配结果',
-                                onLoadMore: () => _load(reset: false),
-                              ),
-                            ),
+                            SliverToBoxAdapter(child: _footer),
                         ],
                       ],
                     ),
                   ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _updateView(VoidCallback update) {
+    setState(() {
+      update();
+      if (_videos.isEmpty && _creators.isEmpty && _playlists.isEmpty) {
+        _cachedResults = null;
+        _resultSnapshot = const [];
+      }
+    });
+    _footerRevision.value++;
+  }
+
+  int get _resultCount =>
+      _videos.length +
+      _creators.length +
+      (_keyword.isEmpty
+          ? _playlists.length
+          : _playlists
+                .where(
+                  (p) => p.title.toLowerCase().contains(_keyword.toLowerCase()),
+                )
+                .length);
+
+  late final Widget _footer = ValueListenableBuilder<int>(
+    valueListenable: _footerRevision,
+    builder: (context, _, _) => PornHubListFooter(
+      currentPage: (_page - 1).clamp(1, 2147483647),
+      onJump: (page) => _load(reset: true, targetPage: page),
+      isLoadingMore: _loading,
+      hasMore: _hasMore,
+      errorText: _error,
+      isEmpty: _resultCount == 0,
+      emptyHint: _kind == 'playlists' ? '已获取片单没有匹配项，可继续加载下一页' : '没有找到匹配结果',
+      onLoadMore: () => _load(reset: false),
+    ),
+  );
+
+  Widget _buildResults(List<PornHubPlaylist> visiblePlaylists) {
+    final currentItems = _kind == 'creators'
+        ? _creators
+        : _kind == 'playlists'
+        ? visiblePlaylists
+        : _videos;
+    if (_cachedResults != null &&
+        _resultKind == _kind &&
+        _resultPage == _page &&
+        listEquals(_resultSnapshot, currentItems)) {
+      return _cachedResults!;
+    }
+    _resultKind = _kind;
+    _resultPage = _page;
+    _resultSnapshot = List<Object>.of(currentItems);
+    if (_kind == 'videos' || _kind == 'clips') {
+      return _cachedResults = RetainedPageSliver(
+        items: _resultSnapshot.cast<VideoItem>(),
+        page: (_page - 1).clamp(1, 2147483647),
+        footer: _footer,
+        gridBuilder: (pageItems) => SliverPornHubGrid(
+          videos: pageItems,
+          onDownload: enqueuePornHubDownload,
+        ),
+      );
+    }
+    if (_kind == 'creators') {
+      final creators = _resultSnapshot.cast<PornHubSubscription>();
+      return _cachedResults = SliverList.builder(
+        itemCount: _resultSnapshot.length,
+        itemBuilder: (_, index) {
+          final creator = creators[index];
+          return ListTile(
+            leading: _cover(creator.avatarUrl),
+            title: Text(creator.name),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Get.to<void>(
+              () => PornHubCreatorPage(name: creator.name, path: creator.path),
+            ),
+          );
+        },
+      );
+    }
+    final playlists = _resultSnapshot.cast<PornHubPlaylist>();
+    return _cachedResults = SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      sliver: SliverGrid.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.15,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        itemCount: _resultSnapshot.length,
+        itemBuilder: (_, index) {
+          final playlist = playlists[index];
+          return PornHubPlaylistCard(
+            playlist: playlist,
+            onTap: () => Get.to<void>(
+              () =>
+                  PornHubBrowsePage(title: playlist.title, path: playlist.url),
+            ),
+          );
+        },
       ),
     );
   }
