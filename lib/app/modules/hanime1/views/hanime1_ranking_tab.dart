@@ -172,6 +172,8 @@ class _Hanime1RankingTabState extends State<Hanime1RankingTab> {
         key: ValueKey(ctrl.currentRankTabIndex.value),
         items: List.of(ctrl.rankingVideos.toList(growable: false)),
         page: ctrl.rankingPage.value,
+        preserveEmptyAppend: ctrl.rankingPaging.lastLoadWasAppend,
+        replacementGeneration: ctrl.rankingPaging.replacementGeneration.value,
         footer: footer,
         gridBuilder: (pageItems) => Hanime1VideoGridSliver(
           items: pageItems,

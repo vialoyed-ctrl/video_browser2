@@ -151,6 +151,8 @@ class _Hanime1SubscriptionsTabState extends State<Hanime1SubscriptionsTab> {
       () => RetainedPageSliver(
         items: List.of(ctrl.subVideos.toList(growable: false)),
         page: ctrl.subscriptionsPage.value,
+        preserveEmptyAppend: ctrl.subscriptionsPaging.lastLoadWasAppend,
+        replacementGeneration: ctrl.subscriptionsPaging.replacementGeneration.value,
         footer: footer,
         gridBuilder: (pageItems) => Hanime1VideoGridSliver(
           items: pageItems,

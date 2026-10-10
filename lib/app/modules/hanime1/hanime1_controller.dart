@@ -184,6 +184,7 @@ class Hanime1Controller extends GetxController {
         page: requestedPage,
       );
       if (isClosed || !rankingPaging.isCurrent(request)) return;
+      rankingPaging.recordSuccess(append: append);
       if (append) {
         rankingVideos.addAll(pageData.items);
       } else {
@@ -246,6 +247,7 @@ class Hanime1Controller extends GetxController {
       );
       if (isClosed || !subscriptionsPaging.isCurrent(request)) return;
       subData.value = data;
+      subscriptionsPaging.recordSuccess(append: append);
       if (append) {
         subVideos.addAll(data.items);
       } else {

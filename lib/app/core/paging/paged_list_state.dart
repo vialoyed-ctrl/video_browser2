@@ -19,6 +19,16 @@ class PagedListState<T> {
   final RxnString error = RxnString();
   final RxnString pageError = RxnString();
 
+  // Only accepted successful replies change section ownership. Loading,
+  // errors and stale replies leave the previously rendered sections intact.
+  bool lastLoadWasAppend = false;
+  final RxInt replacementGeneration = 0.obs;
+
+  void recordSuccess({required bool append}) {
+    lastLoadWasAppend = append;
+    if (!append) replacementGeneration.value++;
+  }
+
   int _generation = 0;
   int get requestGeneration => _generation;
 
