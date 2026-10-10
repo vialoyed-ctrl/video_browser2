@@ -192,3 +192,12 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 正式2010排行59→118、订阅60→120均第2页，两页保留、flagsfalse/errornull。保留数据恢复91首页41/第1页/scroll0/Rootsite91；三APK一致C8B9732D46B536D04C11051203E99A754A800ED67F77D1CAD4B2B5A62238A94B；三自建转发已关闭。详情docs/refactor-hanime-boundaries-2026-10-10.md及摘要。可独立revert0a370ac；其他消费者默认推断仍待各自验证。
 
 继续独立路由控制器职责、其余分页/账号UI、播放器首帧/Seek/弱网/native长期内存和四站点综合回归。整个项目未完成，不重复旧批。
+
+
+## 18. PornHub独立搜索路由控制器（2026-10-10）
+
+实现f86ed8d，route-local ChangeNotifier接管四类请求/结果/错误/失效，UI资源仍view负责；原22契约和局部刷新保留。新增10controller+2UI回归，最终284通过/1原跳过、原7info/0error/0warning；审查total插值Important已RED修复并关闭。
+
+真机四模式十二窗口仍0卡片/行/网格重建，四裁剪像素无差异。正常2011实际视频31/74/117三页、切片8/创作者48/片单36-filter1；退出disposedtrue不代表GC。恢复91首页41/第1页/scroll0/Rootsite91，三APK一致2F8019EE51189B92C5A228C1A867135D1339220633EE6489FA581FF9BBD767E0；detach与6189/11614关闭。报告docs/refactor-ph-search-controller-2026-10-10.md、摘要及docs/superpowers计划ledger。可单独revertf86ed8d；原快照和以前阶段保留。
+
+继续播放器释放/切换等待边界、剩余路由与分页、首帧/Seek/弱网/native长期内存及四站点完整回归；完整项目尚未完成。
