@@ -559,6 +559,7 @@ class SearchController extends GetxController {
         pageSize: pageSize,
       );
       if (!paging.isCurrent(currentRequestId)) return;
+      paging.recordSuccess(append: false);
       results.assignAll(result.items);
       _preloadResults(result.items);
       // 如果当前是作者模式，不覆盖搜到的作者列表
@@ -640,6 +641,7 @@ class SearchController extends GetxController {
         pageSize: pageSize,
       );
       if (!paging.isCurrent(currentRequestId)) return;
+      paging.recordSuccess(append: append);
       if (append) {
         results.addAll(result.items);
       } else {

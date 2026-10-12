@@ -172,6 +172,58 @@ void main() {
       matchesGoldenFile('goldens/search-91-wide.png'),
     );
   });
+  for (final scenario in ['empty append', 'same-prefix replacement']) {
+    testWidgets('91 search accepted boundary contract $scenario', (
+      tester,
+    ) async {
+      final (controller, source) = await mount(tester, '91');
+      final next = controller.goToPage(2, append: true);
+      source.requests.last.complete(
+        VideoPage(
+          items: cards('second'),
+          page: 2,
+          totalPages: 20,
+          hasMore: true,
+        ),
+      );
+      await next;
+      await tester.pumpAndSettle();
+      List<int> sections() => tester
+          .widgetList<PageFooterScope>(
+            find.byType(PageFooterScope, skipOffstage: false),
+          )
+          .map((w) => w.page)
+          .toList();
+      expect(sections(), [1, 2]);
+      final before = List.of(controller.results);
+      if (scenario != 'empty append') {
+        final requests = source.requests.length;
+        await controller.goToPage(2);
+        expect(
+          source.requests.length,
+          requests,
+          reason: 'Same-page navigation remains a no-op',
+        );
+        expect(sections(), [1, 2]);
+      }
+      final pending = scenario == 'empty append'
+          ? controller.goToPage(3, append: true)
+          : controller.runSearch();
+      source.requests.last.complete(
+        VideoPage(
+          items: scenario == 'empty append' ? [] : before,
+          page: scenario == 'empty append' ? 3 : 1,
+          totalPages: 20,
+          hasMore: true,
+        ),
+      );
+      await pending;
+      await tester.pumpAndSettle();
+      expect(sections(), scenario == 'empty append' ? [1, 2] : [1]);
+      expect(controller.results, before);
+    });
+  }
+
   testWidgets('91 failed append retries the same page and jump resets scroll', (
     tester,
   ) async {

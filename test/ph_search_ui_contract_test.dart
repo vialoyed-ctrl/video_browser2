@@ -50,6 +50,42 @@ void main() {
 
   PornHubListFooter footer(WidgetTester tester) =>
       tester.widgetList<PornHubListFooter>(find.byType(PornHubListFooter)).last;
+  for (final scenario in ['empty append', 'same-prefix replacement']) {
+    testWidgets('ph search accepted boundary contract $scenario', (
+      tester,
+    ) async {
+      await mount(tester, 'videos');
+      footer(tester).onLoadMore!();
+      source.requests.last.complete(phSearchResponse('videos', 'second'));
+      await tester.pumpAndSettle();
+      List<int> sections() => tester
+          .widgetList<PageFooterScope>(
+            find.byType(PageFooterScope, skipOffstage: false),
+          )
+          .map((w) => w.page)
+          .toList();
+      expect(sections(), [1, 2]);
+      final before = [
+        ...phSearchResponse('videos', 'first').videos,
+        ...phSearchResponse('videos', 'second').videos,
+      ];
+      if (scenario == 'empty append') {
+        footer(tester).onLoadMore!();
+      } else {
+        footer(tester).onJump!(2);
+      }
+      source.requests.last.complete(
+        PornHubBrowseData(
+          videos: scenario == 'empty append' ? [] : before,
+          hasMore: true,
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(sections(), scenario == 'empty append' ? [1, 2] : [2]);
+      expect(find.byType(BiliVideoCardV), findsNWidgets(8));
+    });
+  }
+
   testWidgets(
     'ph ignored empty submit cannot reset scroll during pending refresh',
     (tester) async {

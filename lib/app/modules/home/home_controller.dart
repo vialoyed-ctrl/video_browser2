@@ -194,6 +194,7 @@ class HomeController extends GetxController {
       );
 
       if (!paging.isCurrent(generation)) return;
+      paging.recordSuccess(append: false);
       _seenVideoIds.clear();
       final newItems = result.items
           .where((v) => _seenVideoIds.add(v.id))
@@ -245,6 +246,7 @@ class HomeController extends GetxController {
       );
 
       if (!paging.isCurrent(generation)) return;
+      paging.recordSuccess(append: true);
       final newItems = result.items
           .where((v) => _seenVideoIds.add(v.id))
           .toList();

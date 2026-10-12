@@ -89,6 +89,9 @@ class _HomeVideoGrid extends StatelessWidget {
               ),
               items: List.of(controller.videos),
               page: controller.currentPage.value,
+              preserveEmptyAppend: controller.paging.lastLoadWasAppend,
+              replacementGeneration:
+                  controller.paging.replacementGeneration.value,
               footer: footer,
               gridBuilder: (items) => VideoGridSliver(
                 items: items,

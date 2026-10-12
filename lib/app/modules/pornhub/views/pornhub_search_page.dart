@@ -41,6 +41,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
   List<Object> _resultSnapshot = const [];
   String? _resultKind;
   int? _resultPage;
+  int? _resultReplacementGeneration;
   Widget? _cachedResults;
   @override
   void initState() {
@@ -486,16 +487,20 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
     if (_cachedResults != null &&
         _resultKind == _controller.kind &&
         _resultPage == _controller.nextPage &&
+        _resultReplacementGeneration == _controller.replacementGeneration &&
         listEquals(_resultSnapshot, currentItems)) {
       return _cachedResults!;
     }
     _resultKind = _controller.kind;
     _resultPage = _controller.nextPage;
+    _resultReplacementGeneration = _controller.replacementGeneration;
     _resultSnapshot = List<Object>.of(currentItems);
     if (_controller.kind == 'videos' || _controller.kind == 'clips') {
       return _cachedResults = RetainedPageSliver(
         items: _resultSnapshot.cast<VideoItem>(),
         page: (_controller.nextPage - 1).clamp(1, 2147483647),
+        preserveEmptyAppend: _controller.lastLoadWasAppend,
+        replacementGeneration: _controller.replacementGeneration,
         footer: _footer,
         gridBuilder: (pageItems) => SliverPornHubGrid(
           videos: pageItems,

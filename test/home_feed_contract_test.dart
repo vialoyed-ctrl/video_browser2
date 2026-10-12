@@ -1,3 +1,5 @@
+import 'package:video_browser/app/widgets/retained_page_sliver.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -95,6 +97,110 @@ void main() {
     expect(controller.videos, hasLength(4));
     return controller;
   }
+
+  testWidgets('home empty append preserves sections while probing next page', (
+    tester,
+  ) async {
+    final source = _FixtureSource();
+    final controller = await mount(tester, source: source);
+    controller.hasMore.value = true;
+    source.pending = Completer<VideoPage>();
+    final second = controller.loadMore();
+    source.pending!.complete(
+      VideoPage(
+        items: List.generate(
+          4,
+          (i) => VideoItem(
+            id: 'second-$i',
+            title: 'Fixture second $i',
+            author: '',
+            hlsUrl: '',
+          ),
+        ),
+        page: 2,
+        hasMore: true,
+      ),
+    );
+    await second;
+    await tester.pumpAndSettle();
+    List<int> sections() => tester
+        .widgetList<PageFooterScope>(
+          find.byType(PageFooterScope, skipOffstage: false),
+        )
+        .map((w) => w.page)
+        .toList();
+    expect(sections(), [1, 2]);
+    source.pending = Completer<VideoPage>();
+    final emptyReply = source.pending!;
+    final pending = controller.loadMore();
+    source.pending = Completer<VideoPage>();
+    emptyReply.complete(VideoPage(items: const [], page: 3, hasMore: true));
+    await tester.pump();
+    expect(controller.currentPage.value, 3);
+    expect(controller.loadingMore.value, true);
+    expect(sections(), [1, 2]);
+    source.pending!.complete(
+      VideoPage(
+        items: List.generate(
+          4,
+          (i) => VideoItem(
+            id: 'fourth-$i',
+            title: 'Fixture fourth $i',
+            author: '',
+            hlsUrl: '',
+          ),
+        ),
+        page: 4,
+        hasMore: false,
+      ),
+    );
+    await pending;
+    await tester.pumpAndSettle();
+    expect(sections(), [1, 2, 4]);
+    expect(controller.videos.length, 12);
+  });
+
+  testWidgets('home accepted boundary contract same-prefix replacement', (
+    tester,
+  ) async {
+    final source = _FixtureSource();
+    final controller = await mount(tester, source: source);
+    controller.hasMore.value = true;
+    source.pending = Completer<VideoPage>();
+    final next = controller.loadMore();
+    source.pending!.complete(
+      VideoPage(
+        items: List.generate(
+          4,
+          (i) => VideoItem(
+            id: 'second-$i',
+            title: 'Fixture second $i',
+            author: '',
+            hlsUrl: '',
+          ),
+        ),
+        page: 2,
+        hasMore: true,
+      ),
+    );
+    await next;
+    await tester.pumpAndSettle();
+    List<int> sections() => tester
+        .widgetList<PageFooterScope>(
+          find.byType(PageFooterScope, skipOffstage: false),
+        )
+        .map((w) => w.page)
+        .toList();
+    expect(sections(), [1, 2]);
+    final before = List.of(controller.videos);
+    source.pending = Completer<VideoPage>();
+    final replace = controller.loadFirstPage(page: 2);
+    source.pending!.complete(VideoPage(items: before, page: 2, hasMore: true));
+    await replace;
+    await tester.pumpAndSettle();
+    expect(sections(), [2]);
+    expect(controller.videos, before);
+  });
 
   for (final width in [400.0, 900.0]) {
     testWidgets('home geometry matches original UI at width $width', (

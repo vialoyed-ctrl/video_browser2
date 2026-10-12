@@ -504,6 +504,8 @@ class _SearchViewState extends State<SearchView> {
         key: ValueKey("${controller.keyword.value}:${controller.searchType.value}"),
         items: results,
         page: controller.currentPage.value,
+        preserveEmptyAppend: controller.paging.lastLoadWasAppend,
+        replacementGeneration: controller.paging.replacementGeneration.value,
         footer: footer,
         gridBuilder: (pageItems) => hanime1
             ? artistDirectory

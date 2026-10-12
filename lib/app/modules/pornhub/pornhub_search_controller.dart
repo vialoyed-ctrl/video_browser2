@@ -28,6 +28,8 @@ class PornHubSearchController extends ChangeNotifier {
   String? _error;
   int _nextPage = 1, _request = 0;
   int? _total;
+  bool _lastLoadWasAppend = false;
+  int _replacementGeneration = 0;
   late final List<VideoItem> videos = UnmodifiableListView(_videos);
   late final List<PornHubSubscription> creators = UnmodifiableListView(
     _creators,
@@ -46,6 +48,8 @@ class PornHubSearchController extends ChangeNotifier {
   String? get error => _error;
   int get nextPage => _nextPage;
   int? get total => _total;
+  bool get lastLoadWasAppend => _lastLoadWasAppend;
+  int get replacementGeneration => _replacementGeneration;
 
   Future<void> start() async {
     if (_disposed) return;
@@ -159,6 +163,8 @@ class PornHubSearchController extends ChangeNotifier {
       final result = await _source.fetchBrowse(path, page: page, kind: kind);
       if (_disposed || request != _request) return;
       _change(() {
+        _lastLoadWasAppend = !reset;
+        if (reset) _replacementGeneration++;
         if (reset) {
           _videos.clear();
           _creators.clear();
