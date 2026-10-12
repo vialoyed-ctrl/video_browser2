@@ -1,0 +1,545 @@
+{
+  "baseline": "92feda8",
+  "implementation": "01154d4",
+  "device": "PMB110 BUPR8HWKLZTCHAPN API36",
+  "tests": {
+    "contracts": 11,
+    "fullPassed": 380,
+    "originalSkipped": 1,
+    "suiteExit": 0,
+    "analyzerErrors": 0,
+    "analyzerWarnings": 0,
+    "originalInfo": 7,
+    "analyzerExit": 1
+  },
+  "hlsRounds": [
+    {
+      "run": "1791845742821",
+      "before": {
+        "action": "status",
+        "elapsedMs": 0,
+        "taskId": "codex-download-1791845728848-1791845742821",
+        "status": "running",
+        "progress": 0.06666666666666667,
+        "completedSegments": 2,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 1,
+        "taskCount": 1,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "canceled": {
+        "action": "cancel",
+        "elapsedMs": 2,
+        "taskId": "codex-download-1791845728848-1791845742821",
+        "status": "canceled",
+        "progress": 0.13333333333333333,
+        "completedSegments": 4,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 1,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 1329,
+        "taskId": "codex-download-1791845728848-1791845742821",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 30,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": 7305811,
+        "activeCount": 0,
+        "taskCount": 1,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    },
+    {
+      "run": "1791845746504",
+      "before": {
+        "action": "status",
+        "elapsedMs": 0,
+        "taskId": "codex-download-1791845728848-1791845746504",
+        "status": "running",
+        "progress": 0.13333333333333333,
+        "completedSegments": 4,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 1,
+        "taskCount": 2,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "canceled": {
+        "action": "cancel",
+        "elapsedMs": 2,
+        "taskId": "codex-download-1791845728848-1791845746504",
+        "status": "canceled",
+        "progress": 0.13333333333333333,
+        "completedSegments": 4,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 2,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 1585,
+        "taskId": "codex-download-1791845728848-1791845746504",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 30,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": 7305811,
+        "activeCount": 0,
+        "taskCount": 2,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    },
+    {
+      "run": "1791845750372",
+      "before": {
+        "action": "status",
+        "elapsedMs": 0,
+        "taskId": "codex-download-1791845728848-1791845750372",
+        "status": "running",
+        "progress": 0.13333333333333333,
+        "completedSegments": 4,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 1,
+        "taskCount": 3,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "canceled": {
+        "action": "cancel",
+        "elapsedMs": 2,
+        "taskId": "codex-download-1791845728848-1791845750372",
+        "status": "canceled",
+        "progress": 0.13333333333333333,
+        "completedSegments": 4,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 3,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 1218,
+        "taskId": "codex-download-1791845728848-1791845750372",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 30,
+        "totalSegments": 30,
+        "error": null,
+        "outputBytes": 7305811,
+        "activeCount": 0,
+        "taskCount": 3,
+        "isolatedRootName": "codex-download-probe-1791845728848",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    }
+  ],
+  "mp4Rounds": [
+    {
+      "mode": "cancel",
+      "run": "1791846211811",
+      "stopped": {
+        "action": "cancel",
+        "elapsedMs": 3,
+        "taskId": "codex-download-1791846191480-1791846211811",
+        "status": "canceled",
+        "progress": 0.015171019665039162,
+        "completedSegments": 0,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 1,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "serverAbort": {
+        "run": "1791846211811",
+        "status": 200,
+        "start": 0,
+        "end": 2429895,
+        "bytesSent": 40960,
+        "aborted": true,
+        "finished": false
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 193,
+        "taskId": "codex-download-1791846191480-1791846211811",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 1,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": 2429896,
+        "activeCount": 0,
+        "taskCount": 1,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    },
+    {
+      "mode": "cancel",
+      "run": "1791846213003",
+      "stopped": {
+        "action": "cancel",
+        "elapsedMs": 3,
+        "taskId": "codex-download-1791846191480-1791846213003",
+        "status": "canceled",
+        "progress": 0.015171019665039162,
+        "completedSegments": 0,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 2,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "serverAbort": {
+        "run": "1791846213003",
+        "status": 200,
+        "start": 0,
+        "end": 2429895,
+        "bytesSent": 36864,
+        "aborted": true,
+        "finished": false
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 177,
+        "taskId": "codex-download-1791846191480-1791846213003",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 1,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": 2429896,
+        "activeCount": 0,
+        "taskCount": 2,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    },
+    {
+      "mode": "cancel",
+      "run": "1791846214189",
+      "stopped": {
+        "action": "cancel",
+        "elapsedMs": 3,
+        "taskId": "codex-download-1791846191480-1791846214189",
+        "status": "canceled",
+        "progress": 0.01685668851671018,
+        "completedSegments": 0,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 3,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "serverAbort": {
+        "run": "1791846214189",
+        "status": 200,
+        "start": 0,
+        "end": 2429895,
+        "bytesSent": 40960,
+        "aborted": true,
+        "finished": false
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 169,
+        "taskId": "codex-download-1791846191480-1791846214189",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 1,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": 2429896,
+        "activeCount": 0,
+        "taskCount": 3,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    },
+    {
+      "mode": "timeout",
+      "run": "1791846215341",
+      "stopped": {
+        "action": "settle",
+        "elapsedMs": 1752,
+        "taskId": "codex-download-1791846191480-1791846215341",
+        "status": "failed",
+        "progress": 0.07079809177018276,
+        "completedSegments": 0,
+        "totalSegments": 0,
+        "error": "TimeoutException: MP4下载超时",
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 4,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "serverAbort": {
+        "run": "1791846215341",
+        "status": 200,
+        "start": 0,
+        "end": 2429895,
+        "bytesSent": 172032,
+        "aborted": true,
+        "finished": false
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 183,
+        "taskId": "codex-download-1791846191480-1791846215341",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 1,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": 2429896,
+        "activeCount": 0,
+        "taskCount": 4,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    },
+    {
+      "mode": "timeout",
+      "run": "1791846218067",
+      "stopped": {
+        "action": "settle",
+        "elapsedMs": 1770,
+        "taskId": "codex-download-1791846191480-1791846218067",
+        "status": "failed",
+        "progress": 0.06911242291851175,
+        "completedSegments": 0,
+        "totalSegments": 0,
+        "error": "TimeoutException: MP4下载超时",
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 5,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "serverAbort": {
+        "run": "1791846218067",
+        "status": 200,
+        "start": 0,
+        "end": 2429895,
+        "bytesSent": 172032,
+        "aborted": true,
+        "finished": false
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 164,
+        "taskId": "codex-download-1791846191480-1791846218067",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 1,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": 2429896,
+        "activeCount": 0,
+        "taskCount": 5,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    },
+    {
+      "mode": "timeout",
+      "run": "1791846220727",
+      "stopped": {
+        "action": "settle",
+        "elapsedMs": 1764,
+        "taskId": "codex-download-1791846191480-1791846220727",
+        "status": "failed",
+        "progress": 0.07079809177018276,
+        "completedSegments": 0,
+        "totalSegments": 0,
+        "error": "TimeoutException: MP4下载超时",
+        "outputBytes": null,
+        "activeCount": 0,
+        "taskCount": 6,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      },
+      "serverAbort": {
+        "run": "1791846220727",
+        "status": 200,
+        "start": 0,
+        "end": 2429895,
+        "bytesSent": 172032,
+        "aborted": true,
+        "finished": false
+      },
+      "retried": {
+        "action": "retry",
+        "elapsedMs": 172,
+        "taskId": "codex-download-1791846191480-1791846220727",
+        "status": "completed",
+        "progress": 1,
+        "completedSegments": 1,
+        "totalSegments": 0,
+        "error": null,
+        "outputBytes": 2429896,
+        "activeCount": 0,
+        "taskCount": 6,
+        "isolatedRootName": "codex-download-probe-1791846191480",
+        "persistentUserTasksLoaded": false,
+        "preferencesAreInMemory": true
+      }
+    }
+  ],
+  "hlsArtifact": {
+    "isolatedRootName": "codex-download-probe-1791845728848",
+    "taskCount": 3,
+    "outputBytes": 7305811,
+    "media": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 640,
+          "height": 360
+        },
+        {
+          "codec_name": "aac"
+        }
+      ],
+      "format": {
+        "duration": "60.160000"
+      }
+    },
+    "decodeExit": 0,
+    "nativeOutputPath": "/data/user/0/com.example.video_browser/cache/codex-download-probe-1791845728848/fixture/unknown_Neutral Butterfly HLS.mp4"
+  },
+  "mp4Artifact": {
+    "isolatedRootName": "codex-download-probe-1791846191480",
+    "taskCount": 6,
+    "outputBytes": 2429896,
+    "media": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "codec_name": "aac"
+        }
+      ],
+      "format": {
+        "duration": "7.540000"
+      }
+    },
+    "decodeExit": 0,
+    "nativeOutputPath": "/data/user/0/com.example.video_browser/cache/codex-download-probe-1791846191480/fixture/unknown_Neutral Butterfly MP4.mp4"
+  },
+  "mp4ByteAndTransportProof": {
+    "sourceAndDownloadSha256": "c78f3f9d3e4834a91e83a0fb0fd005348354329ea58443f4156407b5f6d80413",
+    "sourceBytes": 2429896,
+    "serverRequests": 12,
+    "abortedRequests": 6,
+    "finishedRetries": 6,
+    "cancelSettleMs": [
+      3,
+      3,
+      3
+    ],
+    "timeoutSettleMs": [
+      1752,
+      1770,
+      1764
+    ]
+  },
+  "normal": {
+    "normalBuild": 2021,
+    "outputArchiveDeviceSha256": "2FDCC9CA882DD8FC65EDB6B719F465BAF7AFCAB7381BDF9A37A4B0B356DCC128",
+    "apkBytes": 39109493,
+    "homeVerified": true,
+    "homeItems": 41,
+    "page": 1,
+    "scroll": 0,
+    "platform": "site91",
+    "loading": false,
+    "error": null
+  },
+  "cleanup": {
+    "hls": {
+      "exportedRootRemoved": true,
+      "emptyStartupRootsRemoved": [
+        "codex-download-probe-1791845707897"
+      ],
+      "remainingProbeRoots": []
+    },
+    "mp4": {
+      "exportedRootRemoved": true,
+      "emptyStartupRootsRemoved": [
+        "codex-download-probe-1791846171196"
+      ],
+      "remainingProbeRoots": []
+    },
+    "forwardEmpty": true,
+    "reverseEmpty": true,
+    "fixtureListeners": 0
+  },
+  "limits": [
+    "native measurements use new code; no native baseline throughput/FPS improvement claim",
+    "all HLS rounds reused one output filename sequentially, as did all MP4 rounds",
+    "probe timeout is injected2s; production default60minutes",
+    "preexisting clean truncated EOF/partial-stream-error coverage remains deferred",
+    "Media3 preload/cache is separate from DownloadService and not accepted by this batch"
+  ]
+}

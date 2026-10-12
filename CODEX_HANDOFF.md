@@ -263,3 +263,8 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 ## 29. HLS错误重试按钮层级（2026-10-13）
 
 实现6a73ff6，仅错误背景/内容分层，正常控制回调/解析/播放器保留。有效RED1过1败，GREEN6，完整369/1原跳过、原7info；只读审查无阻断。PMB110三真实503故障中心重试均恢复，原生position推进，最终9创建/9释放。正常2020首页41/1/scroll0/site91，三APK一致854A97B938341EDF0E69DEB18FA8773E75280808D86B791608023D19FAF03504；服务/监听/映射/attach已清理。报告docs/refactor-error-retry-2026-10-13.md及摘要。可独立revert6a73ff6。隐藏控制栏覆盖与长错误/大字体原有溢出暂留，未宣称FPS/首帧/自动恢复。继续短暂HLS中断、缓存下载、其他生命周期和四站点综合回归，完整项目未完成。
+
+
+## 30. 下载取消/重试执行边界（2026-10-13）
+
+实现01154d4，独立run所有权/Token/done，旧回复隔离、同ID重试等旧文件工作、排队HLS清理、MP4自有流/RAF及底层取消屏障。有效RED覆盖后最终11契约/380全量/1原跳过、原7info；独立审查两Important补契约修复后无阻断。PMB110三HLS取消重试30片/解码0；六MP4取消/超时有服务器6abort/6完整重试，文件与源hash一致/解码0。正常2021恢复首页41/1/scroll0/site91，三APK一致2FDCC9CA882DD8FC65EDB6B719F465BAF7AFCAB7381BDF9A37A4B0B356DCC128。自有目录/服务/监听/映射/attach清理。报告docs/refactor-download-lifecycle-2026-10-13.md及摘要；可独立revert01154d4。未测原生旧新吞吐/FPS；截断EOF/partial-error原有Minor覆盖暂留，继续Media3cache/preload、短HLS中断、可见帧/其他生命周期、列表账号/91搜索和四站点综合验收，整体未完成。
