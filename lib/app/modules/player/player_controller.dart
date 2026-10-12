@@ -161,6 +161,7 @@ class PlayerController extends GetxController {
 
   /// 正在飞的拖动 seek 任务；同一时刻最多一个。
   Future<void>? _scrubSeekTask;
+  _ScrubReleaseSignal _scrubReleaseSignal = _ScrubReleaseSignal();
 
   /// Final seek/resume is dispatched immediately on release; this tracks only cleanup.
   Future<void>? _scrubFinishTask;
@@ -1038,9 +1039,12 @@ class PlayerController extends GetxController {
   ) {
     final previousCleanup = _scrubFinishTask;
     final inFlightSeek = _scrubSeekTask;
+    final releaseSignal = _scrubReleaseSignal;
     final releaseAt = DateTime.now();
     _scrubFinishTask = () async {
-      if (previousCleanup != null) await previousCleanup;
+      if (!await _awaitOwnedScrub(controller, releaseSignal, previousCleanup)) {
+        return;
+      }
       await _completeScrubCleanup(
         controller,
         inFlightSeek,
@@ -1048,8 +1052,32 @@ class PlayerController extends GetxController {
         shouldResume,
         pauseTask,
         releaseAt,
+        releaseSignal,
       );
     }();
+    // Release may revoke this task before its platform replies arrive.
+    _scrubFinishTask!.ignore();
+  }
+
+  bool _ownsScrubPlayer(
+    VideoPlayerController controller,
+    _ScrubReleaseSignal releaseSignal,
+  ) =>
+      identical(_videoPlayerController, controller) &&
+      !releaseSignal.isCompleted;
+
+  Future<bool> _awaitOwnedScrub(
+    VideoPlayerController controller,
+    _ScrubReleaseSignal releaseSignal,
+    Future<void>? operation,
+  ) async {
+    if (!_ownsScrubPlayer(controller, releaseSignal)) {
+      // Dispatch itself can synchronously revoke ownership before this await.
+      operation?.ignore();
+      return false;
+    }
+    if (!await releaseSignal.wait(operation)) return false;
+    return _ownsScrubPlayer(controller, releaseSignal);
   }
 
   Future<void> _dispatchReleaseSeek(
@@ -1092,38 +1120,55 @@ class PlayerController extends GetxController {
     bool shouldResume,
     Future<void>? pauseTask,
     DateTime releaseAt,
+    _ScrubReleaseSignal releaseSignal,
   ) async {
     // Pause and seek use separate Pigeon message channels. Waiting for both native
     // acknowledgements prevents a late pause from overriding the release-time play.
     // The seek acknowledgement only means ExoPlayer accepted the target; it does not
     // wait for network buffering or frame decode.
-    await _awaitScrubPause(pauseTask);
+    if (!await _awaitOwnedScrub(
+      controller,
+      releaseSignal,
+      _awaitScrubPause(pauseTask),
+    )) {
+      return;
+    }
     try {
-      await finalSeek;
+      if (!await _awaitOwnedScrub(controller, releaseSignal, finalSeek)) return;
     } catch (error) {
       AppLogger.w('Player', '拖动结束 seek 失败: $error');
     }
-    if (shouldResume && identical(_videoPlayerController, controller)) {
+    if (shouldResume && _ownsScrubPlayer(controller, releaseSignal)) {
       AppLogger.i(
         'Player',
         '松手后恢复播放命令延迟 ${DateTime.now().difference(releaseAt).inMilliseconds}ms',
       );
       // Send play only after pause and the release seek have been acknowledged.
       // This avoids the independent platform channels racing and leaving ExoPlayer paused.
-      await _dispatchReleasePlayback(controller);
+      if (!await _awaitOwnedScrub(
+        controller,
+        releaseSignal,
+        _dispatchReleasePlayback(controller),
+      )) {
+        return;
+      }
     }
     if (inFlightSeek != null) {
       try {
-        await inFlightSeek;
+        if (!await _awaitOwnedScrub(controller, releaseSignal, inFlightSeek)) {
+          return;
+        }
       } catch (_) {
         // The final seek supersedes a failed intermediate drag seek.
       }
       if (identical(_scrubSeekTask, inFlightSeek)) _scrubSeekTask = null;
     }
-    if (!_liveSeekActive && identical(_videoPlayerController, controller)) {
+    if (!_liveSeekActive && _ownsScrubPlayer(controller, releaseSignal)) {
       await _stopNativeScrubbing();
     }
-    if (!_liveSeekActive) _lastScrubSeekDispatchedAt = null;
+    if (!_liveSeekActive && _ownsScrubPlayer(controller, releaseSignal)) {
+      _lastScrubSeekDispatchedAt = null;
+    }
   }
 
   /// 手指位置 → 吸附到帧 → 夹到时长范围 → 发布并请求 seek。
@@ -1139,13 +1184,22 @@ class PlayerController extends GetxController {
 
   void _scheduleScrubSeekPump() {
     if (_scrubSeekTask != null) return;
-    _scrubSeekTask = _pumpScrubSeek().whenComplete(() {
+    final controller = _videoPlayerController;
+    if (controller == null) return;
+    final releaseSignal = _scrubReleaseSignal;
+    late final Future<void> task;
+    task = _pumpScrubSeek().whenComplete(() {
+      if (!identical(_scrubSeekTask, task)) return;
       _scrubSeekTask = null;
-      // Close the small completion race where a new target arrives as the prior pump exits.
-      if (_liveSeekActive && _scrubLatestTarget != null) {
+      // Only the current player and task may hand off the pending target.
+      if (_liveSeekActive &&
+          _scrubLatestTarget != null &&
+          _ownsScrubPlayer(controller, releaseSignal)) {
         _scheduleScrubSeekPump();
       }
     });
+    _scrubSeekTask = task;
+    task.ignore();
   }
 
   void _startNativeScrubbing() {
@@ -1166,13 +1220,16 @@ class PlayerController extends GetxController {
   Future<void> _stopNativeScrubbing() async {
     final playerId = _nativeScrubbingPlayerId;
     final enableTask = _nativeScrubbingEnableTask;
+    final controller = _videoPlayerController;
+    final releaseSignal = _scrubReleaseSignal;
     _nativeScrubbingPlayerId = null;
     _nativeScrubbingEnableTask = null;
-    if (playerId == null) return;
-    await enableTask;
-    await Media3CacheService.setScrubbingModeForPlayer(
-      playerId,
-      enabled: false,
+    if (playerId == null || controller == null) return;
+    if (!await _awaitOwnedScrub(controller, releaseSignal, enableTask)) return;
+    await _awaitOwnedScrub(
+      controller,
+      releaseSignal,
+      Media3CacheService.setScrubbingModeForPlayer(playerId, enabled: false),
     );
   }
 
@@ -1192,13 +1249,26 @@ class PlayerController extends GetxController {
   Future<void> _pumpScrubSeek() async {
     final controller = _videoPlayerController;
     if (controller == null) return;
+    final releaseSignal = _scrubReleaseSignal;
     // Do not let the first seek race the native mode transition.
-    await _nativeScrubbingEnableTask;
+    if (!await _awaitOwnedScrub(
+      controller,
+      releaseSignal,
+      _nativeScrubbingEnableTask,
+    )) {
+      return;
+    }
     // Pause and seek travel on separate platform channels. Wait for the pause acknowledgement
     // before issuing the first preview seek, or playback can advance while the seek is applied.
     final pauseTask = _seekPauseTask ?? _scrubPauseTask;
-    await _awaitScrubPause(pauseTask);
-    while (_liveSeekActive) {
+    if (!await _awaitOwnedScrub(
+      controller,
+      releaseSignal,
+      _awaitScrubPause(pauseTask),
+    )) {
+      return;
+    }
+    while (_liveSeekActive && _ownsScrubPlayer(controller, releaseSignal)) {
       if (_scrubLatestTarget == null) break;
       final lastSentAt = _lastScrubSeekDispatchedAt;
       if (lastSentAt != null) {
@@ -1206,14 +1276,22 @@ class PlayerController extends GetxController {
         final remaining = _scrubSeekInterval - elapsed;
         if (remaining > Duration.zero) await Future<void>.delayed(remaining);
       }
-      if (!_liveSeekActive) break;
+      if (!_liveSeekActive || !_ownsScrubPlayer(controller, releaseSignal)) {
+        break;
+      }
       // Re-read after the throttle so intermediate pointer samples collapse to the newest one.
       final target = _scrubLatestTarget;
       if (target == null) break;
       _scrubLatestTarget = null;
       _lastScrubSeekDispatchedAt = DateTime.now();
       try {
-        await controller.seekTo(target);
+        if (!await _awaitOwnedScrub(
+          controller,
+          releaseSignal,
+          controller.seekTo(target),
+        )) {
+          break;
+        }
       } catch (e) {
         AppLogger.w('Player', '拖动 seek 失败: $e');
         break;
@@ -1332,37 +1410,36 @@ class PlayerController extends GetxController {
   }
 
   Future<void> _releaseCurrentPlayer() async {
+    final old = _videoPlayerController;
+    _videoPlayerController = null;
+    if (old != null) old.removeListener(_onPlayerValueChanged);
+    if (!_scrubReleaseSignal.isCompleted) _scrubReleaseSignal.complete();
     _liveSeekActive = false;
     _scrubLatestTarget = null;
     isScrubbing.value = false;
     isSeeking.value = false;
-    try {
-      await _scrubFinishTask;
-    } catch (_) {
-      // Cleanup is best-effort; disposing the player must still proceed.
-    }
+    // Cancellation releases owned waiters. Platform RPCs themselves remain
+    // uncancellable, so observe replies without blocking native disposal.
+    _scrubFinishTask?.ignore();
+    _scrubSeekTask?.ignore();
+    _scrubPauseTask?.ignore();
+    _seekPauseTask?.ignore();
+    _nativeScrubbingEnableTask?.ignore();
     _scrubFinishTask = null;
-    try {
-      await _scrubSeekTask;
-    } catch (_) {
-      // A scrub may be canceled while its final platform request is being disposed.
-    }
     _scrubSeekTask = null;
-    await _awaitScrubPause(_scrubPauseTask);
-    await _awaitScrubPause(_seekPauseTask);
     _scrubPauseTask = null;
     _seekPauseTask = null;
-    await _stopNativeScrubbing();
+    // Native disposal releases this player's scrubbing state with the player.
+    _nativeScrubbingPlayerId = null;
+    _nativeScrubbingEnableTask = null;
     _activeScrubController = null;
+    _lastScrubSeekDispatchedAt = null;
 
     isInitialized.value = false;
     playing.value = false;
     buffering.value = false;
     HlsCacheProxy.instance.stopCurrentAcceleration();
-    final old = _videoPlayerController;
-    _videoPlayerController = null;
     if (old != null) {
-      old.removeListener(_onPlayerValueChanged);
       try {
         // Request silence first, but a delayed pause reply must not hold up
         // disposal. Native disposal releases the old player before takeover.
@@ -1469,6 +1546,7 @@ class PlayerController extends GetxController {
             '⚡ 命中提前打开的原生控制器 '
                 '(ready=${preloaded.value.isInitialized})，直接接管',
           );
+          _scrubReleaseSignal = _ScrubReleaseSignal();
           _videoPlayerController = preloaded;
           isInitialized.value = preloaded.value.isInitialized;
           preloaded.addListener(_onPlayerValueChanged);
@@ -1913,6 +1991,7 @@ class PlayerController extends GetxController {
         item: item,
       );
       openingController = controller;
+      _scrubReleaseSignal = _ScrubReleaseSignal();
       _videoPlayerController = controller;
       controller.addListener(_onPlayerValueChanged);
 
@@ -2288,5 +2367,44 @@ class PlayerController extends GetxController {
       overlays: SystemUiOverlay.values,
     );
     super.onClose();
+  }
+}
+
+// Completed operations remove their waiter instead of leaving a callback on
+// one never-completed cancellation Future for the entire playback session.
+class _ScrubReleaseSignal {
+  bool isCompleted = false;
+  final _waiters = <Completer<bool>>{};
+
+  Future<bool> wait(Future<void>? operation) {
+    if (isCompleted) {
+      operation?.ignore();
+      return Future<bool>.value(false);
+    }
+    if (operation == null) return Future<bool>.value(true);
+    final waiter = Completer<bool>();
+    _waiters.add(waiter);
+    unawaited(
+      operation.then<void>(
+        (_) {
+          if (!waiter.isCompleted) waiter.complete(true);
+        },
+        onError: (Object error, StackTrace stack) {
+          if (!waiter.isCompleted) waiter.completeError(error, stack);
+        },
+      ),
+    );
+    return waiter.future.whenComplete(() {
+      _waiters.remove(waiter);
+    });
+  }
+
+  void complete() {
+    if (isCompleted) return;
+    isCompleted = true;
+    for (final waiter in _waiters.toList()) {
+      if (!waiter.isCompleted) waiter.complete(false);
+    }
+    _waiters.clear();
   }
 }
