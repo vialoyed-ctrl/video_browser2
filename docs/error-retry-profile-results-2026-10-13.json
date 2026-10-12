@@ -1,0 +1,299 @@
+{
+  "baseline": "26ccff3",
+  "implementation": "6a73ff6",
+  "device": "PMB110 BUPR8HWKLZTCHAPN API36",
+  "fullTests": {
+    "passed": 369,
+    "originalSkipped": 1,
+    "exit": 0
+  },
+  "analyzer": {
+    "errors": 0,
+    "warnings": 0,
+    "originalInfo": 7,
+    "exit": 1
+  },
+  "widgetContracts": 6,
+  "nativeRetryRounds": [
+    {
+      "run": "1791843632908",
+      "tapPx": [
+        720,
+        787
+      ],
+      "sourceFailures503": 13,
+      "recovered": {
+        "action": "status",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [
+          3
+        ],
+        "creations": 3,
+        "disposals": 2,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "sdkPlaying": true,
+        "sdkBuffering": false,
+        "sdkError": null,
+        "buffered": [],
+        "error": null,
+        "durationMs": 60000,
+        "nativePositionMs": 58,
+        "videoRectPx": [
+          0,
+          160,
+          2560,
+          1600
+        ]
+      },
+      "progressed": {
+        "action": "status",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [
+          3
+        ],
+        "creations": 3,
+        "disposals": 2,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "sdkPlaying": true,
+        "sdkBuffering": false,
+        "sdkError": null,
+        "buffered": [],
+        "error": null,
+        "durationMs": 60000,
+        "nativePositionMs": 778,
+        "videoRectPx": [
+          0,
+          160,
+          2560,
+          1600
+        ]
+      },
+      "closed": {
+        "action": "close",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [],
+        "creations": 3,
+        "disposals": 3,
+        "activeRoutes": false,
+        "initialized": null,
+        "playing": null,
+        "sdkPlaying": null,
+        "sdkBuffering": null,
+        "sdkError": null,
+        "buffered": null,
+        "error": null,
+        "durationMs": null,
+        "nativePositionMs": null,
+        "videoRectPx": null
+      }
+    },
+    {
+      "run": "1791843648932",
+      "tapPx": [
+        720,
+        787
+      ],
+      "sourceFailures503": 11,
+      "recovered": {
+        "action": "status",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [
+          6
+        ],
+        "creations": 6,
+        "disposals": 5,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "sdkPlaying": true,
+        "sdkBuffering": false,
+        "sdkError": null,
+        "buffered": [],
+        "error": null,
+        "durationMs": 60000,
+        "nativePositionMs": 58,
+        "videoRectPx": [
+          0,
+          160,
+          2560,
+          1600
+        ]
+      },
+      "progressed": {
+        "action": "status",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [
+          6
+        ],
+        "creations": 6,
+        "disposals": 5,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "sdkPlaying": true,
+        "sdkBuffering": false,
+        "sdkError": null,
+        "buffered": [
+          [
+            0,
+            52000
+          ]
+        ],
+        "error": null,
+        "durationMs": 60000,
+        "nativePositionMs": 935,
+        "videoRectPx": [
+          0,
+          160,
+          2560,
+          1600
+        ]
+      },
+      "closed": {
+        "action": "close",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [],
+        "creations": 6,
+        "disposals": 6,
+        "activeRoutes": false,
+        "initialized": null,
+        "playing": null,
+        "sdkPlaying": null,
+        "sdkBuffering": null,
+        "sdkError": null,
+        "buffered": null,
+        "error": null,
+        "durationMs": null,
+        "nativePositionMs": null,
+        "videoRectPx": null
+      }
+    },
+    {
+      "run": "1791843665037",
+      "tapPx": [
+        720,
+        787
+      ],
+      "sourceFailures503": 14,
+      "recovered": {
+        "action": "status",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [
+          9
+        ],
+        "creations": 9,
+        "disposals": 8,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "sdkPlaying": true,
+        "sdkBuffering": false,
+        "sdkError": null,
+        "buffered": [],
+        "error": null,
+        "durationMs": 60000,
+        "nativePositionMs": 0,
+        "videoRectPx": [
+          0,
+          160,
+          2560,
+          1600
+        ]
+      },
+      "progressed": {
+        "action": "status",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [
+          9
+        ],
+        "creations": 9,
+        "disposals": 8,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "sdkPlaying": true,
+        "sdkBuffering": false,
+        "sdkError": null,
+        "buffered": [],
+        "error": null,
+        "durationMs": 60000,
+        "nativePositionMs": 825,
+        "videoRectPx": [
+          0,
+          160,
+          2560,
+          1600
+        ]
+      },
+      "closed": {
+        "action": "close",
+        "cycles": 0,
+        "completedScrubs": 0,
+        "beforeClose": null,
+        "activeNativeRpcIds": [],
+        "creations": 9,
+        "disposals": 9,
+        "activeRoutes": false,
+        "initialized": null,
+        "playing": null,
+        "sdkPlaying": null,
+        "sdkBuffering": null,
+        "sdkError": null,
+        "buffered": null,
+        "error": null,
+        "durationMs": null,
+        "nativePositionMs": null,
+        "videoRectPx": null
+      }
+    }
+  ],
+  "normal": {
+    "build": 2020,
+    "threeApkSha256": "854A97B938341EDF0E69DEB18FA8773E75280808D86B791608023D19FAF03504",
+    "homeItems": 41,
+    "page": 1,
+    "scroll": 0,
+    "platform": "site91",
+    "loading": false,
+    "error": null
+  },
+  "cleanup": {
+    "ownedServers": 0,
+    "listeners8788": 0,
+    "forwardEmpty": true,
+    "reverseEmpty": true,
+    "terminalHandles": [
+      17798,
+      94267,
+      50950,
+      15716,
+      37697,
+      56300
+    ]
+  },
+  "limits": [
+    "not automatic recovery after persistent 503",
+    "not FPS/visible Seek latency/native global leak proof",
+    "hidden controls and enlarged text/long errors not covered; preexisting short-column overflow remains"
+  ]
+}
