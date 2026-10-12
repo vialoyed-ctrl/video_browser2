@@ -29,7 +29,6 @@ import '../../../routes/app_navigator.dart';
 import '../../../widgets/app_toast.dart';
 import '../../../widgets/bili_video_card.dart';
 import '../widgets/pornhub_actions.dart';
-import 'pornhub_creator_page.dart';
 import 'pornhub_browse_page.dart';
 import '../pornhub_controller.dart';
 
@@ -321,14 +320,10 @@ class _PornHubVideoInfoPanelState extends State<PornHubVideoInfoPanel> {
         : (extra != null && extra.pornstars.isNotEmpty
               ? extra.pornstars.first.path
               : '');
-    if (path.isNotEmpty) {
-      Get.to<void>(
-        () => PornHubCreatorPage(name: widget.video.author, path: path),
-      );
-      return;
-    }
-    // 兜底：详情未解析出 UP主路径时，按作者名走原有搜索页。
-    AppNavigator.toAuthor(widget.video.author);
+    AppNavigator.toPornHubAuthor(
+      widget.video.author,
+      path: path.isNotEmpty ? path : widget.video.authorUrl,
+    );
   }
 
   Future<void> _toggleSubscription() async {
@@ -887,6 +882,8 @@ class _PornHubVideoInfoPanelState extends State<PornHubVideoInfoPanel> {
         return BiliVideoCardV(
           video: video,
           onTap: () => widget.onPlayVideo(video),
+          onAuthorTap: () =>
+              AppNavigator.toPornHubAuthor(video.author, path: video.authorUrl),
           onDownload: () => enqueuePornHubDownload(video),
         );
       },

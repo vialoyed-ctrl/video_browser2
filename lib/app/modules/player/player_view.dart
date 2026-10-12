@@ -981,7 +981,7 @@ class _PlayerViewState extends State<PlayerView> {
                   Expanded(
                     child: InkWell(
                       borderRadius: BorderRadius.circular(8),
-                      onTap: () => AppNavigator.toAuthor(v.author),
+                      onTap: () => AppNavigator.toAuthor(v.author, video: v),
                       child: Row(
                         children: [
                           CircleAvatar(
@@ -1073,7 +1073,8 @@ class _PlayerViewState extends State<PlayerView> {
                           size: 15,
                         ),
                         label: const Text('作品', style: TextStyle(fontSize: 12)),
-                        onPressed: () => AppNavigator.toAuthor(v.author),
+                        onPressed: () =>
+                            AppNavigator.toAuthor(v.author, video: v),
                       ),
                     ],
                   ),
@@ -1874,4 +1875,3 @@ class _PlayerGestureZoneState extends State<_PlayerGestureZone> {
     );
   }
 }
-

@@ -13,7 +13,8 @@ class PornHubSearchController extends ChangeNotifier {
     this._source, {
     this.initialKeyword = '',
     this.initialPath,
-  });
+    String initialKind = 'videos',
+  }) : _kind = initialKind;
   final PornHubSource _source;
   final String initialKeyword;
   final String? initialPath;
@@ -23,7 +24,7 @@ class PornHubSearchController extends ChangeNotifier {
   final _filters = <String, String>{};
   List<PornHubFilterGroup> _groups = [];
   List<PornHubLinkItem> _suggestions = [];
-  String _kind = 'videos', _creatorScope = 'members', _keyword = '', _path = '';
+  String _kind, _creatorScope = 'members', _keyword = '', _path = '';
   bool _loading = false, _hasMore = false, _started = false, _disposed = false;
   String? _error;
   int _nextPage = 1, _request = 0;

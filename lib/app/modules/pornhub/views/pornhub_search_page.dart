@@ -21,10 +21,12 @@ class PornHubSearchPage extends StatefulWidget {
   const PornHubSearchPage({
     super.key,
     this.initialKeyword = '',
+    this.initialKind = 'videos',
     this.initialPath,
     this.title,
   });
   final String initialKeyword;
+  final String initialKind;
   final String? initialPath, title;
   @override
   State<PornHubSearchPage> createState() => _PornHubSearchPageState();
@@ -37,6 +39,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
     SourceRegistry.byId('pornhub') as PornHubSource,
     initialKeyword: widget.initialKeyword,
     initialPath: widget.initialPath,
+    initialKind: widget.initialKind,
   );
   List<Object> _resultSnapshot = const [];
   String? _resultKind;

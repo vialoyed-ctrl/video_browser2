@@ -55,6 +55,10 @@ class SliverPornHubGrid extends StatelessWidget {
           return BiliVideoCardV(
             video: video,
             onTap: () => AppNavigator.toPlayer(video),
+            onAuthorTap: () => AppNavigator.toPornHubAuthor(
+              video.author,
+              path: video.authorUrl,
+            ),
             onDownload: onDownload == null ? null : () => onDownload!(video),
           );
         }, childCount: videos.length),

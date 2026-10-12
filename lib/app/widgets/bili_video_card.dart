@@ -17,14 +17,22 @@ import 'app_toast.dart';
 /// 点击 UP 主名称：直接进入搜索页检索该作者的作品。
 ///
 /// 匿名与聚合占位作者（`匿名` / `官方精选`）没有可检索的主页，直接忽略。
-void _searchAuthor(String author) {
+void _searchAuthor(
+  String author, {
+  VideoItem? video,
+  VoidCallback? onAuthorTap,
+}) {
   if (author.isEmpty ||
       author == '匿名' ||
       author == '官方精选' ||
       author == '91麻豆') {
     return;
   }
-  AppNavigator.toAuthor(author);
+  if (onAuthorTap != null) {
+    onAuthorTap();
+    return;
+  }
+  AppNavigator.toAuthor(author, video: video);
 }
 
 /// 哔哩哔哩移动端风格 - 竖向视频卡片（用于双列网格瀑布流）
@@ -52,11 +60,13 @@ class BiliVideoCardV extends StatelessWidget {
     required this.video,
     this.onTap,
     this.onDownload,
+    this.onAuthorTap,
   });
 
   final VideoItem video;
   final VoidCallback? onTap;
   final VoidCallback? onDownload;
+  final VoidCallback? onAuthorTap;
 
   @override
   Widget build(BuildContext context) {
@@ -228,9 +238,17 @@ class BiliVideoCardV extends StatelessWidget {
                         Expanded(
                           child: InkWell(
                             borderRadius: BorderRadius.circular(4),
-                            onTap: () => _searchAuthor(video.author),
-                            onLongPress: () =>
-                                _showAuthorSheet(context, video.author),
+                            onTap: () => _searchAuthor(
+                              video.author,
+                              video: video,
+                              onAuthorTap: onAuthorTap,
+                            ),
+                            onLongPress: () => _showAuthorSheet(
+                              context,
+                              video.author,
+                              video: video,
+                              onAuthorTap: onAuthorTap,
+                            ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -332,7 +350,12 @@ class BiliVideoCardV extends StatelessWidget {
     );
   }
 
-  static void _showAuthorSheet(BuildContext context, String author) {
+  static void _showAuthorSheet(
+    BuildContext context,
+    String author, {
+    VideoItem? video,
+    VoidCallback? onAuthorTap,
+  }) {
     if (author.isEmpty ||
         author == '匿名' ||
         author == '官方精选' ||
@@ -433,7 +456,7 @@ class BiliVideoCardV extends StatelessWidget {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 14),
                 onTap: () {
                   Navigator.of(ctx).pop();
-                  AppNavigator.toAuthor(author);
+                  _searchAuthor(author, video: video, onAuthorTap: onAuthorTap);
                 },
               ),
             ],
@@ -536,7 +559,8 @@ class BiliVideoCardH extends StatelessWidget {
                       Expanded(
                         child: InkWell(
                           borderRadius: BorderRadius.circular(4),
-                          onTap: () => _searchAuthor(video.author),
+                          onTap: () =>
+                              _searchAuthor(video.author, video: video),
                           child: Text(
                             video.author,
                             maxLines: 1,
