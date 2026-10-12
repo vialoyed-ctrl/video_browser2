@@ -40,6 +40,47 @@ void main() {
     return (controller, source);
   }
 
+  for (final scenario in ['empty append', 'same-prefix replacement']) {
+    testWidgets('md $scenario preserves accepted page sections', (
+      tester,
+    ) async {
+      final (controller, source) = await mount(tester);
+      final next = controller.loadMore();
+      source.requests.last.complete(mdResponse('second', 2));
+      await next;
+      await tester.pumpAndSettle();
+      List<int> sections() => tester
+          .widgetList<PageFooterScope>(find.byType(PageFooterScope))
+          .map((s) => s.page)
+          .toList();
+      expect(sections(), [1, 2]);
+      final before = List.of(controller.items);
+      final operation = scenario == 'empty append'
+          ? controller.loadMore()
+          : controller.goToPage(2);
+      await tester.pump();
+      expect(sections(), [1, 2]);
+      source.requests.last.complete(
+        VideoPage(
+          items: scenario == 'empty append' ? [] : before,
+          page: scenario == 'empty append' ? 3 : 2,
+          totalPages: 20,
+          hasMore: true,
+        ),
+      );
+      await operation;
+      await tester.pumpAndSettle();
+      expect(sections(), scenario == 'empty append' ? [1, 2] : [2]);
+      expect(controller.items, before);
+      final failed = controller.goToPage(7);
+      source.requests.last.completeError(StateError('offline'));
+      await failed;
+      await tester.pumpAndSettle();
+      expect(sections(), scenario == 'empty append' ? [1, 2] : [2]);
+      expect(controller.items, before);
+    });
+  }
+
   for (final width in [400.0, 800.0]) {
     testWidgets('original md search geometry at $width', (tester) async {
       await mount(tester, width: width);

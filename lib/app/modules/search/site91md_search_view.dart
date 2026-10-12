@@ -32,6 +32,7 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
   final scroll = ScrollController();
   List<VideoItem> _resultItems = const [];
   int? _resultPage;
+  int? _resultReplacementGeneration;
   String? _resultKeyword;
   Widget? _retainedResults;
   @override
@@ -137,17 +138,21 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
   Widget _buildRetainedResults() {
     if (_retainedResults != null &&
         _resultPage == controller.page &&
+        _resultReplacementGeneration == controller.replacementGeneration &&
         _resultKeyword == controller.keyword &&
         listEquals(_resultItems, controller.items)) {
       return _retainedResults!;
     }
     _resultPage = controller.page;
+    _resultReplacementGeneration = controller.replacementGeneration;
     _resultKeyword = controller.keyword;
     _resultItems = List.of(controller.items);
     return _retainedResults = RetainedPageSliver(
       key: ValueKey(controller.keyword),
       items: _resultItems,
       page: controller.page,
+      preserveEmptyAppend: controller.lastLoadWasAppend,
+      replacementGeneration: controller.replacementGeneration,
       footer: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => AppendPaginationFooter(
