@@ -7,3 +7,7 @@
 lib/test分析0error/0warning、原7info。额外整个目录分析275项，扫描了未安装独立依赖的第三方示例、第三方media-kit源码和临时测量探针；不能与lib/test范围混用。
 
 正式main.dart ARM64 Profile2013已构建并保留数据安装（10月10日）；最终正常站点搜索/返回首页和手机APK哈希在额度审批中断前未完成。10月12日恢复时ADB无设备、无转发，真机验收仍待连接。不能把安装成功写成正式功能验收完成。本批不声称FPS/首帧/native内存改善。源码可独立回滚，旧提交和快照保留；此报告把正式验收明确保留，不阻挡独立测试和其他模块的核对。
+
+## 联网后补充正式验收
+
+2026-10-12连接PLK110/API37/1272×2772，正常2013 APK与归档SHA256一致：4fef9224c8fcdb2498265f7a2174ff22c5540374e056171def27a2ddc7d99715。用户说明前两次未联网；联网后确认提交2026搜索返回1项、第1页/error null；实际数字页2返回0项、page2/error null、replacementGeneration2。hasMore false，不伪造真实追加。退出后控制器disposed true，回91首页状态{"items": {"length": 41}, "page": {"value": "1"}, "loadingFirst": {"value": "false"}, "loadingPage": {"value": "false"}, "hasMore": {"value": "true"}, "pageError": {"value": "null"}}、Root site91。旧探针对照PMB110与此次正式验收设备不同，不能形成跨设备性能比较。首次联网输入未成功聚焦的快照不算请求结果，保留原始记录。
