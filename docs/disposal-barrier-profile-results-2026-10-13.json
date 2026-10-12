@@ -1,0 +1,252 @@
+{
+  "date": "2026-10-13",
+  "baseline": "755691a",
+  "implementation": "1b06a8b",
+  "tests": {
+    "initialRedPass": 7,
+    "initialRedFail": 1,
+    "reviewRedPass": 8,
+    "reviewRedFail": 3,
+    "targetedPass": 24,
+    "fullPass": 354,
+    "existingSkip": 1,
+    "analysisErrors": 0,
+    "analysisWarnings": 0,
+    "existingInfo": 7
+  },
+  "device": {
+    "model": "PMB110",
+    "serial": "BUPR8HWKLZTCHAPN",
+    "api": 36,
+    "resolution": [
+      1440,
+      3200
+    ]
+  },
+  "profile": {
+    "nativeBackend": "AndroidVideoPlayer",
+    "fixture": "Repository neutral Butterfly MP4 via loopback Range server",
+    "fault": "gate before actual Android native disposal; old instance remains allocated; 500ms concurrent observation",
+    "before": [
+      {
+        "operation": "switch",
+        "round": 0,
+        "oldId": 1,
+        "nativeIdsBeforeUnblock": [
+          1,
+          2
+        ],
+        "allocationsWhileBlocked": 1,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          2
+        ]
+      },
+      {
+        "operation": "switch",
+        "round": 1,
+        "oldId": 3,
+        "nativeIdsBeforeUnblock": [
+          3,
+          4
+        ],
+        "allocationsWhileBlocked": 1,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          4
+        ]
+      },
+      {
+        "operation": "switch",
+        "round": 2,
+        "oldId": 5,
+        "nativeIdsBeforeUnblock": [
+          5,
+          6
+        ],
+        "allocationsWhileBlocked": 1,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          6
+        ]
+      },
+      {
+        "operation": "close",
+        "round": 0,
+        "oldId": 7,
+        "nativeIdsBeforeUnblock": [
+          7,
+          8
+        ],
+        "allocationsWhileBlocked": 1,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          8
+        ]
+      },
+      {
+        "operation": "close",
+        "round": 1,
+        "oldId": 9,
+        "nativeIdsBeforeUnblock": [
+          9,
+          10
+        ],
+        "allocationsWhileBlocked": 1,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          10
+        ]
+      },
+      {
+        "operation": "close",
+        "round": 2,
+        "oldId": 11,
+        "nativeIdsBeforeUnblock": [
+          11,
+          12
+        ],
+        "allocationsWhileBlocked": 1,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          12
+        ]
+      }
+    ],
+    "after": [
+      {
+        "operation": "switch",
+        "round": 0,
+        "oldId": 1,
+        "nativeIdsBeforeUnblock": [
+          1
+        ],
+        "allocationsWhileBlocked": 0,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          2
+        ]
+      },
+      {
+        "operation": "switch",
+        "round": 1,
+        "oldId": 3,
+        "nativeIdsBeforeUnblock": [
+          3
+        ],
+        "allocationsWhileBlocked": 0,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          4
+        ]
+      },
+      {
+        "operation": "switch",
+        "round": 2,
+        "oldId": 5,
+        "nativeIdsBeforeUnblock": [
+          5
+        ],
+        "allocationsWhileBlocked": 0,
+        "oldReleased": true,
+        "ownsLatest": true,
+        "createdAfterInitial": 1,
+        "activeAfterUnblock": [
+          6
+        ]
+      },
+      {
+        "operation": "close",
+        "round": 0,
+        "oldId": 7,
+        "nativeIdsBeforeUnblock": [
+          7
+        ],
+        "allocationsWhileBlocked": 0,
+        "oldReleased": true,
+        "ownsLatest": false,
+        "createdAfterInitial": 0,
+        "activeAfterUnblock": []
+      },
+      {
+        "operation": "close",
+        "round": 1,
+        "oldId": 8,
+        "nativeIdsBeforeUnblock": [
+          8
+        ],
+        "allocationsWhileBlocked": 0,
+        "oldReleased": true,
+        "ownsLatest": false,
+        "createdAfterInitial": 0,
+        "activeAfterUnblock": []
+      },
+      {
+        "operation": "close",
+        "round": 2,
+        "oldId": 9,
+        "nativeIdsBeforeUnblock": [
+          9
+        ],
+        "allocationsWhileBlocked": 0,
+        "oldReleased": true,
+        "ownsLatest": false,
+        "createdAfterInitial": 0,
+        "activeAfterUnblock": []
+      }
+    ],
+    "finalActiveIds": []
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "reloadAndSynchronousRxContractsAdded": true
+  },
+  "formal": {
+    "buildNumber": 2018,
+    "target": "lib/main.dart",
+    "arm64": true,
+    "sha256": "9016E568F5C1AD3380EA1D9575866D9FAE0BABF7C9EB4A54A652488859E5C6AC",
+    "home": {
+      "items": 41,
+      "page": 1,
+      "loadingFirst": false,
+      "loadingPage": false,
+      "error": null,
+      "scroll": 0,
+      "site": "site91"
+    },
+    "userDataPreserved": true,
+    "ownForwardsRemoved": [
+      5523,
+      4509,
+      1673
+    ],
+    "reverse8787Removed": true,
+    "serverStopped": true,
+    "attachClosed": true
+  },
+  "limits": [
+    "Same PlayerController disposal barrier, not global cross-route ownership proof",
+    "Controlled 500ms native disposal gate; no normal FPS or long-term memory gain claimed",
+    "Platform VideoPlayer IDs count only this create/dispose path; not all native preloader resources",
+    "Native create/dispose itself and pending scrub/seek responses remain separate acceptance scope"
+  ]
+}

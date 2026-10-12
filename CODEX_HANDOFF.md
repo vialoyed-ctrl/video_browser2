@@ -241,3 +241,8 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 ## 25. 活跃播放器pause回复释放边界（2026-10-13）
 
 实现260153c，先发best-effort pause但不等待回复，仍awaitdispose。有效RED1过2败、最终19定向/349完整/1原跳过、原7info；独立审查晚到异常Minor已覆盖关闭。PMB110 Android真实故障对照旧退出3/切换3均>1s未释放；新退出66–77ms、切换旧释放60–69ms，新播放命令完成172–200ms，每轮native确认清理。正常2017首页41/1/scroll0/site91，三APK一致9C737BFEC87B8709A8BB59C9358BBA05E1FEBD9075113B5DA9722D0D6EFC64A9；attach/自建转发/reverse8787/server关闭。报告docs/refactor-active-release-2026-10-13.md及摘要。不能称可见首帧或长期native内存改善；永久挂起pause continuation、全局并发dispose屏障、scrub/Seek等待仍保留后续。整个项目未完成，继续四站点和完整生命周期验收。
+
+
+## 26. 同一路由并发释放屏障（2026-10-13）
+
+实现1b06a8b，先发布共享Completer.future再同步清理，identity finally清引用；reload等待后generation拒绝失效。有效RED7/1、审查追加RED8/3；最终24定向/354完整/1原跳过、原7info；独立复审无剩余项。PMB110六轮真实native.dispose前500ms gate：旧额外allocation1/两实例，新0/只有旧；解除后只最新目标、close无新分配，终态nativeRPC tracked空。正常2018恢复41/1/scroll0/site91、三APK一致9016E568F5C1AD3380EA1D9575866D9FAE0BABF7C9EB4A54A652488859E5C6AC，attach/自建转发/reverse/server关闭。报告docs/refactor-disposal-barrier-2026-10-13.md及摘要。不宣称长期native内存或跨所有路由串行化；继续scrub/Seek/实际画面/内存/四站点，完整项目未完成。
