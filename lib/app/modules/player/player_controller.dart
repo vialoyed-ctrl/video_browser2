@@ -1337,8 +1337,9 @@ class PlayerController extends GetxController {
     if (old != null) {
       old.removeListener(_onPlayerValueChanged);
       try {
-        // Pause first so a route or card switch cannot leave the previous audio audible.
-        await old.pause();
+        // Request silence first, but a delayed pause reply must not hold up
+        // disposal. Native disposal releases the old player before takeover.
+        unawaited(old.pause().catchError((Object _) {}));
       } catch (_) {
         // best-effort：旧实例可能已释放，pause 失败无后果，继续走 dispose。
       }
