@@ -1,0 +1,697 @@
+{
+  "baseline": "1d9b11a",
+  "productionChanges": false,
+  "device": "PMB110 BUPR8HWKLZTCHAPN API36",
+  "routeCycles": {
+    "productionBaseline": "1d9b11a",
+    "productionChanges": false,
+    "cycles": 60,
+    "controlsInvokedNotBehaviorValidated": true,
+    "closedResourcesVerified": true,
+    "checkpoints": [
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 58950879,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          0
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 0,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 0
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "label": "probe-idle",
+        "beforeJavaGc": {
+          "totalPssKB": 177205,
+          "totalRssKB": 327980,
+          "nativePssKB": 46661,
+          "javaPssKB": 2672,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 21176,
+          "graphicsRssKB": 21176
+        },
+        "afterJavaGc": {
+          "totalPssKB": 216339,
+          "totalRssKB": 371124,
+          "nativePssKB": 75673,
+          "javaPssKB": 8093,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 21176,
+          "graphicsRssKB": 21176
+        }
+      },
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 82809681,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          1
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 3,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 3
+        },
+        "label": "probe-playing",
+        "beforeJavaGc": {
+          "totalPssKB": 260360,
+          "totalRssKB": 428268,
+          "nativePssKB": 54213,
+          "javaPssKB": 31805,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 42344,
+          "graphicsRssKB": 42344
+        },
+        "afterJavaGc": {
+          "totalPssKB": 244498,
+          "totalRssKB": 412640,
+          "nativePssKB": 54621,
+          "javaPssKB": 31801,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25628,
+          "graphicsRssKB": 25628
+        }
+      },
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 61648287,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          0
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 0,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 0
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "label": "closed-0",
+        "beforeJavaGc": {
+          "totalPssKB": 267261,
+          "totalRssKB": 435452,
+          "nativePssKB": 55385,
+          "javaPssKB": 33913,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 45360,
+          "graphicsRssKB": 45360
+        },
+        "afterJavaGc": {
+          "totalPssKB": 263209,
+          "totalRssKB": 431404,
+          "nativePssKB": 95621,
+          "javaPssKB": 9597,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25428,
+          "graphicsRssKB": 25428
+        }
+      },
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 61718688,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          0
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 0,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 0
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "label": "closed-10",
+        "beforeJavaGc": {
+          "totalPssKB": 270385,
+          "totalRssKB": 438656,
+          "nativePssKB": 55669,
+          "javaPssKB": 49089,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25560,
+          "graphicsRssKB": 25560
+        },
+        "afterJavaGc": {
+          "totalPssKB": 252041,
+          "totalRssKB": 420312,
+          "nativePssKB": 76953,
+          "javaPssKB": 9661,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25428,
+          "graphicsRssKB": 25428
+        }
+      },
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 61742275,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          0
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 0,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 0
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "label": "closed-30",
+        "beforeJavaGc": {
+          "totalPssKB": 275401,
+          "totalRssKB": 443896,
+          "nativePssKB": 55901,
+          "javaPssKB": 28589,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 45360,
+          "graphicsRssKB": 45360
+        },
+        "afterJavaGc": {
+          "totalPssKB": 277777,
+          "totalRssKB": 446272,
+          "nativePssKB": 97205,
+          "javaPssKB": 9673,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25428,
+          "graphicsRssKB": 25428
+        }
+      },
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 61789534,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          0
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 0,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 0
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "label": "closed-60",
+        "beforeJavaGc": {
+          "totalPssKB": 277317,
+          "totalRssKB": 446148,
+          "nativePssKB": 56493,
+          "javaPssKB": 29021,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 45360,
+          "graphicsRssKB": 45360
+        },
+        "afterJavaGc": {
+          "totalPssKB": 254489,
+          "totalRssKB": 423320,
+          "nativePssKB": 72977,
+          "javaPssKB": 9709,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25428,
+          "graphicsRssKB": 25428
+        }
+      }
+    ]
+  },
+  "soak": {
+    "samples": 31,
+    "elapsedSeconds": 900.5779999999995,
+    "nativePositionsMs": [
+      315,
+      5724,
+      5773,
+      5425,
+      5394,
+      5183,
+      5179,
+      5096,
+      5085,
+      5051,
+      4572,
+      2718,
+      2670,
+      2287,
+      2158,
+      2301,
+      2159,
+      2009,
+      1945,
+      1573,
+      1470,
+      7264,
+      7327,
+      7121,
+      6710,
+      6560,
+      6475,
+      6342,
+      6612,
+      6309,
+      6303
+    ],
+    "playingResourceSnapshots": [
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 80284328,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          1
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 3,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 3
+        },
+        "label": "soak-playing-0",
+        "beforeJavaGc": {
+          "totalPssKB": 277998,
+          "totalRssKB": 446784,
+          "nativePssKB": 57373,
+          "javaPssKB": 28205,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 45380,
+          "graphicsRssKB": 45380
+        },
+        "afterJavaGc": {
+          "totalPssKB": 273042,
+          "totalRssKB": 442028,
+          "nativePssKB": 56541,
+          "javaPssKB": 32173,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 37068,
+          "graphicsRssKB": 37068
+        }
+      },
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 82958371,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          1
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 3,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 3
+        },
+        "label": "soak-playing-300",
+        "beforeJavaGc": {
+          "totalPssKB": 288368,
+          "totalRssKB": 459248,
+          "nativePssKB": 58001,
+          "javaPssKB": 43713,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 37056,
+          "graphicsRssKB": 37056
+        },
+        "afterJavaGc": {
+          "totalPssKB": 264988,
+          "totalRssKB": 435872,
+          "nativePssKB": 57225,
+          "javaPssKB": 32605,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25584,
+          "graphicsRssKB": 25584
+        }
+      },
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 82959944,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          1
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 3,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 3
+        },
+        "label": "soak-playing-600",
+        "beforeJavaGc": {
+          "totalPssKB": 278058,
+          "totalRssKB": 448964,
+          "nativePssKB": 58957,
+          "javaPssKB": 43701,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25712,
+          "graphicsRssKB": 25712
+        },
+        "afterJavaGc": {
+          "totalPssKB": 265826,
+          "totalRssKB": 436732,
+          "nativePssKB": 58169,
+          "javaPssKB": 32481,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25580,
+          "graphicsRssKB": 25580
+        }
+      },
+      {
+        "header": "JAVA PROFILE 1.0.3",
+        "idSize": 4,
+        "bytes": 82963939,
+        "pluginInstances": 1,
+        "pluginVideoPlayerSizes": [
+          1
+        ],
+        "codec": {
+          "classLoaded": true,
+          "instances": 2,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 2
+        },
+        "surface": {
+          "classLoaded": true,
+          "instances": 3,
+          "nativeFieldFound": true,
+          "activeNativeHandles": 3
+        },
+        "label": "soak-playing-900",
+        "beforeJavaGc": {
+          "totalPssKB": 284340,
+          "totalRssKB": 455272,
+          "nativePssKB": 59049,
+          "javaPssKB": 43757,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 31872,
+          "graphicsRssKB": 31872
+        },
+        "afterJavaGc": {
+          "totalPssKB": 266012,
+          "totalRssKB": 436944,
+          "nativePssKB": 58249,
+          "javaPssKB": 32417,
+          "graphicsPssKB": null,
+          "graphicsPrivateDirtyKB": 25712,
+          "graphicsRssKB": 25712
+        }
+      }
+    ],
+    "closed": {
+      "header": "JAVA PROFILE 1.0.3",
+      "idSize": 4,
+      "bytes": 61785456,
+      "pluginInstances": 1,
+      "pluginVideoPlayerSizes": [
+        0
+      ],
+      "codec": {
+        "classLoaded": true,
+        "instances": 0,
+        "nativeFieldFound": true,
+        "activeNativeHandles": 0
+      },
+      "surface": {
+        "classLoaded": true,
+        "instances": 2,
+        "nativeFieldFound": true,
+        "activeNativeHandles": 2
+      },
+      "label": "soak-closed",
+      "beforeJavaGc": {
+        "totalPssKB": 283483,
+        "totalRssKB": 453024,
+        "nativePssKB": 58857,
+        "javaPssKB": 31525,
+        "graphicsPssKB": null,
+        "graphicsPrivateDirtyKB": 45360,
+        "graphicsRssKB": 45360
+      },
+      "afterJavaGc": {
+        "totalPssKB": 282383,
+        "totalRssKB": 451924,
+        "nativePssKB": 99469,
+        "javaPssKB": 9769,
+        "graphicsPssKB": null,
+        "graphicsPrivateDirtyKB": 25428,
+        "graphicsRssKB": 25428
+      }
+    },
+    "limitations": "Forced Java GC at sparse checkpoints; JNI wrapper handles do not prove absence of all native/GPU leaks. Native position and playing flags do not time visible first frame.",
+    "validPlayingStatusSamples": 31,
+    "invalidPlayingStatusSamples": 0
+  },
+  "controls": {
+    "rows": [
+      {
+        "action": "open",
+        "cycles": 60,
+        "activeNativeRpcIds": [
+          63
+        ],
+        "creations": 63,
+        "disposals": 62,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "error": null,
+        "durationMs": 7540,
+        "nativePositionMs": 0,
+        "videoRectPx": [
+          0,
+          160,
+          5120,
+          3040
+        ]
+      },
+      {
+        "action": "full",
+        "cycles": 60,
+        "activeNativeRpcIds": [
+          63
+        ],
+        "creations": 63,
+        "disposals": 62,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "error": null,
+        "durationMs": 7540,
+        "nativePositionMs": 1400,
+        "videoRectPx": [
+          320,
+          0,
+          5440,
+          2880
+        ]
+      },
+      {
+        "action": "window",
+        "cycles": 60,
+        "activeNativeRpcIds": [
+          63
+        ],
+        "creations": 63,
+        "disposals": 62,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "error": null,
+        "durationMs": 7540,
+        "nativePositionMs": 4865,
+        "videoRectPx": [
+          0,
+          160,
+          5120,
+          3040
+        ]
+      },
+      {
+        "action": "pause",
+        "cycles": 60,
+        "activeNativeRpcIds": [
+          63
+        ],
+        "creations": 63,
+        "disposals": 62,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": false,
+        "error": null,
+        "durationMs": 7540,
+        "nativePositionMs": 7029,
+        "videoRectPx": [
+          0,
+          160,
+          5120,
+          3040
+        ]
+      },
+      {
+        "action": "status",
+        "cycles": 60,
+        "activeNativeRpcIds": [
+          63
+        ],
+        "creations": 63,
+        "disposals": 62,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": false,
+        "error": null,
+        "durationMs": 7540,
+        "nativePositionMs": 7052,
+        "videoRectPx": [
+          0,
+          160,
+          5120,
+          3040
+        ]
+      },
+      {
+        "action": "play",
+        "cycles": 60,
+        "activeNativeRpcIds": [
+          63
+        ],
+        "creations": 63,
+        "disposals": 62,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "error": null,
+        "durationMs": 7540,
+        "nativePositionMs": 7052,
+        "videoRectPx": [
+          0,
+          160,
+          5120,
+          3040
+        ]
+      },
+      {
+        "action": "status",
+        "cycles": 60,
+        "activeNativeRpcIds": [
+          63
+        ],
+        "creations": 63,
+        "disposals": 62,
+        "activeRoutes": true,
+        "initialized": true,
+        "playing": true,
+        "error": null,
+        "durationMs": 7540,
+        "nativePositionMs": 503,
+        "videoRectPx": [
+          0,
+          160,
+          5120,
+          3040
+        ]
+      },
+      {
+        "action": "close",
+        "cycles": 60,
+        "activeNativeRpcIds": [],
+        "creations": 63,
+        "disposals": 63,
+        "activeRoutes": false,
+        "initialized": null,
+        "playing": null,
+        "error": null,
+        "durationMs": null,
+        "nativePositionMs": null,
+        "videoRectPx": null
+      }
+    ],
+    "claims": "Native pause/resume position and fullscreen screenshots only; no seek or first-frame timing",
+    "limitations": "Paused native position 7029 to7052ms (23ms), resume progressed across7540ms loop boundary to503ms. videoRectPx is intrinsic VideoPlayer geometry, not visible clipped screen crop; screenshots manually inspected. Final control close has RPC map check, no separate ART snapshot."
+  },
+  "normalRestoration": {
+    "buildNumber": 2018,
+    "apkSha256": "9016E568F5C1AD3380EA1D9575866D9FAE0BABF7C9EB4A54A652488859E5C6AC",
+    "deviceApkSha256": "9016E568F5C1AD3380EA1D9575866D9FAE0BABF7C9EB4A54A652488859E5C6AC",
+    "homeVerified": true,
+    "home": {
+      "items": 41,
+      "page": 1,
+      "loadingFirst": false,
+      "loadingPage": false,
+      "error": null,
+      "scrollPx": 0,
+      "platform": "site91"
+    },
+    "cleanupVerified": true,
+    "cleanup": {
+      "rawLocalHeaps": 0,
+      "remoteHeapDirectoryAbsent": true,
+      "forwardEmpty": true,
+      "reverseEmpty": true,
+      "local8787NotListening": true,
+      "ownedForwardsRemoved": [
+        14724,
+        3697
+      ],
+      "probeAttachExited": true,
+      "normalAttachExited": true,
+      "serverSession63083Exited": true
+    },
+    "normalApkReusedUnchanged": true
+  },
+  "parserContracts": 6,
+  "priorProductionSuite": "Stage26 354 passed/1 prior skipped; unchanged lib, not a fresh full-suite claim",
+  "stage28PendingRed": "scrub_release_contract_test.dart uncommitted:1 passed/4 failed, held pause/seek close/switch defects reproduced; fixes not included in this measurement batch"
+}

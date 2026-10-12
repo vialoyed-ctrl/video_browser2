@@ -18,3 +18,5 @@
 2026-10-13进展：活跃Player最后pause回复等待已故障对照修复，正常2017恢复。全局并发dispose屏障、scrub/Seek/native创建与释放本身、可见画面及长期native内存、四站点综合验收仍保留；不能用第25批nativeRPC确认代替最终内存要求。
 
 第26批（2026-10-13）：同一PlayerController并发释放、reload关闭/超越、Rx同步重入已验证修正；不是跨所有路由统一排队。下一步核对scrub/Seek待回复、可见首帧/控制与真正native资源/长期内存证据，再完成四站点可执行综合回归及其它列表审计。
+
+第27批（2026-10-13）：真实PlayerView60轮及900秒播放的实际ART资源快照已补，退出map0/codec0/surface2匹配基线；不代表所有native/GPU无泄漏或可见首帧/Seek验收。正常2018与原数据恢复，测量资源清理。第28批scrub/Seek回复悬挂四入口已RED复现，旧Androidprobe已构建待测，再小修取消/迟到任务归属；四站点/弱网/HLS/缓存下载/其它列表仍继续。
