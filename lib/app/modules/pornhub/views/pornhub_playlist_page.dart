@@ -1,5 +1,6 @@
 import '../../../widgets/retained_page_sliver.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +25,9 @@ class PornHubPlaylistPage extends StatefulWidget {
 class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
   late final PornHubPlaylistController _controller;
   bool _busy = false;
+  List<VideoItem> _resultSnapshot = const [];
+  int? _resultPage, _resultGeneration;
+  Widget? _cachedResults;
   List<VideoItem> get _videos => _controller.videos;
   PornHubPlaylistDetails? get _detail => _controller.detail;
   bool get _loading => _controller.loading;
@@ -33,8 +37,15 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
   int get _request => _controller.requestRevision;
   String? get _error => _controller.error;
   void _onChanged() {
-    if (mounted) setState(() {});
+    if (!mounted) return;
+    setState(() {
+      if (_videos.isEmpty) {
+        _cachedResults = null;
+        _resultSnapshot = const [];
+      }
+    });
   }
+
   Worker? _accountWorker;
   PornHubSource get _source => SourceRegistry.byId('pornhub') as PornHubSource;
 
@@ -93,6 +104,40 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
     }
   }
 
+  late final Widget _footer = AnimatedBuilder(
+    animation: _controller,
+    builder: (context, _) => PornHubListFooter(
+      currentPage: (_page - 1).clamp(1, 2147483647),
+      onJump: (page) => _load(reset: true, targetPage: page),
+      isLoadingMore: _loading,
+      hasMore: _hasMore,
+      errorText: _error,
+      isEmpty: !_loading && _error == null && _videos.isEmpty,
+      emptyHint: '片单中暂时没有可用视频',
+      onLoadMore: () => _load(reset: _videos.isEmpty),
+    ),
+  );
+
+  Widget _buildResults() {
+    if (_cachedResults != null &&
+        _resultPage == _page &&
+        _resultGeneration == _controller.replacementGeneration &&
+        listEquals(_resultSnapshot, _videos)) {
+      return _cachedResults!;
+    }
+    _resultPage = _page;
+    _resultGeneration = _controller.replacementGeneration;
+    _resultSnapshot = List<VideoItem>.of(_videos);
+    return _cachedResults = RetainedPageSliver(
+      items: _resultSnapshot,
+      page: (_page - 1).clamp(1, 2147483647),
+      preserveEmptyAppend: _controller.lastLoadWasAppend,
+      replacementGeneration: _controller.replacementGeneration,
+      footer: _footer,
+      gridBuilder: (pageItems) => SliverPornHubGrid(videos: pageItems),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
@@ -147,24 +192,7 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
                 physics: const AlwaysScrollableScrollPhysics(
                   parent: BouncingScrollPhysics(),
                 ),
-                slivers: [
-                  RetainedPageSliver(
-                    items: List.of(_videos),
-                    page: (_page - 1).clamp(1, 2147483647),
-                    footer: PornHubListFooter(
-                      currentPage: (_page - 1).clamp(1, 2147483647),
-                      onJump: (page) => _load(reset: true, targetPage: page),
-                      isLoadingMore: _loading,
-                      hasMore: _hasMore,
-                      isEmpty: !_loading && _error == null && _videos.isEmpty,
-                      emptyHint: '片单中暂时没有可用视频',
-                      errorText: _error,
-                      onLoadMore: () => _load(reset: _videos.isEmpty),
-                    ),
-                    gridBuilder: (pageItems) =>
-                        SliverPornHubGrid(videos: pageItems),
-                  ),
-                ],
+                slivers: [_buildResults()],
               ),
             ),
           ),

@@ -15,6 +15,8 @@ class PornHubPlaylistController extends ChangeNotifier {
   PornHubPlaylistDetails? _detail;
   bool _loading = false, _hasMore = true, _favourite = false, _disposed = false;
   int _page = 1, _request = 0;
+  bool _lastLoadWasAppend = false;
+  int _replacementGeneration = 0;
   String? _error;
   late final List<VideoItem> videos = UnmodifiableListView(_videos);
   PornHubPlaylistDetails? get detail => _detail;
@@ -22,6 +24,8 @@ class PornHubPlaylistController extends ChangeNotifier {
   bool get hasMore => _hasMore;
   bool get favourite => _favourite;
   int get nextPage => _page;
+  bool get lastLoadWasAppend => _lastLoadWasAppend;
+  int get replacementGeneration => _replacementGeneration;
   int get requestRevision => _request;
   String? get error => _error;
 
@@ -73,6 +77,8 @@ class PornHubPlaylistController extends ChangeNotifier {
         throw const PornHubRequestException();
       }
       _change(() {
+        _lastLoadWasAppend = !reset;
+        if (reset) _replacementGeneration++;
         if (reset) _videos.clear();
         final seen = _videos.map((v) => v.id).toSet();
         _videos.addAll(page.items.where((v) => seen.add(v.id)));

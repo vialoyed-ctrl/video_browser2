@@ -1,6 +1,7 @@
 import '../../../widgets/retained_page_sliver.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -27,6 +28,10 @@ class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
   final _scroll = ScrollController();
   late final PornHubCreatorController _controller;
   bool _subBusy = false;
+  List<VideoItem> _resultSnapshot = const [];
+  int? _resultPage, _resultGeneration;
+  bool? _resultClips;
+  Widget? _cachedResults;
   List<VideoItem> get _items => _controller.items;
   PornHubCreatorProfile? get _profile => _controller.profile;
   bool get _clips => _controller.clips;
@@ -36,8 +41,15 @@ class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
   String? get _profileError => _controller.profileError;
   int get _page => _controller.nextPage;
   void _onChanged() {
-    if (mounted) setState(() {});
+    if (!mounted) return;
+    setState(() {
+      if (_items.isEmpty) {
+        _cachedResults = null;
+        _resultSnapshot = const [];
+      }
+    });
   }
+
   PornHubSource get _source => SourceRegistry.byId('pornhub') as PornHubSource;
   @override
   void initState() {
@@ -97,6 +109,45 @@ class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
     _controller.selectClips(clips);
     if (_scroll.hasClients) _scroll.jumpTo(0);
     _load(reset: true);
+  }
+
+  late final Widget _footer = AnimatedBuilder(
+    animation: _controller,
+    builder: (context, _) => PornHubListFooter(
+      currentPage: (_page - 1).clamp(1, 2147483647),
+      onJump: (page) => _load(reset: true, targetPage: page),
+      isLoadingMore: _loading,
+      hasMore: _hasMore,
+      errorText: _error,
+      isEmpty: _items.isEmpty,
+      emptyHint: _clips ? '暂无切片' : '暂无视频',
+      onLoadMore: () => _load(reset: false),
+    ),
+  );
+
+  Widget _buildResults() {
+    if (_cachedResults != null &&
+        _resultPage == _page &&
+        _resultGeneration == _controller.replacementGeneration &&
+        _resultClips == _clips &&
+        listEquals(_resultSnapshot, _items)) {
+      return _cachedResults!;
+    }
+    _resultPage = _page;
+    _resultGeneration = _controller.replacementGeneration;
+    _resultClips = _clips;
+    _resultSnapshot = List<VideoItem>.of(_items);
+    return _cachedResults = RetainedPageSliver(
+      items: _resultSnapshot,
+      page: (_page - 1).clamp(1, 2147483647),
+      preserveEmptyAppend: _controller.lastLoadWasAppend,
+      replacementGeneration: _controller.replacementGeneration,
+      footer: _footer,
+      gridBuilder: (pageItems) => SliverPornHubGrid(
+        videos: pageItems,
+        onDownload: enqueuePornHubDownload,
+      ),
+    );
   }
 
   @override
@@ -219,24 +270,7 @@ class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
                       ),
                     )
                   else ...[
-                    RetainedPageSliver(
-                      items: List.of(_items),
-                      page: (_page - 1).clamp(1, 2147483647),
-                      footer: PornHubListFooter(
-                        currentPage: (_page - 1).clamp(1, 2147483647),
-                        onJump: (page) => _load(reset: true, targetPage: page),
-                        isLoadingMore: _loading,
-                        hasMore: _hasMore,
-                        errorText: _error,
-                        isEmpty: _items.isEmpty,
-                        emptyHint: _clips ? '暂无切片' : '暂无视频',
-                        onLoadMore: () => _load(reset: false),
-                      ),
-                      gridBuilder: (pageItems) => SliverPornHubGrid(
-                        videos: pageItems,
-                        onDownload: enqueuePornHubDownload,
-                      ),
-                    ),
+                    _buildResults(),
                   ],
                 ],
               ),

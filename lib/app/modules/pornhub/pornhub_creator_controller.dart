@@ -16,6 +16,8 @@ class PornHubCreatorController extends ChangeNotifier {
   bool _clips = false, _loading = false, _hasMore = true, _disposed = false;
   String? _error, _profileError;
   int _page = 1, _request = 0;
+  bool _lastLoadWasAppend = false;
+  int _replacementGeneration = 0;
   late final List<VideoItem> items = UnmodifiableListView(_items);
   PornHubCreatorProfile? get profile => _profile;
   bool get clips => _clips;
@@ -24,6 +26,8 @@ class PornHubCreatorController extends ChangeNotifier {
   String? get error => _error;
   String? get profileError => _profileError;
   int get nextPage => _page;
+  bool get lastLoadWasAppend => _lastLoadWasAppend;
+  int get replacementGeneration => _replacementGeneration;
 
   void selectClips(bool value) {
     if (_disposed || _clips == value) return;
@@ -73,6 +77,8 @@ class PornHubCreatorController extends ChangeNotifier {
         throw const PornHubRequestException();
       }
       _change(() {
+        _lastLoadWasAppend = !reset;
+        if (reset) _replacementGeneration++;
         if (reset) _items.clear();
         final seen = _items.map((v) => v.id).toSet();
         final newItems = result.items.where((v) => seen.add(v.id)).toList();
