@@ -11,6 +11,7 @@ import '../../../data/sources/pornhub_source.dart';
 import '../../../data/sources/video_source.dart';
 import '../../../widgets/app_toast.dart';
 import '../pornhub_controller.dart';
+import '../pornhub_creator_controller.dart';
 import '../widgets/pornhub_actions.dart';
 import '../widgets/pornhub_video_grid.dart';
 
@@ -24,15 +25,25 @@ class PornHubCreatorPage extends StatefulWidget {
 
 class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
   final _scroll = ScrollController();
-  final _items = <VideoItem>[];
-  PornHubCreatorProfile? _profile;
-  bool _clips = false, _loading = false, _hasMore = true, _subBusy = false;
-  String? _error, _profileError;
-  int _page = 1, _request = 0;
+  late final PornHubCreatorController _controller;
+  bool _subBusy = false;
+  List<VideoItem> get _items => _controller.items;
+  PornHubCreatorProfile? get _profile => _controller.profile;
+  bool get _clips => _controller.clips;
+  bool get _loading => _controller.loading;
+  bool get _hasMore => _controller.hasMore;
+  String? get _error => _controller.error;
+  String? get _profileError => _controller.profileError;
+  int get _page => _controller.nextPage;
+  void _onChanged() {
+    if (mounted) setState(() {});
+  }
   PornHubSource get _source => SourceRegistry.byId('pornhub') as PornHubSource;
   @override
   void initState() {
     super.initState();
+    _controller = PornHubCreatorController(_source, path: widget.path)
+      ..addListener(_onChanged);
     _scroll.addListener(() {
       if (_scroll.hasClients &&
           _scroll.position.userScrollDirection == ScrollDirection.idle) {
@@ -52,24 +63,13 @@ class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
 
   @override
   void dispose() {
-    _request++;
+    _controller.removeListener(_onChanged);
+    _controller.dispose();
     _scroll.dispose();
     super.dispose();
   }
 
-  Future<void> _loadProfile() async {
-    try {
-      final result = await _source.fetchCreatorProfile(widget.path);
-      if (mounted) {
-        setState(() {
-          _profile = result;
-          _profileError = null;
-        });
-      }
-    } catch (_) {
-      if (mounted) setState(() => _profileError = '主页信息加载失败，点击重试');
-    }
-  }
+  Future<void> _loadProfile() => _controller.loadProfile();
 
   Future<void> _subscribe() async {
     final profile = _profile;
@@ -89,54 +89,12 @@ class _PornHubCreatorPageState extends State<PornHubCreatorPage> {
     if (mounted) setState(() => _subBusy = false);
   }
 
-  Future<void> _load({required bool reset, int? targetPage}) async {
-    if (!reset && (_loading || !_hasMore)) return;
-    final request = ++_request;
-    final page = reset ? (targetPage ?? 1) : _page;
-    final clips = _clips;
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-    try {
-      final result = clips
-          ? await _source.fetchCreatorClips(widget.path, page: page)
-          : await _source.fetchCreatorVideos(widget.path, page: page);
-      if (!mounted || request != _request) return;
-      if (result.summary != null && result.items.isEmpty) {
-        throw const PornHubRequestException();
-      }
-      setState(() {
-        if (reset) _items.clear();
-        final seen = _items.map((v) => v.id).toSet();
-        final newItems = result.items.where((v) => seen.add(v.id)).toList();
-        _items.addAll(newItems);
-        _hasMore = result.hasMore && newItems.isNotEmpty;
-        if (clips &&
-            result.totalItems > 0 &&
-            _items.length >= result.totalItems) {
-          _hasMore = false;
-        }
-        _page = page + 1;
-        _loading = false;
-      });
-    } catch (_) {
-      if (mounted && request == _request) {
-        setState(() {
-          _loading = false;
-          _error = PornHubSource.requestFailureMessage;
-        });
-      }
-    }
-  }
+  Future<void> _load({required bool reset, int? targetPage}) =>
+      _controller.load(reset: reset, targetPage: targetPage);
 
   void _select(bool clips) {
     if (_clips == clips) return;
-    setState(() {
-      _clips = clips;
-      _items.clear();
-      _hasMore = true;
-    });
+    _controller.selectClips(clips);
     if (_scroll.hasClients) _scroll.jumpTo(0);
     _load(reset: true);
   }

@@ -10,6 +10,7 @@ import '../../../data/sources/pornhub_source.dart';
 import '../../../data/sources/video_source.dart';
 import '../../../widgets/app_toast.dart';
 import '../pornhub_controller.dart';
+import '../pornhub_playlist_controller.dart';
 import '../widgets/pornhub_video_grid.dart';
 
 /// 官网片单详情、真实收藏状态与 viewChunked 分页。
@@ -21,34 +22,34 @@ class PornHubPlaylistPage extends StatefulWidget {
 }
 
 class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
-  final _videos = <VideoItem>[];
-  PornHubPlaylistDetails? _detail;
-  bool _loading = false, _busy = false, _hasMore = true, _favourite = false;
-  int _page = 1, _request = 0;
-  String? _error;
+  late final PornHubPlaylistController _controller;
+  bool _busy = false;
+  List<VideoItem> get _videos => _controller.videos;
+  PornHubPlaylistDetails? get _detail => _controller.detail;
+  bool get _loading => _controller.loading;
+  bool get _favourite => _controller.favourite;
+  int get _page => _controller.nextPage;
+  int get _request => _controller.requestRevision;
+  String? get _error => _controller.error;
+  void _onChanged() {
+    if (mounted) setState(() {});
+  }
   Worker? _accountWorker;
   PornHubSource get _source => SourceRegistry.byId('pornhub') as PornHubSource;
 
   @override
   void initState() {
     super.initState();
+    _controller = PornHubPlaylistController(_source, id: widget.id)
+      ..addListener(_onChanged);
     if (Get.isRegistered<PornHubAuthService>()) {
       final auth = PornHubAuthService.to;
       _accountWorker = everAll(
         [auth.sessionRevision, auth.username, auth.isLoggedIn],
         (_) {
           if (!mounted) return;
-          _request++;
-          setState(() {
-            _detail = null;
-            _videos.clear();
-            _favourite = false;
-            _loading = false;
-            _busy = false;
-            _error = null;
-            _page = 1;
-            _hasMore = true;
-          });
+          _busy = false;
+          _controller.resetAccount();
           if (auth.isLoggedIn.value) _load(reset: true);
         },
       );
@@ -58,51 +59,14 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
 
   @override
   void dispose() {
-    _request++;
     _accountWorker?.dispose();
+    _controller.removeListener(_onChanged);
+    _controller.dispose();
     super.dispose();
   }
 
-  Future<void> _load({bool reset = false, int? targetPage}) async {
-    if (_loading || (!reset && !_hasMore)) return;
-    final request = ++_request;
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-    try {
-      if (reset) {
-        final detail = await _source.fetchPlaylistDetails(
-          widget.id,
-          forceRefresh: true,
-        );
-        if (!mounted || request != _request) return;
-        _detail = detail;
-        _favourite = detail.isFavourite;
-      }
-      final page = await _source.fetchPlaylistVideos(
-        widget.id,
-        page: reset ? (targetPage ?? 1) : _page,
-      );
-      if (!mounted || request != _request) return;
-      if (page.summary == PornHubSource.requestFailureMessage) {
-        throw const PornHubRequestException();
-      }
-      setState(() {
-        if (reset) _videos.clear();
-        final seen = _videos.map((v) => v.id).toSet();
-        _videos.addAll(page.items.where((v) => seen.add(v.id)));
-        _page = page.page + 1;
-        _hasMore = page.hasMore;
-      });
-    } catch (_) {
-      if (mounted && request == _request) {
-        setState(() => _error = '片单加载失败，点击重试');
-      }
-    } finally {
-      if (mounted && request == _request) setState(() => _loading = false);
-    }
-  }
+  Future<void> _load({bool reset = false, int? targetPage}) =>
+      _controller.load(reset: reset, targetPage: targetPage);
 
   Future<void> _toggleFavourite() async {
     if (_busy || _detail == null) return;
@@ -115,7 +79,7 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
       );
       if (!mounted || request != _request) return;
       if (result.ok) {
-        setState(() => _favourite = !_favourite);
+        _controller.toggleFavourite();
         if (Get.isRegistered<PornHubController>()) {
           await PornHubController.to.loadMyPlaylists();
         }
