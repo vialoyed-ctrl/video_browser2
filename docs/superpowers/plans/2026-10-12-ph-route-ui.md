@@ -3,10 +3,12 @@
 Spec: docs/superpowers/specs/2026-10-12-ph-route-ui.md
 Base: 996e21e。既有隔离阶段分支inline执行，已授权持续工作。
 
-- [ ] 路由controller契约、UI重建和成功页段RED；当前源码基线分析/测试。
-- [ ] 同设备旧Profile，三模式每三轮等待/失败，保留中性截图。
-- [ ] 两controller成功追加/替换元数据；两view结果快照缓存和独立footer，保持真实操作职责。
-- [ ] 定向GREEN/全量/分析/只读独立审查；修正发现的问题。
-- [ ] 同设备新Profile、截图/边界对照；正常入口构建恢复，证据/回滚提交。
+- [x] 路由controller契约、UI重建和成功页段RED；当前源码基线分析/测试。
+- [x] 同设备旧Profile，三模式每三轮等待/失败，保留中性截图。
+- [x] 两controller成功追加/替换元数据；两view结果快照缓存和独立footer，保持真实操作职责。
+- [x] 定向GREEN/全量/分析/只读独立审查；修正发现的问题。
+- [x] 同设备新Profile、截图/边界对照；正常入口构建恢复，证据/回滚提交。
 
 Ruling: 最新持续目标明确恢复测试/测量要求；上一轮跳转额外验证取消不重做。888f86a已保存，不删除已授权的未验证工作。新增契约先证明具体差异再修改。本批不改profile并发语义，避免夹带行为变化。
+
+Task complete: dd7987a; 49 targeted/343 full/1 prior skip; 7 prior info. PMB110 9 windows 8→0 cards, 6 accepted boundaries correct, 3 pixel crops equal; normal2016 restored, own transports closed.

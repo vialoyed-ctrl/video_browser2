@@ -1,0 +1,419 @@
+{
+  "date": "2026-10-12",
+  "baseline": "996e21e",
+  "implementation": "dd7987a",
+  "priorExtraction": "888f86a",
+  "compileConnectionFix": "996e21e",
+  "tests": {
+    "red": {
+      "pass": 9,
+      "fail": 10
+    },
+    "targetedPass": 49,
+    "fullPass": 343,
+    "existingSkip": 1,
+    "analysisErrors": 0,
+    "analysisWarnings": 0,
+    "existingInfo": 7
+  },
+  "device": {
+    "model": "PMB110",
+    "serial": "BUPR8HWKLZTCHAPN",
+    "api": 36,
+    "resolution": [
+      1440,
+      3200
+    ]
+  },
+  "profile": {
+    "fixture": "Neutral fixture using actual CreatorPage/PlaylistPage and actual route controllers",
+    "cyclesPerMode": 3,
+    "window": "append waiting and injected failure",
+    "comparison": {
+      "videos": {
+        "before": [
+          [
+            8,
+            2
+          ],
+          [
+            8,
+            2
+          ],
+          [
+            8,
+            2
+          ]
+        ],
+        "after": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "pixelDiffBBox": null
+      },
+      "clips": {
+        "before": [
+          [
+            8,
+            2
+          ],
+          [
+            8,
+            2
+          ],
+          [
+            8,
+            2
+          ]
+        ],
+        "after": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "pixelDiffBBox": null
+      },
+      "playlist": {
+        "before": [
+          [
+            8,
+            2
+          ],
+          [
+            8,
+            2
+          ],
+          [
+            8,
+            2
+          ]
+        ],
+        "after": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "pixelDiffBBox": null
+      }
+    },
+    "boundaries": [
+      {
+        "mode": "videos",
+        "cases": [
+          {
+            "action": "empty",
+            "second": {
+              "mode": "videos",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            },
+            "after": {
+              "mode": "videos",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "loading": false,
+              "hasMore": false,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "second": {
+              "mode": "videos",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            },
+            "after": {
+              "mode": "videos",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "clips",
+        "cases": [
+          {
+            "action": "empty",
+            "second": {
+              "mode": "clips",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            },
+            "after": {
+              "mode": "clips",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "loading": false,
+              "hasMore": false,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "second": {
+              "mode": "clips",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            },
+            "after": {
+              "mode": "clips",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "playlist",
+        "cases": [
+          {
+            "action": "empty",
+            "second": {
+              "mode": "playlist",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            },
+            "after": {
+              "mode": "playlist",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "second": {
+              "mode": "playlist",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            },
+            "after": {
+              "mode": "playlist",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "loading": false,
+              "hasMore": true,
+              "error": false,
+              "sections": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "crop": [
+      0,
+      140,
+      1440,
+      3100
+    ]
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "mode": "independent read-only; five added coverage contracts reviewed"
+  },
+  "formal": {
+    "buildNumber": 2016,
+    "target": "lib/main.dart",
+    "arm64": true,
+    "sha256": "D5A75E66A23B74B88E0E21D5BE267D357964A5DC63EDBD274CE901F4B5E0305C",
+    "home": {
+      "items": 41,
+      "page": 1,
+      "loadingFirst": false,
+      "loadingPage": false,
+      "error": null,
+      "scroll": 0,
+      "site": "site91"
+    },
+    "preserveUserData": true,
+    "ownForwardsRemoved": [
+      8541,
+      3591,
+      3632
+    ],
+    "attachedSessionsClosed": true
+  },
+  "limits": [
+    "No FPS/visible-first-frame/native memory gain claimed",
+    "No real subscription or favourite write performed",
+    "Probe replaces responses only; normal creator/playlist network end-to-end awaits four-site integrated acceptance",
+    "Initial malformed fixture (missing import/new duplicate registry source) and initial full compile failures excluded from valid RED"
+  ]
+}
