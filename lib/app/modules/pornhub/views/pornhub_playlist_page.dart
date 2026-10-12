@@ -27,6 +27,7 @@ class _PornHubPlaylistPageState extends State<PornHubPlaylistPage> {
   List<VideoItem> get _videos => _controller.videos;
   PornHubPlaylistDetails? get _detail => _controller.detail;
   bool get _loading => _controller.loading;
+  bool get _hasMore => _controller.hasMore;
   bool get _favourite => _controller.favourite;
   int get _page => _controller.nextPage;
   int get _request => _controller.requestRevision;
