@@ -251,3 +251,10 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 ## 27. 实际原生资源重复播放验收（2026-10-13）
 
 生产1d9b11a未改。真实PlayerView 60轮closed0/10/30/60为map0/codec0/surface2；900秒播放31状态样本、4原生快照1/2/3，最终0/0/2。工具6契约/只读审查，正常2018同hash恢复及清理见docs/refactor-native-resources-2026-10-13.md和摘要。不计FPS/可见首帧或所有native无泄漏；第28批scrub释放测试当前1过4败未提交，旧Androidprobe已构建待测，继续小修及四站点综合验收。
+
+
+## 28. 拖动pause/Seek/原生模式等待释放（2026-10-13）
+
+实现be2acec，撤销旧SDK所有权并取消其拖动等待，晚到回复隔离新播放器；正常恢复仍等pause与最终seek，dispose仍await。9新契约/20定向，完整363通过/1原跳过、分析0error/0warning/原7info；只读复审无剩余项。PMB110同机24旧/新原生扣回复对照：旧全部>1s，新38–64ms释放；10实际PlayerView控制退出、同播放器100拖动后等待集合0，最终map0/codec0/surface2。正常2019恢复首页41/1/scroll0/site91，三APK一致D9DFB5AFFE4DF96CC85D014B64478C4977120B5C25908CB0A3CC13066410F8CC；所有本批临时资源及原始堆已清理。报告docs/refactor-scrub-release-2026-10-13.md及摘要。可单独revert be2acec。
+
+第27节所述第28批未完成状态已由上述证据替代。仍待可见首帧/Seek、HLS/弱网/缓存/下载、其他生命周期、剩余列表账号、91搜索诊断和四站点综合回归；整个项目未完成。不要重复已验收的60轮/15分钟资源测试与本批24场景。
