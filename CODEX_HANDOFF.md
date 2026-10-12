@@ -236,3 +236,8 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 ## 24. PH 创作者/片单局部刷新与分页边界（2026-10-12）
 
 实现dd7987a，controller成功元数据+view结果缓存/独立footer。有效RED9过10败，最终49定向/343全量/1原跳过、0error/0warning/原7info；独立审查无剩余项。PMB110三模式各三窗口卡片8→0、网格2→0，六页段旧错新正确，三内容区像素一致，不计FPS/native提升。正常2016首页41/第1页/scroll0/Rootsite91，三APK一致D5A75E66A23B74B88E0E21D5BE267D357964A5DC63EDBD274CE901F4B5E0305C；attach/本批三转发关闭。详见docs/refactor-ph-route-ui-2026-10-12.md及摘要。原快照和旧阶段保留，继续活跃播放器和四站点综合回归，整个项目未完成。
+
+
+## 25. 活跃播放器pause回复释放边界（2026-10-13）
+
+实现260153c，先发best-effort pause但不等待回复，仍awaitdispose。有效RED1过2败、最终19定向/349完整/1原跳过、原7info；独立审查晚到异常Minor已覆盖关闭。PMB110 Android真实故障对照旧退出3/切换3均>1s未释放；新退出66–77ms、切换旧释放60–69ms，新播放命令完成172–200ms，每轮native确认清理。正常2017首页41/1/scroll0/site91，三APK一致9C737BFEC87B8709A8BB59C9358BBA05E1FEBD9075113B5DA9722D0D6EFC64A9；attach/自建转发/reverse8787/server关闭。报告docs/refactor-active-release-2026-10-13.md及摘要。不能称可见首帧或长期native内存改善；永久挂起pause continuation、全局并发dispose屏障、scrub/Seek等待仍保留后续。整个项目未完成，继续四站点和完整生命周期验收。
