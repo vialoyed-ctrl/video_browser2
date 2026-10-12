@@ -370,42 +370,12 @@ class _PlayerViewState extends State<PlayerView> {
               );
             }),
 
-            // 5. 播放错误横幅
+            // Keep the error backdrop below the existing controls.
             Obx(() {
-              final err = controller.error.value;
-              if (err != null) {
-                return Container(
-                  color: Colors.black87,
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          color: context.cError,
-                          size: 36,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          err,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-                        FilledButton.tonal(
-                          onPressed: controller.reload,
-                          child: const Text('重试加载'),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
+              if (controller.error.value == null) return const SizedBox.shrink();
+              return const IgnorePointer(
+                child: ColoredBox(color: Colors.black87),
+              );
             }),
 
             // 7. 浮层控制栏（自动淡入淡出；滑动 Seek、调亮度/音量 HUD 期间绝不显示控制栏，保持纯净画面）
@@ -429,6 +399,48 @@ class _PlayerViewState extends State<PlayerView> {
                 ),
               );
             }),
+
+            // Error actions take precedence over overlapping control decorations.
+            Obx(() {
+              final err = controller.error.value;
+              if (err != null) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IgnorePointer(
+                          child: Icon(
+                            Icons.error_outline,
+                            color: context.cError,
+                            size: 36,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        IgnorePointer(
+                          child: Text(
+                            err,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        FilledButton.tonal(
+                          onPressed: controller.reload,
+                          child: const Text('重试加载'),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+
           ],
         );
       },
