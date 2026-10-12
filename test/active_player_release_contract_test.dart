@@ -226,4 +226,123 @@ void main() {
       expect(controller.error.value, isNull);
     },
   );
+
+  test(
+    'concurrent switches share old disposal before latest video opens',
+    () async {
+      await open();
+      native.disposeGates[1] = Completer<void>();
+      final firstSwitch = controller.switchVideo(releaseItem('second'));
+      pending.add(firstSwitch);
+      await until(() => native.disposeStarted.contains(1));
+      final latestSwitch = controller.switchVideo(releaseItem('third'));
+      pending.add(latestSwitch);
+      for (var n = 0; n < 30; n++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+      expect(
+        native.nextId,
+        1,
+        reason: 'No new native allocation before old disposal acknowledgement',
+      );
+      expect(native.active, {1});
+      native.disposeGates[1]!.complete();
+      await Future.wait([firstSwitch, latestSwitch]);
+      await until(() => native.played.contains(2));
+      expect(controller.video.value?.id, 'active-third');
+      expect(native.nextId, 2);
+      expect(native.released, [1]);
+      expect(native.active, {2});
+      await controller.switchVideo(releaseItem('fourth'));
+      await until(() => native.played.contains(3));
+      expect(native.released, [1, 2]);
+      expect(native.active, {3});
+      expect(controller.video.value?.id, 'active-fourth');
+    },
+  );
+  test(
+    'closing during shared disposal cannot allocate a stale switch target',
+    () async {
+      await open();
+      native.disposeGates[1] = Completer<void>();
+      final firstSwitch = controller.switchVideo(releaseItem('second'));
+      pending.add(firstSwitch);
+      await until(() => native.disposeStarted.contains(1));
+      final latestSwitch = controller.switchVideo(releaseItem('third'));
+      pending.add(latestSwitch);
+      controller.onClose();
+      for (var n = 0; n < 30; n++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+      expect(native.nextId, 1);
+      expect(native.active, {1});
+      native.disposeGates[1]!.complete();
+      await Future.wait([firstSwitch, latestSwitch]);
+      await until(() => native.active.isEmpty);
+      expect(native.nextId, 1);
+      expect(native.released, [1]);
+    },
+  );
+
+  test('reload pending disposal cannot reopen after route close', () async {
+    await open();
+    native.disposeGates[1] = Completer<void>();
+    final reload = controller.reload();
+    pending.add(reload);
+    await until(() => native.disposeStarted.contains(1));
+    controller.onClose();
+    native.disposeGates[1]!.complete();
+    await reload;
+    expect(native.nextId, 1);
+    expect(native.active, isEmpty);
+  });
+  test('reload pending disposal cannot override a newer switch', () async {
+    await open();
+    native.disposeGates[1] = Completer<void>();
+    final reload = controller.reload();
+    pending.add(reload);
+    await until(() => native.disposeStarted.contains(1));
+    final latest = controller.switchVideo(releaseItem('latest'));
+    pending.add(latest);
+    native.disposeGates[1]!.complete();
+    await Future.wait([reload, latest]);
+    await until(
+      () => native.active.length == 1 && native.played.contains(native.nextId),
+    );
+    expect(native.nextId, 2);
+    expect(controller.video.value?.id, 'active-latest');
+  });
+  test(
+    'synchronous seeking listener cannot bypass the disposal barrier',
+    () async {
+      await open();
+      native.disposeGates[1] = Completer<void>();
+      var fired = false;
+      final subscription = controller.isSeeking.listen((seeking) {
+        if (!seeking && !fired) {
+          fired = true;
+          pending.add(controller.switchVideo(releaseItem('reentrant')));
+        }
+      });
+      addTearDown(subscription.cancel);
+      controller.isSeeking.value = true;
+      final initial = controller.switchVideo(releaseItem('second'));
+      pending.add(initial);
+      await until(() => native.disposeStarted.contains(1));
+      expect(fired, isTrue);
+      for (var n = 0; n < 30; n++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+      final latest = controller.switchVideo(releaseItem('latest'));
+      pending.add(latest);
+      for (var n = 0; n < 30; n++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+      expect(native.nextId, 1);
+      native.disposeGates[1]!.complete();
+      await Future.wait(pending);
+      expect(native.nextId, 2);
+      expect(controller.video.value?.id, 'active-latest');
+    },
+  );
 }

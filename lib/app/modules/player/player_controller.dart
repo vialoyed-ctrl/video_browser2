@@ -56,6 +56,7 @@ class PlayerController extends GetxController {
   bool _historyWriteErrorLogged = false;
 
   VideoPlayerController? _videoPlayerController;
+  Future<void>? _disposeTask;
   VideoPlayerController? get videoPlayerController => _videoPlayerController;
 
   final Rxn<VideoItem> video = Rxn<VideoItem>();
@@ -1305,6 +1306,32 @@ class PlayerController extends GetxController {
   }
 
   Future<void> _disposeCurrentPlayer() async {
+    final pending = _disposeTask;
+    if (pending != null) {
+      await pending;
+      return;
+    }
+    final completion = Completer<void>();
+    final task = completion.future;
+    // Publish before cleanup changes Rx values: a synchronous listener may
+    // request another switch while those values are being updated.
+    _disposeTask = task;
+    unawaited(
+      _releaseCurrentPlayer().then<void>(
+        (_) => completion.complete(),
+        onError: (Object error, StackTrace stack) {
+          completion.completeError(error, stack);
+        },
+      ),
+    );
+    try {
+      await task;
+    } finally {
+      if (identical(_disposeTask, task)) _disposeTask = null;
+    }
+  }
+
+  Future<void> _releaseCurrentPlayer() async {
     _liveSeekActive = false;
     _scrubLatestTarget = null;
     isScrubbing.value = false;
@@ -2012,12 +2039,13 @@ class PlayerController extends GetxController {
     final item = video.value;
     if (item == null) return;
     _playRequestAt = DateTime.now();
-    _videoSwitchGeneration++;
+    final generation = ++_videoSwitchGeneration;
     _hasAutoRetried = false;
     _resetPornHubRecovery();
     resolving.value = false;
     resolveStatus.value = '';
     await _disposeCurrentPlayer();
+    if (generation != _videoSwitchGeneration) return;
     buffered.value = Duration.zero;
     _pendingSeekPosition = Duration.zero;
     await _prepareAndOpen(item, forceRefresh: true);
