@@ -30,7 +30,7 @@ class NoHistoryUser extends UserService {
 }
 
 void main() {
-  for (final action in ['retry', 'topRefresh', 'pause']) {
+  for (final action in ['retry', 'topRefresh', 'pause', 'longRetry']) {
     for (final width in [400.0, 576.0]) {
       testWidgets('$action remains reachable at width $width', (tester) async {
         final previous = VideoPlayerPlatform.instance;
@@ -46,6 +46,12 @@ void main() {
         try {
           await tester.pumpWidget(
             GetMaterialApp(
+              builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaler: TextScaler.linear(action == 'longRetry' ? 2 : 1),
+                ),
+                child: child!,
+              ),
               home: PlayerView(key: key, videoItem: releaseItem('retry')),
             ),
           );
@@ -57,10 +63,21 @@ void main() {
           expect(c.isInitialized.value, true);
           c.error.value = 'Video player had error androidx.media3.exoplayer.ExoPlaybackException: Source error';
           if (action == 'pause') c.error.value = null;
+          if (action == 'longRetry') {
+            c.error.value = List.filled(
+              35,
+              'Neutral network error description',
+            ).join(' ');
+          }
           c.showControls.value = true;
           await tester.pump(const Duration(milliseconds: 300));
+          expect(
+            tester.takeException(),
+            isNull,
+            reason: 'Error content must fit without overflow',
+          );
           final oldPlayer = c.videoPlayerController;
-          final button = action == 'retry'
+          final button = (action == 'retry' || action == 'longRetry')
               ? find.widgetWithText(FilledButton, '重试加载')
               : find.byIcon(
                   action == 'topRefresh' ? Icons.refresh : Icons.pause_rounded,

@@ -219,7 +219,7 @@ class _PlaylistsPane extends StatefulWidget {
 
 class _PlaylistsPaneState extends State<_PlaylistsPane> {
   final List<PornHubPlaylist> _items = <PornHubPlaylist>[];
-  bool _loading = true;
+  bool _loading = false;
   String? _error;
 
   @override
@@ -229,6 +229,7 @@ class _PlaylistsPaneState extends State<_PlaylistsPane> {
   }
 
   Future<void> _load() async {
+    if (!mounted || _loading) return;
     setState(() {
       _loading = true;
       _error = null;
@@ -329,7 +330,7 @@ class _StarsPane extends StatefulWidget {
 
 class _StarsPaneState extends State<_StarsPane> {
   final List<PornHubStar> _items = <PornHubStar>[];
-  bool _loading = true;
+  bool _loading = false;
   String? _error;
 
   @override
@@ -339,6 +340,7 @@ class _StarsPaneState extends State<_StarsPane> {
   }
 
   Future<void> _load() async {
+    if (!mounted || _loading) return;
     setState(() {
       _loading = true;
       _error = null;

@@ -543,6 +543,9 @@ class DownloadService extends GetxService {
         }
       }
       if (run.token.isCancelled) throw run.token.cancelError!;
+      if (total > 0 && count != total) {
+        throw StateError('MP4下载不完整: 预期$total字节，实际$count字节');
+      }
     } catch (_) {
       await stopReading();
       await run.transportDrain;

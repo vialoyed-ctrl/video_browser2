@@ -372,7 +372,9 @@ class _PlayerViewState extends State<PlayerView> {
 
             // Keep the error backdrop below the existing controls.
             Obx(() {
-              if (controller.error.value == null) return const SizedBox.shrink();
+              if (controller.error.value == null) {
+                return const SizedBox.shrink();
+              }
               return const IgnorePointer(
                 child: ColoredBox(color: Colors.black87),
               );
@@ -418,13 +420,17 @@ class _PlayerViewState extends State<PlayerView> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        IgnorePointer(
-                          child: Text(
-                            err,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
+                        Flexible(
+                          child: SingleChildScrollView(
+                            child: IgnorePointer(
+                              child: Text(
+                                err,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -440,7 +446,6 @@ class _PlayerViewState extends State<PlayerView> {
               }
               return const SizedBox.shrink();
             }),
-
           ],
         );
       },
@@ -631,57 +636,69 @@ class _PlayerViewState extends State<PlayerView> {
                       ),
                     ),
                     // 纵向双行堆叠时长：上行当前时间，下行总时长（对齐图2）
-                    Obx(() {
-                      final scrubbing = controller.isScrubbing.value;
-                      final currentPos = scrubbing
-                          ? controller.scrubPosition.value
-                          : controller.isSeeking.value
-                          ? controller.seekPreviewPosition.value
-                          : controller.position.value;
-                      // 逐帧拖动时秒级读数不够用（24fps 下相邻两帧只差 42ms），
-                      // 拖动中改用毫秒级显示。
-                      final pos = scrubbing
-                          ? formatPreciseDuration(currentPos)
-                          : _formatDuration(currentPos);
-                      final dur = _formatDuration(controller.duration.value);
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 2),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              pos,
-                              style: TextStyle(
-                                color:
-                                    (controller.isSeeking.value ||
-                                        controller.isScrubbing.value)
-                                    ? AppTheme.playerAccent
-                                    : Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                height: 1.15,
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Obx(() {
+                            final scrubbing = controller.isScrubbing.value;
+                            final currentPos = scrubbing
+                                ? controller.scrubPosition.value
+                                : controller.isSeeking.value
+                                ? controller.seekPreviewPosition.value
+                                : controller.position.value;
+                            // 逐帧拖动时秒级读数不够用（24fps 下相邻两帧只差 42ms），
+                            // 拖动中改用毫秒级显示。
+                            final pos = scrubbing
+                                ? formatPreciseDuration(currentPos)
+                                : _formatDuration(currentPos);
+                            final dur = _formatDuration(
+                              controller.duration.value,
+                            );
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 2),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    pos,
+                                    style: TextStyle(
+                                      color:
+                                          (controller.isSeeking.value ||
+                                              controller.isScrubbing.value)
+                                          ? AppTheme.playerAccent
+                                          : Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      height: 1.15,
+                                      fontFeatures: const [
+                                        FontFeature.tabularFigures(),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    dur,
+                                    style: const TextStyle(
+                                      color: Colors.white60,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 10.5,
+                                      height: 1.15,
+                                      fontFeatures: [
+                                        FontFeature.tabularFigures(),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              dur,
-                              style: const TextStyle(
-                                color: Colors.white60,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 10.5,
-                                height: 1.15,
-                                fontFeatures: [FontFeature.tabularFigures()],
-                              ),
-                            ),
-                          ],
+                            );
+                          }),
                         ),
-                      );
-                    }),
-                    const Spacer(),
+                      ),
+                    ),
                     // 倍速切换（文字显示为 1.0X）
                     PopupMenuButton<double>(
                       initialValue: controller.speed.value,
