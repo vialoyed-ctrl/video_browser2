@@ -305,3 +305,8 @@ PMB110 Profile匿名source+nativeSDK公开回归：91/PH/91MD首页第二页搜�
 ## 37. GitHub v2.0.3 发布整理（2026-10-13）
 
 按用户要求上传既有仓库 vialoyed-ctrl/video_browser2。本地独立审计历史通过043283b连接远端main，保留旧记录，未强制推送；发布源码版本2.0.3+2028。发布前全量424通过/1原跳过、分析0error/0warning/原7info，正式ARM64 APK构建成功；详细用户可见更新、受控性能证据和限制见docs/releases/v2.0.3.md。原生/布局实现及原始备份保留，发行签名沿用现有开发配置。
+
+
+## 38. GitHub更新查询备用路径（2026-10-14）
+
+用户截图版本2.0.2显示403文案且无法检测更新。原实现仅匿名GitHub API、所有403统一显示限流；未证明截图时具体响应头。ReleaseMetadataClient在Dio请求失败时使用公开docs/releases/latest.json，403/429冷却遵守reset/retry-after且至少60秒，不内置Token；补text/plain JSON解码。5新契约通过，最终全量429通过/1原跳过、分析0error/0warning原7info，2.0.4+2029 ARM64正式包构建成功，原安装/架构匹配/版本比较保留。旧版无备用路径，若被限流需手动覆盖安装修复版。v2.0.3已公开发布并保留；本版发布说明docs/releases/v2.0.4.md。

@@ -17,6 +17,11 @@
 
 在 [Releases](https://github.com/vialoyed-ctrl/video_browser2/releases) 下载最新 APK。当前版本提供 `playback-warehouse-arm64.apk`，适用于 ARM64 Android 手机和平板；旧款32位设备请查看此前提供 ARM32 包的历史版本。
 
+## v2.0.4 更新
+
+- 更新查询支持公开版本文件备用路径，解决GitHub API限流或连接失败时无法发现新版本。
+- [v2.0.4发布说明](docs/releases/v2.0.4.md)。
+
 ## v2.0.3 更新
 
 - 公共抽屉和“我的”新增卡片布局：自动适配或1–6列，各页面共用，立即生效并保存。

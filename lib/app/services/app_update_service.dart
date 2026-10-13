@@ -9,6 +9,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'release_metadata_client.dart';
+
 class AppUpdateInfo {
   const AppUpdateInfo({
     required this.version,
@@ -31,8 +33,6 @@ class AppUpdateService extends GetxService {
   static const _channel = MethodChannel(
     'com.example.video_browser/app_updates',
   );
-  static const _releaseUrl =
-      'https://api.github.com/repos/vialoyed-ctrl/video_browser2/releases/latest';
   static const _lastCheckKey = 'app_update_last_successful_check';
   static const _checkInterval = Duration(hours: 24);
 
@@ -46,6 +46,8 @@ class AppUpdateService extends GetxService {
       },
     ),
   );
+
+  late final _releaseMetadata = ReleaseMetadataClient(_dio);
 
   final Rxn<AppUpdateInfo> availableUpdate = Rxn<AppUpdateInfo>();
   final RxBool checking = false.obs;
@@ -94,8 +96,7 @@ class AppUpdateService extends GetxService {
     try {
       final package = await PackageInfo.fromPlatform();
       currentVersion.value = package.version;
-      final response = await _dio.get<Object?>(_releaseUrl);
-      final data = Map<String, dynamic>.from(response.data! as Map);
+      final data = await _releaseMetadata.fetchLatest();
       final tagName = (data['tag_name'] as String? ?? '').trim();
       final releaseVersion = _versionFromTag(tagName);
       if (releaseVersion == null) {
@@ -170,7 +171,9 @@ class AppUpdateService extends GetxService {
       }
     } on DioException catch (error) {
       final code = error.response?.statusCode;
-      status.value = code == 403 ? 'GitHub 暂时限制了版本查询，请稍后重试' : '检查更新失败，请检查网络后重试';
+      status.value = (code == 403 || code == 429)
+          ? 'GitHub 暂时限制了版本查询，请稍后重试'
+          : '检查更新失败，请检查网络后重试';
       if (manual) rethrow;
     } catch (_) {
       status.value = '检查更新失败，请稍后重试';
