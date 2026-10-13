@@ -33,6 +33,8 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
   private final LongSparseArray<VideoPlayer> videoPlayers = new LongSparseArray<>();
   private FlutterState flutterState;
   @Nullable private MethodChannel media3CacheChannel;
+  // Accessed only on the platform thread; each request owns its queued channel events.
+  private final Map<String, Object> preloadOwners = new HashMap<>();
   private final VideoPlayerOptions sharedOptions = new VideoPlayerOptions();
   private long nextPlayerIdentifier = 1;
 
@@ -71,6 +73,7 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
     if (flutterState == null) {
       Log.wtf(TAG, "Detached from the engine before registering to it.");
     }
+    preloadOwners.clear();
     flutterState.stopListening(binding.getBinaryMessenger());
     if (media3CacheChannel != null) {
       media3CacheChannel.setMethodCallHandler(null);
@@ -153,11 +156,13 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
         result.error("invalid_task_id", "Expected a preload task id", null);
         return;
       }
+      preloadOwners.remove(taskId);
       Media3Preloader.cancel(taskId);
       result.success(null);
       return;
     }
     if ("cancelAllPreloads".equals(call.method)) {
+      preloadOwners.clear();
       Media3Preloader.cancelAll();
       result.success(null);
       return;
@@ -199,6 +204,8 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
       }
     }
 
+    final Object owner = new Object();
+    preloadOwners.put(taskId, owner);
     Media3Preloader.enqueue(
         context,
         taskId,
@@ -210,7 +217,8 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
         asLong(args.get("positionBytes"), 0L),
         asLong(args.get("lengthBytes"), C.LENGTH_UNSET),
         asLong(args.get("durationUs"), C.TIME_UNSET),
-        this::emitPreloadProgress);
+        (id, length, bytes, percent, finished, error) ->
+            emitPreloadProgress(owner, id, length, bytes, percent, finished, error));
     result.success(null);
   }
 
@@ -221,6 +229,7 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
    * on the platform thread, hence the hop.
    */
   private void emitPreloadProgress(
+      Object owner,
       String taskId,
       long contentLength,
       long bytesDownloaded,
@@ -236,6 +245,12 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
     payload.put("error", error);
     mainHandler.post(
         () -> {
+          if (preloadOwners.get(taskId) != owner) {
+            return;
+          }
+          if (finished || error != null) {
+            preloadOwners.remove(taskId);
+          }
           final MethodChannel channel = media3CacheChannel;
           if (channel != null) {
             channel.invokeMethod("preloadProgress", payload);

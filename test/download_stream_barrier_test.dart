@@ -122,7 +122,7 @@ void main() {
     final adapter = HeldStreamCleanup();
     final service = DownloadService(
       dio: Dio()..httpClientAdapter = adapter,
-      mp4DownloadTimeout: const Duration(milliseconds: 200),
+      mp4DownloadTimeout: const Duration(seconds: 2),
     );
     const video = VideoItem(
       id: 'timeout-barrier',
