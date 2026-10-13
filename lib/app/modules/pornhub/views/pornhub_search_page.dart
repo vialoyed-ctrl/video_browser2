@@ -2,7 +2,13 @@ import '../../../widgets/retained_page_sliver.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
+
+import '../../../widgets/adaptive_sliver_layout.dart';
+
 import 'package:flutter/material.dart';
+
+import '../../../widgets/grid_layout_scope.dart';
+
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
@@ -529,26 +535,33 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
       );
     }
     final playlists = _resultSnapshot.cast<PornHubPlaylist>();
-    return _cachedResults = SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      sliver: SliverGrid.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1.15,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
-        itemCount: _resultSnapshot.length,
-        itemBuilder: (_, index) {
-          final playlist = playlists[index];
-          return PornHubPlaylistCard(
-            playlist: playlist,
-            onTap: () => Get.to<void>(
-              () =>
-                  PornHubBrowsePage(title: playlist.title, path: playlist.url),
+    return _cachedResults = adaptiveSliverLayout(
+      (context, constraints) => SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        sliver: SliverGrid.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: GridLayoutScope.columnsOf(
+              context,
+              constraints.crossAxisExtent,
             ),
-          );
-        },
+            childAspectRatio: 1.15,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: _resultSnapshot.length,
+          itemBuilder: (_, index) {
+            final playlist = playlists[index];
+            return PornHubPlaylistCard(
+              playlist: playlist,
+              onTap: () => Get.to<void>(
+                () => PornHubBrowsePage(
+                  title: playlist.title,
+                  path: playlist.url,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -19,6 +19,9 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import '../../../widgets/adaptive_card_grid.dart';
+
 import 'package:get/get.dart';
 
 import '../../../data/models/pornhub_models.dart';
@@ -271,14 +274,13 @@ class _PornHubMineTabState extends State<PornHubMineTab> {
         if (_playlistsExpanded)
           SizedBox(
             height: MediaQuery.sizeOf(context).height * 0.26,
-            child: GridView.builder(
+            child: AdaptiveCardGrid(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1.15,
-                crossAxisSpacing: 6,
-                mainAxisSpacing: 6,
-              ),
+
+              childAspectRatio: 1.15,
+              crossAxisSpacing: 6,
+              mainAxisSpacing: 6,
+
               itemCount: playlists.length,
               itemBuilder: (_, i) => _playlistTile(theme, playlists[i]),
             ),
@@ -634,17 +636,16 @@ class _PublicPlaylistsPane extends StatelessWidget {
     }
     return RefreshIndicator(
       onRefresh: onRetry,
-      child: GridView.builder(
+      child: AdaptiveCardGrid(
         physics: const AlwaysScrollableScrollPhysics(
           parent: BouncingScrollPhysics(),
         ),
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1.15,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
+
+        childAspectRatio: 1.15,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+
         itemCount: items.length,
         itemBuilder: (context, index) => PornHubPlaylistCard(
           playlist: items[index],

@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../core/responsive_utils.dart';
+import '../../../widgets/adaptive_card_grid.dart';
 import '../../../data/models/pornhub_models.dart';
 import '../../../services/pornhub_auth_service.dart';
 import '../widgets/pornhub_playlist_card.dart';
@@ -858,24 +858,10 @@ class _PornHubVideoInfoPanelState extends State<PornHubVideoInfoPanel> {
     final theme = Theme.of(context);
     if (videos.isEmpty) return _emptyHint(theme, emptyHint);
 
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final isWide = ResponsiveLayout.isWideScreen(context);
-    final availableWidth = isWide ? screenWidth - 73 : screenWidth;
-    final columnCount = ResponsiveLayout.gridColumnCount(availableWidth);
-    final columnWidth =
-        (availableWidth - 12 - (columnCount - 1) * 6) / columnCount;
-    final childAspectRatio = ResponsiveLayout.cardAspectRatio(columnWidth);
-
-    return GridView.builder(
+    return AdaptiveCardGrid(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: columnCount,
-        crossAxisSpacing: 6,
-        mainAxisSpacing: 6,
-        childAspectRatio: childAspectRatio,
-      ),
       itemCount: videos.length,
       itemBuilder: (context, index) {
         final video = videos[index];
@@ -990,15 +976,14 @@ class _PornHubVideoInfoPanelState extends State<PornHubVideoInfoPanel> {
 
   Widget _buildPlaylists(ThemeData theme, List<PornHubPlaylist> playlists) {
     if (playlists.isEmpty) return _emptyHint(theme, '暂无片单');
-    return GridView.builder(
+    return AdaptiveCardGrid(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.15,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
+
+      childAspectRatio: 1.15,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+
       itemCount: playlists.length,
       itemBuilder: (_, i) => PornHubPlaylistCard(
         playlist: playlists[i],

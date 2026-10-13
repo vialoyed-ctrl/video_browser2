@@ -21,7 +21,8 @@ class ResponsiveLayout {
   /// 宽度 >= 720dp，或者为平板且处于横向形态
   static bool isWideScreen(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return size.width >= 720 || (size.shortestSide >= 600 && size.width > size.height);
+    return size.width >= 720 ||
+        (size.shortestSide >= 600 && size.width > size.height);
   }
 
   /// 依据可用宽度自适应计算瀑布流网格的列数：
@@ -39,11 +40,11 @@ class ResponsiveLayout {
   /// 依据单列宽度动态计算 BiliVideoCardV 的黄金子组件宽高比 (childAspectRatio)，
   /// 封面比例恒定为 16:10，底部元数据区固定约 72~76dp，
   /// 保证在任何宽度下文字绝不越界、底部绝无空白黑边、封面不拉伸。
-  static double cardAspectRatio(double columnWidth) {
+  static double cardAspectRatio(double columnWidth, {double textScale = 1}) {
     final coverHeight = columnWidth * (10.0 / 16.0);
-    const contentHeight = 74.0;
+    final contentHeight = 74.0 * textScale;
     final totalHeight = coverHeight + contentHeight;
-    return (columnWidth / totalHeight).clamp(0.85, 1.25);
+    return (columnWidth / totalHeight).clamp(0.01, 1.25);
   }
 
   /// 最大内容居中宽度（适用于弹窗、设置列表、超宽屏头部导航卡片）

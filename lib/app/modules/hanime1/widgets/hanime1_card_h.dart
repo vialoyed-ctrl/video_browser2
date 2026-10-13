@@ -50,9 +50,13 @@
 library;
 
 import 'package:cached_network_image/cached_network_image.dart';
+
+import '../../../widgets/adaptive_sliver_layout.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/app_theme.dart';
+import '../../../widgets/grid_layout_scope.dart';
 import '../../../data/models/video_item.dart';
 import '../../../routes/app_navigator.dart';
 import '../../../services/player_service.dart';
@@ -230,15 +234,18 @@ class Hanime1CardH extends StatelessWidget {
                       ),
                       if (video.publishedAt != null &&
                           video.publishedAt!.isNotEmpty)
-                        Text(
-                          // 官网是 `&nbsp;• 12小時前`（时间前面有一个不换行空格）
-                          '\u00A0• ${video.publishedAt!}',
-                          maxLines: 1,
-                          softWrap: false,
-                          style: TextStyle(
-                            fontSize: 12,
-                            height: 1.25,
-                            color: context.cTextSub,
+                        Flexible(
+                          child: Text(
+                            overflow: TextOverflow.ellipsis,
+                            // 官网是 `&nbsp;• 12小時前`（时间前面有一个不换行空格）
+                            '\u00A0• ${video.publishedAt!}',
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontSize: 12,
+                              height: 1.25,
+                              color: context.cTextSub,
+                            ),
                           ),
                         ),
                     ],
@@ -368,51 +375,51 @@ class Hanime1VideoGridSliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rowCount = (items.length + 1) ~/ 2;
-
-    return SliverPadding(
-      padding:
-          padding ??
-          const EdgeInsets.symmetric(
-            horizontal: Hanime1CardH.horizontalPadding,
+    return adaptiveSliverLayout((context, constraints) {
+      final columns = GridLayoutScope.columnsOf(
+        context,
+        constraints.crossAxisExtent,
+      );
+      final rowCount = (items.length + columns - 1) ~/ columns;
+      return SliverPadding(
+        padding:
+            padding ??
+            const EdgeInsets.symmetric(
+              horizontal: Hanime1CardH.horizontalPadding,
+            ),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (ctx, row) => Padding(
+              padding: EdgeInsets.only(
+                bottom: row == rowCount - 1 ? 0 : Hanime1CardH.rowGap,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var column = 0; column < columns; column++) ...[
+                    if (column > 0)
+                      const SizedBox(width: Hanime1CardH.columnGap),
+                    Expanded(
+                      child: row * columns + column < items.length
+                          ? Hanime1CardH(
+                              video: items[row * columns + column],
+                              onTap: onTapItem == null
+                                  ? null
+                                  : () => onTapItem!(
+                                      items[row * columns + column],
+                                    ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            childCount: rowCount,
           ),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate((ctx, row) {
-          final leftIndex = row * 2;
-          final rightIndex = leftIndex + 1;
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: row == rowCount - 1 ? 0 : Hanime1CardH.rowGap,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Hanime1CardH(
-                    video: items[leftIndex],
-                    onTap: onTapItem == null
-                        ? null
-                        : () => onTapItem!(items[leftIndex]),
-                  ),
-                ),
-                const SizedBox(width: Hanime1CardH.columnGap),
-                Expanded(
-                  child: rightIndex < items.length
-                      ? Hanime1CardH(
-                          video: items[rightIndex],
-                          onTap: onTapItem == null
-                              ? null
-                              : () => onTapItem!(items[rightIndex]),
-                        )
-                      // 奇数个时右侧留空，保持左对齐
-                      : const SizedBox.shrink(),
-                ),
-              ],
-            ),
-          );
-        }, childCount: rowCount),
-      ),
-    );
+        ),
+      );
+    });
   }
 }
 
@@ -561,7 +568,6 @@ class Hanime1PosterGridSliver extends StatelessWidget {
   final void Function(VideoItem video)? onTapItem;
 
   /// 列数。官网搜索结果实测 3 列。
-  static const int columns = 3;
 
   /// 列间距 / 行间距。
   static const double columnGap = 7;
@@ -569,36 +575,44 @@ class Hanime1PosterGridSliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rowCount = (items.length + columns - 1) ~/ columns;
+    return adaptiveSliverLayout((context, constraints) {
+      final columns = GridLayoutScope.columnsOf(
+        context,
+        constraints.crossAxisExtent,
+      );
+      final rowCount = (items.length + columns - 1) ~/ columns;
 
-    return SliverPadding(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 7),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate((ctx, row) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: row == rowCount - 1 ? 0 : rowGap),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (var c = 0; c < columns; c++) ...[
-                  if (c > 0) const SizedBox(width: columnGap),
-                  Expanded(
-                    child: (row * columns + c) < items.length
-                        ? Hanime1PosterCard(
-                            video: items[row * columns + c],
-                            onTap: onTapItem == null
-                                ? null
-                                : () => onTapItem!(items[row * columns + c]),
-                          )
-                        // 末行不足时右侧留空，保持左对齐
-                        : const SizedBox.shrink(),
-                  ),
+      return SliverPadding(
+        padding: padding ?? const EdgeInsets.symmetric(horizontal: 7),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate((ctx, row) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: row == rowCount - 1 ? 0 : rowGap,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var c = 0; c < columns; c++) ...[
+                    if (c > 0) const SizedBox(width: columnGap),
+                    Expanded(
+                      child: (row * columns + c) < items.length
+                          ? Hanime1PosterCard(
+                              video: items[row * columns + c],
+                              onTap: onTapItem == null
+                                  ? null
+                                  : () => onTapItem!(items[row * columns + c]),
+                            )
+                          // 末行不足时右侧留空，保持左对齐
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
                 ],
-              ],
-            ),
-          );
-        }, childCount: rowCount),
-      ),
-    );
+              ),
+            );
+          }, childCount: rowCount),
+        ),
+      );
+    });
   }
 }

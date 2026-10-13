@@ -233,83 +233,96 @@ class BiliVideoCardV extends StatelessWidget {
                       ),
                     ),
                     // 底栏：UP主 / 作者 ID + 发布时间 + 快捷下载（紧贴底部，无多余空行）
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(4),
-                            onTap: () => _searchAuthor(
-                              video.author,
-                              video: video,
-                              onAuthorTap: onAuthorTap,
-                            ),
-                            onLongPress: () => _showAuthorSheet(
-                              context,
-                              video.author,
-                              video: video,
-                              onAuthorTap: onAuthorTap,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 3,
-                                    vertical: 0.5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: theme.colorScheme.primary
-                                          .withValues(alpha: 0.7),
-                                      width: 0.8,
-                                    ),
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                  child: Text(
-                                    'UP',
-                                    style: TextStyle(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    video.publishedAt != null &&
-                                            video.publishedAt!.isNotEmpty
-                                        ? '${video.author} · ${video.publishedAt}'
-                                        : video.author,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (onDownload != null)
-                          InkWell(
-                            onTap: onDownload,
-                            borderRadius: BorderRadius.circular(16),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                                vertical: 2,
+                    LayoutBuilder(
+                      builder: (context, constraints) => Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(4),
+                              onTap: () => _searchAuthor(
+                                video.author,
+                                video: video,
+                                onAuthorTap: onAuthorTap,
                               ),
-                              child: Icon(
-                                Icons.download_for_offline_outlined,
-                                size: 22,
-                                color: theme.colorScheme.onSurfaceVariant,
+                              onLongPress: () => _showAuthorSheet(
+                                context,
+                                video.author,
+                                video: video,
+                                onAuthorTap: onAuthorTap,
+                              ),
+                              child: LayoutBuilder(
+                                builder: (context, constraints) => Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (constraints.maxWidth >= 45) ...[
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 3,
+                                          vertical: 0.5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: theme.colorScheme.primary
+                                                .withValues(alpha: 0.7),
+                                            width: 0.8,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            3,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'UP',
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.colorScheme.primary,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                    ],
+                                    Expanded(
+                                      child: Text(
+                                        video.publishedAt != null &&
+                                                video.publishedAt!.isNotEmpty
+                                            ? '${video.author} · ${video.publishedAt}'
+                                            : video.author,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: theme
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                      ],
+                          if (onDownload != null)
+                            InkWell(
+                              onTap: onDownload,
+                              borderRadius: BorderRadius.circular(16),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 2,
+                                ),
+                                child: Icon(
+                                  Icons.download_for_offline_outlined,
+                                  size: (constraints.maxWidth - 8).clamp(
+                                    0.0,
+                                    22.0,
+                                  ),
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

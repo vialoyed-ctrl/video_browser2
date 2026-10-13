@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../core/responsive_utils.dart';
+import '../../widgets/video_grid_sliver.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/video_source.dart';
 import '../../routes/app_navigator.dart';
@@ -166,36 +166,20 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
               : controller.loadMore,
         ),
       ),
-      gridBuilder: (pageItems) => SliverPadding(
+      gridBuilder: (pageItems) => VideoGridSliver(
+        items: pageItems,
+        availableWidth: MediaQuery.sizeOf(context).width,
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        sliver: SliverLayoutBuilder(
-          builder: (context, constraints) {
-            final columns = ResponsiveLayout.gridColumnCount(
-              constraints.crossAxisExtent,
-            );
-            final width =
-                (constraints.crossAxisExtent - (columns - 1) * 6) / columns;
-            return SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columns,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 6,
-                childAspectRatio: ResponsiveLayout.cardAspectRatio(width),
-              ),
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final video = pageItems[index];
-                return BiliVideoCardV(
-                  video: video,
-                  onTap: () => AppNavigator.toPlayer(video),
-                  onDownload: () {
-                    Get.find<DownloadService>().enqueue(video);
-                    AppToast.show('已加入下载队列');
-                  },
-                );
-              }, childCount: pageItems.length),
-            );
-          },
-        ),
+        itemBuilder: (context, video) {
+          return BiliVideoCardV(
+            video: video,
+            onTap: () => AppNavigator.toPlayer(video),
+            onDownload: () {
+              Get.find<DownloadService>().enqueue(video);
+              AppToast.show('已加入下载队列');
+            },
+          );
+        },
       ),
     );
   }

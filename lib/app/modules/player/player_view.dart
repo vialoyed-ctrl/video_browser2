@@ -8,6 +8,8 @@ library;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/adaptive_card_grid.dart';
+
 import '../../core/app_theme.dart';
 
 import 'package:flutter/services.dart';
@@ -1746,16 +1748,14 @@ class _PlayerViewState extends State<PlayerView> {
             );
           }
 
-          return ListView.separated(
+          return AdaptiveCardGrid(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.only(bottom: 24),
+            padding: const EdgeInsets.fromLTRB(6, 0, 6, 24),
             itemCount: list.length,
-            separatorBuilder: (_, _) =>
-                const Divider(height: 1, indent: 14, endIndent: 14),
             itemBuilder: (context, index) {
               final item = list[index];
-              return BiliVideoCardH(
+              return BiliVideoCardV(
                 video: item,
                 onTap: () => controller.switchVideo(item),
               );

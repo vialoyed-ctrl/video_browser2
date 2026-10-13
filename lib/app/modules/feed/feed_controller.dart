@@ -85,7 +85,7 @@ class FeedController extends GetxController {
     super.onClose();
   }
 
-  List<String> get subscriptions => _userSvc.subscriptions.toList();
+  List<String> get subscriptions => _userSvc.latestSubscriptions;
 
   /// 切换筛选的 UP 主
   void selectAuthor(String author) {

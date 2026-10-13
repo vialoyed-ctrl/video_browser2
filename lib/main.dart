@@ -24,11 +24,14 @@ import 'app/services/player_service.dart';
 import 'app/services/pornhub_auth_service.dart';
 import 'app/services/preload_service.dart';
 import 'app/services/user_service.dart';
+import 'app/services/grid_layout_settings.dart';
+import 'app/widgets/grid_layout_scope.dart';
 import 'app/widgets/app_toast.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppLogger.initialize();
+  await GridLayoutSettings.instance.init();
 
   // 杜绝 Release 模式下未捕获 UI 异常渲染全局灰屏方块 (RenderErrorBox)
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -167,6 +170,10 @@ class VideoBrowserApp extends StatelessWidget {
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) => GetMaterialApp(
         title: '播放仓库',
+        builder: (context, child) => GridLayoutScope(
+          settings: GridLayoutSettings.instance,
+          child: child!,
+        ),
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(dynamicScheme: lightDynamic),
         darkTheme: AppTheme.dark(dynamicScheme: darkDynamic),

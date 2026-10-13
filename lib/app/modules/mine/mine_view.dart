@@ -23,6 +23,8 @@ import '../../services/task_repository.dart';
 import '../../services/user_service.dart';
 import '../../widgets/bili_video_card.dart';
 import '../../widgets/download_dir_migrator.dart';
+import '../../widgets/grid_layout_settings_tile.dart';
+import '../../widgets/adaptive_card_grid.dart';
 
 class MineView extends StatelessWidget {
   const MineView({super.key});
@@ -215,6 +217,7 @@ class MineView extends StatelessWidget {
           const Divider(height: 1),
 
           // 5. 辅助快捷列表项
+          const GridLayoutSettingsTile(),
           ListTile(
             leading: const Icon(Icons.playlist_play_rounded),
             title: const Text('所有收藏夹管理'),
@@ -940,11 +943,9 @@ class FavoriteFolderDetailView extends StatelessWidget {
         }
         PreloadService.instance.preloadList(list, isNewPage: true);
 
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+        return AdaptiveCardGrid(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           itemCount: list.length,
-          separatorBuilder: (_, _) =>
-              const Divider(height: 1, indent: 14, endIndent: 14),
           itemBuilder: (context, index) {
             final video = list[index];
             return Dismissible(
@@ -960,7 +961,7 @@ class FavoriteFolderDetailView extends StatelessWidget {
                 userSvc.removeVideoFromFolder(folderName, video.id);
                 AppToast.show('已从 $folderName 移出');
               },
-              child: BiliVideoCardH(
+              child: BiliVideoCardV(
                 video: video,
                 onTap: () => AppNavigator.toPlayer(video),
               ),
@@ -1000,11 +1001,9 @@ class HistoryListView extends StatelessWidget {
           return const Center(child: Text('暂无观看历史'));
         }
 
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+        return AdaptiveCardGrid(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           itemCount: list.length,
-          separatorBuilder: (_, _) =>
-              const Divider(height: 1, indent: 14, endIndent: 14),
           itemBuilder: (context, index) {
             final item = list[index];
             final percent = (item.progressPercent * 100).toInt();
@@ -1018,7 +1017,7 @@ class HistoryListView extends StatelessWidget {
                 child: const Icon(Icons.delete, color: Colors.white),
               ),
               onDismissed: (_) => userSvc.removeHistory(item.video.id),
-              child: BiliVideoCardH(
+              child: BiliVideoCardV(
                 video: item.video.copyWith(
                   viewsStr: percent > 0 ? '看到 $percent%' : '刚开始观看',
                 ),
@@ -1061,11 +1060,9 @@ class WatchLaterListView extends StatelessWidget {
         }
         PreloadService.instance.preloadList(list, isNewPage: true);
 
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+        return AdaptiveCardGrid(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           itemCount: list.length,
-          separatorBuilder: (_, _) =>
-              const Divider(height: 1, indent: 14, endIndent: 14),
           itemBuilder: (context, index) {
             final video = list[index];
             return Dismissible(
@@ -1078,7 +1075,7 @@ class WatchLaterListView extends StatelessWidget {
                 child: const Icon(Icons.delete, color: Colors.white),
               ),
               onDismissed: (_) => userSvc.removeFromWatchLater(video.id),
-              child: BiliVideoCardH(
+              child: BiliVideoCardV(
                 video: video,
                 onTap: () => AppNavigator.toPlayer(video),
               ),
@@ -1102,7 +1099,7 @@ class SubscriptionsListView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('我的订阅')),
       body: Obx(() {
-        final list = userSvc.subscriptions.toList();
+        final list = userSvc.latestSubscriptions;
         if (list.isEmpty) {
           return const Center(child: Text('暂无关注的 UP 主，在视频页点击【关注】即可订阅'));
         }

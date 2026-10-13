@@ -13,6 +13,8 @@ import '../../widgets/retained_page_sliver.dart';
 import '../../widgets/pull_to_next_page.dart';
 import '../../widgets/append_pagination_footer.dart';
 
+import '../../widgets/adaptive_sliver_layout.dart';
+
 import 'package:flutter/material.dart' hide SearchController;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
@@ -20,6 +22,7 @@ import 'package:get/get.dart';
 import '../../core/app_logger.dart';
 import '../../core/app_theme.dart';
 import '../../widgets/video_grid_sliver.dart';
+import '../../widgets/grid_layout_scope.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/video_source.dart';
 import '../../routes/app_navigator.dart';
@@ -163,76 +166,82 @@ class _Hanime1StudioGridSliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 7),
-      sliver: SliverGrid(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 7,
-          mainAxisSpacing: 10,
-          childAspectRatio: 0.77,
-        ),
-        delegate: SliverChildBuilderDelegate((context, index) {
-          final item = items[index];
-          return InkWell(
-            onTap: () => onTapItem(item),
-            borderRadius: BorderRadius.circular(3),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
-                    child: ColoredBox(
-                      color: context.cImagePlaceholder,
-                      child: item.thumbnailUrl == null
-                          ? Icon(
-                              Icons.business,
-                              color: context.cTextFaint,
-                              size: 34,
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: item.thumbnailUrl!,
-                              fit: BoxFit.contain,
-                              placeholder: (_, _) =>
-                                  ColoredBox(color: context.cImagePlaceholder),
-                              errorWidget: (_, _, _) => Icon(
+    return adaptiveSliverLayout(
+      (context, constraints) => SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 7),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: GridLayoutScope.columnsOf(
+              context,
+              constraints.crossAxisExtent,
+            ),
+            crossAxisSpacing: 7,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.77,
+          ),
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final item = items[index];
+            return InkWell(
+              onTap: () => onTapItem(item),
+              borderRadius: BorderRadius.circular(3),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: ColoredBox(
+                        color: context.cImagePlaceholder,
+                        child: item.thumbnailUrl == null
+                            ? Icon(
                                 Icons.business,
                                 color: context.cTextFaint,
                                 size: 34,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: item.thumbnailUrl!,
+                                fit: BoxFit.contain,
+                                placeholder: (_, _) => ColoredBox(
+                                  color: context.cImagePlaceholder,
+                                ),
+                                errorWidget: (_, _, _) => Icon(
+                                  Icons.business,
+                                  color: context.cTextFaint,
+                                  size: 34,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  item.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: context.cTextMain,
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w700,
-                    height: 1.2,
+                  const SizedBox(height: 4),
+                  Text(
+                    item.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: context.cTextMain,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  item.viewsStr ?? '',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: context.cTextSub,
-                    fontSize: 9.5,
-                    height: 1.2,
+                  const SizedBox(height: 2),
+                  Text(
+                    item.viewsStr ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: context.cTextSub,
+                      fontSize: 9.5,
+                      height: 1.2,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }, childCount: items.length),
+                ],
+              ),
+            );
+          }, childCount: items.length),
+        ),
       ),
     );
   }
@@ -498,10 +507,13 @@ class _SearchViewState extends State<SearchView> {
     final footer = _buildPaginationBar(context);
     return Obx(() {
       final results = List<VideoItem>.of(controller.results);
-      final artistDirectory = controller.searchType.value == SearchType.authorId;
+      final artistDirectory =
+          controller.searchType.value == SearchType.authorId;
       final usesPosterGrid = hanime1 && _hanime1UsesPosterGrid(controller);
       return RetainedPageSliver(
-        key: ValueKey("${controller.keyword.value}:${controller.searchType.value}"),
+        key: ValueKey(
+          "${controller.keyword.value}:${controller.searchType.value}",
+        ),
         items: results,
         page: controller.currentPage.value,
         preserveEmptyAppend: controller.paging.lastLoadWasAppend,
@@ -509,13 +521,14 @@ class _SearchViewState extends State<SearchView> {
         footer: footer,
         gridBuilder: (pageItems) => hanime1
             ? artistDirectory
-                ? _Hanime1StudioGridSliver(
-                    items: pageItems,
-                    onTapItem: (studio) => controller.searchVideosForArtist(studio.title),
-                  )
-                : usesPosterGrid
-                    ? Hanime1PosterGridSliver(items: pageItems)
-                    : Hanime1VideoGridSliver(items: pageItems)
+                  ? _Hanime1StudioGridSliver(
+                      items: pageItems,
+                      onTapItem: (studio) =>
+                          controller.searchVideosForArtist(studio.title),
+                    )
+                  : usesPosterGrid
+                  ? Hanime1PosterGridSliver(items: pageItems)
+                  : Hanime1VideoGridSliver(items: pageItems)
             : VideoGridSliver(
                 items: pageItems,
                 availableWidth: MediaQuery.sizeOf(context).width,

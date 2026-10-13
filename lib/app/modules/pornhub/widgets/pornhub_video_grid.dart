@@ -9,7 +9,7 @@ import '../../../widgets/append_pagination_footer.dart';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/responsive_utils.dart';
+import '../../../widgets/video_grid_sliver.dart';
 import '../../../data/models/video_item.dart';
 import '../../../routes/app_navigator.dart';
 import '../../../widgets/bili_video_card.dart';
@@ -33,36 +33,19 @@ class SliverPornHubGrid extends StatelessWidget {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final isWide = ResponsiveLayout.isWideScreen(context);
-    final availableWidth = isWide ? screenWidth - 73 : screenWidth;
-    final columnCount = ResponsiveLayout.gridColumnCount(availableWidth);
-    final columnWidth =
-        (availableWidth - 12 - (columnCount - 1) * 6) / columnCount;
-    final childAspectRatio = ResponsiveLayout.cardAspectRatio(columnWidth);
-
-    return SliverPadding(
+    return VideoGridSliver(
+      items: videos,
+      availableWidth: MediaQuery.sizeOf(context).width,
       padding: padding,
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: columnCount,
-          crossAxisSpacing: 6,
-          mainAxisSpacing: 6,
-          childAspectRatio: childAspectRatio,
-        ),
-        delegate: SliverChildBuilderDelegate((context, index) {
-          final video = videos[index];
-          return BiliVideoCardV(
-            video: video,
-            onTap: () => AppNavigator.toPlayer(video),
-            onAuthorTap: () => AppNavigator.toPornHubAuthor(
-              video.author,
-              path: video.authorUrl,
-            ),
-            onDownload: onDownload == null ? null : () => onDownload!(video),
-          );
-        }, childCount: videos.length),
-      ),
+      itemBuilder: (context, video) {
+        return BiliVideoCardV(
+          video: video,
+          onTap: () => AppNavigator.toPlayer(video),
+          onAuthorTap: () =>
+              AppNavigator.toPornHubAuthor(video.author, path: video.authorUrl),
+          onDownload: onDownload == null ? null : () => onDownload!(video),
+        );
+      },
     );
   }
 }

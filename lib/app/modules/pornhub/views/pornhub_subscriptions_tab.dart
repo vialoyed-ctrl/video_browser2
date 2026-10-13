@@ -17,6 +17,9 @@ import '../../../widgets/retained_page_sliver.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import '../../../widgets/adaptive_card_grid.dart';
+
 import 'package:get/get.dart';
 
 import '../../../data/models/pornhub_models.dart';
@@ -147,14 +150,13 @@ class _PornHubSubscriptionsTabState extends State<PornHubSubscriptionsTab> {
         if (_expanded)
           SizedBox(
             height: MediaQuery.sizeOf(context).height * 0.26,
-            child: GridView.builder(
+            child: AdaptiveCardGrid(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisExtent: 94,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
+
+              mainAxisExtent: 94,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+
               itemCount: subs.length + 1,
               itemBuilder: (context, index) => Obx(
                 () => _buildCreatorTile(

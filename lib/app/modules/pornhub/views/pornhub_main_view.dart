@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../widgets/app_drawer.dart';
+import '../../../widgets/adaptive_site_navigation.dart';
+import '../../../core/responsive_utils.dart';
 import '../pornhub_controller.dart';
 import 'pornhub_more_page.dart';
 import 'pornhub_mine_tab.dart';
@@ -29,109 +31,123 @@ class PornHubMainView extends StatelessWidget {
     final ctrl = PornHubController.to;
     final theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      drawer: const AppDrawer(),
-      appBar: AppBar(
-        leading: Builder(
-          builder: (ctx) => IconButton(
-            tooltip: '打开功能与版面抽屉',
-            icon: const Icon(Icons.menu_rounded),
-            onPressed: () => Scaffold.of(ctx).openDrawer(),
-          ),
-        ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
-                borderRadius: BorderRadius.circular(4),
+    final destinations = const <NavigationDestination>[
+      NavigationDestination(
+        icon: Icon(Icons.recommend_outlined),
+        selectedIcon: Icon(Icons.recommend_rounded),
+        label: '推荐',
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.local_fire_department_outlined),
+        selectedIcon: Icon(Icons.local_fire_department_rounded),
+        label: '最热',
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.subscriptions_outlined),
+        selectedIcon: Icon(Icons.subscriptions_rounded),
+        label: '订阅',
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.person_outline_rounded),
+        selectedIcon: Icon(Icons.person_rounded),
+        label: '我的',
+      ),
+    ];
+    final isWide = ResponsiveLayout.isWideScreen(context);
+    return Obx(
+      () => AdaptiveSiteNavigation(
+        destinations: destinations,
+        selectedIndex: ctrl.currentTabIndex.value,
+        onSelected: ctrl.switchTab,
+        child: Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          drawer: const AppDrawer(),
+          appBar: AppBar(
+            leading: Builder(
+              builder: (ctx) => IconButton(
+                tooltip: '打开功能与版面抽屉',
+                icon: const Icon(Icons.menu_rounded),
+                onPressed: () => Scaffold.of(ctx).openDrawer(),
               ),
-              child: Text(
-                'P',
-                style: TextStyle(
-                  // 徽标底是 colorScheme.primary，文字必须用 onPrimary ——
-                  // 莫奈取色下 primary 可能是浅色，写死白色会看不清。
-                  color: theme.colorScheme.onPrimary,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16,
-                  height: 1.1,
+            ),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'P',
+                    style: TextStyle(
+                      // 徽标底是 colorScheme.primary，文字必须用 onPrimary ——
+                      // 莫奈取色下 primary 可能是浅色，写死白色会看不清。
+                      color: theme.colorScheme.onPrimary,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                      height: 1.1,
+                    ),
+                  ),
                 ),
+                const SizedBox(width: 8),
+                Text(
+                  'PornHub',
+                  style:
+                      theme.appBarTheme.titleTextStyle ??
+                      theme.textTheme.titleMedium,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              IconButton(
+                tooltip: '搜索视频',
+                icon: const Icon(Icons.search_rounded),
+                onPressed: () => Get.to<void>(() => const PornHubSearchPage()),
               ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'PornHub',
-              style:
-                  theme.appBarTheme.titleTextStyle ??
-                  theme.textTheme.titleMedium,
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          IconButton(
-            tooltip: '搜索视频',
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () => Get.to<void>(() => const PornHubSearchPage()),
-          ),
-          // 分类 / 片单 / 明星 作为子页面入口，不占主导航。
-          PopupMenuButton<int>(
-            tooltip: '更多',
-            onSelected: (value) =>
-                Get.to<void>(() => PornHubMorePage(initialIndex: value)),
-            itemBuilder: (context) => const <PopupMenuEntry<int>>[
-              PopupMenuItem<int>(value: 0, child: Text('分类')),
-              PopupMenuItem<int>(value: 1, child: Text('片单')),
-              PopupMenuItem<int>(value: 2, child: Text('明星')),
+              // 分类 / 片单 / 明星 作为子页面入口，不占主导航。
+              PopupMenuButton<int>(
+                tooltip: '更多',
+                onSelected: (value) =>
+                    Get.to<void>(() => PornHubMorePage(initialIndex: value)),
+                itemBuilder: (context) => const <PopupMenuEntry<int>>[
+                  PopupMenuItem<int>(value: 0, child: Text('分类')),
+                  PopupMenuItem<int>(value: 1, child: Text('片单')),
+                  PopupMenuItem<int>(value: 2, child: Text('明星')),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-      body: Obx(() {
-        final currentIdx = ctrl.currentTabIndex.value;
-        return IndexedStack(
-          index: currentIdx,
-          children: <Widget>[
-            const PornHubVideoListTab(path: '/recommended?o=time'),
-            PornHubVideoListTab(
-              path: PornHubController.hotPath,
-              showSortBar: true,
-            ),
-            const PornHubSubscriptionsTab(),
-            // 最右位原为「收藏」，现按用户要求改为「我的」：
-            // 内含 收藏 / 片单 / 历史 三个板块（顶部按钮切换）。
-            const PornHubMineTab(),
-          ],
-        );
-      }),
-      bottomNavigationBar: Obx(
-        () => NavigationBar(
-          selectedIndex: ctrl.currentTabIndex.value,
-          onDestinationSelected: ctrl.switchTab,
-          destinations: const <NavigationDestination>[
-            NavigationDestination(
-              icon: Icon(Icons.recommend_outlined),
-              selectedIcon: Icon(Icons.recommend_rounded),
-              label: '推荐',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.local_fire_department_outlined),
-              selectedIcon: Icon(Icons.local_fire_department_rounded),
-              label: '最热',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.subscriptions_outlined),
-              selectedIcon: Icon(Icons.subscriptions_rounded),
-              label: '订阅',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline_rounded),
-              selectedIcon: Icon(Icons.person_rounded),
-              label: '我的',
-            ),
-          ],
+          body: Obx(() {
+            final currentIdx = ctrl.currentTabIndex.value;
+            return IndexedStack(
+              index: currentIdx,
+              children: <Widget>[
+                const PornHubVideoListTab(path: '/recommended?o=time'),
+                PornHubVideoListTab(
+                  path: PornHubController.hotPath,
+                  showSortBar: true,
+                ),
+                const PornHubSubscriptionsTab(),
+                // 最右位原为「收藏」，现按用户要求改为「我的」：
+                // 内含 收藏 / 片单 / 历史 三个板块（顶部按钮切换）。
+                const PornHubMineTab(),
+              ],
+            );
+          }),
+          bottomNavigationBar: isWide
+              ? null
+              : Obx(
+                  () => NavigationBar(
+                    selectedIndex: ctrl.currentTabIndex.value,
+                    onDestinationSelected: ctrl.switchTab,
+                    destinations: destinations,
+                  ),
+                ),
         ),
       ),
     );
