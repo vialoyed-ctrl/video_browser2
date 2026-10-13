@@ -280,3 +280,7 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 ## 33. 可见纹理计时实验（2026-10-13）
 
 生产bbf661e/0cfccd0未改。PMB110真实PlayerView三录屏能捕捉open标记/首个红色及Seek6秒黄色；观测首红677/362/338ms、Seek81/148/99ms，仅编码录屏转变，VFR间隙导致宽区间，不能作为精确物理/手指分发延迟或旧新改善。只读审查后强化PTS/维度/目标2秒期限/先前非黄色/样本来源及SDK释放检查，三轮重验通过；12转变帧联系表及摘要保留。正常2022恢复，自有server映射/attach/远程录屏清理。报告docs/refactor-visible-frame-2026-10-13.md及摘要。精准物理首帧/HLS视觉Seek未证明，保留限制；继续其他生命周期、剩余列表账号/91搜索和四站点综合验收，整体未完成。
+
+## 34. Hanime订阅账号请求边界（2026-10-13）
+
+实现b3ecf2a，监听既有登录标志/UID/邮箱/用户名，先invalidate旧分页请求再清已知账号订阅数据和metadata/creator/page/error/loading；保留全部筛选、无标识匿名结果登录提示契约，onClose释放Worker，不改解析/认证持久化/自动请求。有效RED原3场景+空UID4场景，最终10新契约/26定向、全量390通过/1原跳过、分析0error/0warning原7info；复审无剩余问题。PMB110 Profile真实Tab纯mockauth/source16步骤5请求通过，未触碰真实账号，不宣称真实站点登录/FPS/内存改善。正常2023恢复首页41/1/scroll0/site91，产物归档真机三APKhash FB314C0BA68A9F0694439D0BFC774D9016B4E61A22BFB2E3823E1AC45AC4E44A。attach/forward清理；报告docs/refactor-hanime-account-2026-10-13.md及摘要，独立revertb3ecf2a。继续其他生命周期/剩余列表/91搜索/四站点综合验收，整体未完成。

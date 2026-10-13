@@ -1,0 +1,42 @@
+{
+  "baseline": "72b639d",
+  "implementation": "b3ecf2a",
+  "newContracts": 10,
+  "targetedPassed": 26,
+  "flutterPassed": 390,
+  "flutterSkipped": 1,
+  "analysis": {
+    "errors": 0,
+    "warnings": 0,
+    "originalInfos": 7
+  },
+  "profile": {
+    "passed": true,
+    "steps": 16,
+    "requests": 5,
+    "oldReplyDropped": true,
+    "publishedPrivateCleared": true,
+    "oldErrorIgnored": true,
+    "currentReplyAccepted": true,
+    "emailOnlyAccepted": true,
+    "publicLoginPromptResultsRetained": true,
+    "controllerClosed": true,
+    "scope": "Profile actual subscription tab with pure mock auth/source; no real account changes or network claims"
+  },
+  "normalBuild": 2023,
+  "apkSha256": "FB314C0BA68A9F0694439D0BFC774D9016B4E61A22BFB2E3823E1AC45AC4E44A",
+  "apkBytes": 92254318,
+  "home": {
+    "items": 41,
+    "page": 1,
+    "scroll": 0,
+    "platform": "site91",
+    "loading": false,
+    "error": null
+  },
+  "limits": [
+    "Mock-auth/source Profile verifies UI/controller boundaries, not real login or network",
+    "No FPS or memory-performance delta measured",
+    "Whole-project acceptance remains incomplete"
+  ]
+}
