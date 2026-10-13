@@ -268,3 +268,7 @@ P2 新增一批经测试及真机 Profile 前后对照的局部修复：初始�
 ## 30. 下载取消/重试执行边界（2026-10-13）
 
 实现01154d4，独立run所有权/Token/done，旧回复隔离、同ID重试等旧文件工作、排队HLS清理、MP4自有流/RAF及底层取消屏障。有效RED覆盖后最终11契约/380全量/1原跳过、原7info；独立审查两Important补契约修复后无阻断。PMB110三HLS取消重试30片/解码0；六MP4取消/超时有服务器6abort/6完整重试，文件与源hash一致/解码0。正常2021恢复首页41/1/scroll0/site91，三APK一致2FDCC9CA882DD8FC65EDB6B719F465BAF7AFCAB7381BDF9A37A4B0B356DCC128。自有目录/服务/监听/映射/attach清理。报告docs/refactor-download-lifecycle-2026-10-13.md及摘要；可独立revert01154d4。未测原生旧新吞吐/FPS；截断EOF/partial-error原有Minor覆盖暂留，继续Media3cache/preload、短HLS中断、可见帧/其他生命周期、列表账号/91搜索和四站点综合验收，整体未完成。
+
+## 31. 原生预加载回调所有权（2026-10-13）
+
+实现0cfccd0，取消/同ID替换后旧worker终态与主线程排队事件隔离；请求标识在终态/取消/解绑清理，消息/缓存键/并发/PH节流不变。原生107通过、Flutter380通过/1原跳过、lib/test分析原7info无错误警告。PMB110真机MP4/HLS完整预加载后播放0新增媒体请求，慢MP4取消及同ID替换服务器abort证据，HLS取消后无迟到终态；正常2022首页41/1/scroll0/site91恢复，三APK hash一致B520D738147FD10D22691ED23A9ACD57138C1EC5FEAB9768D5181202C073CA9D。报告docs/refactor-native-preload-2026-10-13.md及摘要，独立revert0cfccd0。多引擎仅条件审查限制，当前app单引擎；未宣称FPS/可见首帧/吞吐提升。其余弱网/可见Seek/生命周期/列表账号/91搜索/四站点综合回归继续，整体未完成。
