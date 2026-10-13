@@ -71,6 +71,44 @@ class Hanime1Controller extends GetxController {
   final RxBool subscriptionBroad = false.obs;
   RxnString get subscriptionsError => subscriptionsPaging.error;
   int _subPage = 1;
+  Worker? _subscriptionAccountWorker;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (!Get.isRegistered<Hanime1AuthService>()) return;
+    final auth = Hanime1AuthService.to;
+    bool identityKnown() =>
+        auth.userId.value.isNotEmpty ||
+        auth.userEmail.value.isNotEmpty ||
+        auth.username.value.isNotEmpty;
+    var previousIdentityKnown = identityKnown();
+    _subscriptionAccountWorker = everAll(
+      [auth.isLoggedIn, auth.userId, auth.userEmail, auth.username],
+      (_) {
+        final currentIdentityKnown = identityKnown();
+        final knownAccount = previousIdentityKnown || currentIdentityKnown;
+        previousIdentityKnown = currentIdentityKnown;
+        // Revoke pending replies before notifying observers of the account reset.
+        subscriptionsPaging.invalidateRequests();
+        // Public results remain visible when only the login prompt changes.
+        if (!knownAccount) {
+          isLoadingSub.value = false;
+          return;
+        }
+        _subPage = 1;
+        subscriptionsPaging.recordSuccess(append: false);
+        subVideos.clear();
+        subData.value = null;
+        selectedCreator.value = null;
+        subscriptionsPage.value = 1;
+        subscriptionsTotalPages.value = 1;
+        hasMoreSub.value = false;
+        subscriptionsError.value = null;
+        isLoadingSub.value = false;
+      },
+    );
+  }
 
   // --- 4. 我的 Hanime1 (Profile Tab) 状态 ---
   //
@@ -112,6 +150,7 @@ class Hanime1Controller extends GetxController {
 
   @override
   void onClose() {
+    _subscriptionAccountWorker?.dispose();
     _homeRequest++;
     _profileRequest++;
     rankingPaging.invalidateRequests();
