@@ -53,3 +53,9 @@ The source's APK installation feature remains Android-only.
 The bundle identifier remains `com.vialoyed.videoBrowser`, minimum iOS 16.0.
 Sign with the same account and bundle ID and update over the existing app;
 do not uninstall if existing downloads must be kept.
+
+CI keeps the complete Flutter suite (including unchanged Windows pixel
+baselines) on Windows. macOS static analysis and iPhone compilation run only
+after that suite and the Linux native remux/decode checks pass. Comparing
+Windows pixel baselines on macOS produced 18 renderer differences; those
+baselines were preserved rather than regenerated for the build host.
