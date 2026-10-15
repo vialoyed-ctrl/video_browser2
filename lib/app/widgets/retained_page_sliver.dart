@@ -10,9 +10,17 @@ class RetainedPageSliver extends StatefulWidget {
     required this.page,
     required this.gridBuilder,
     required this.footer,
+    this.preserveEmptyAppend = false,
+    this.replacementGeneration,
   });
   final List<VideoItem> items;
   final int page;
+  /// Keep loaded section labels when an append advances without adding items.
+  /// Replacement requests leave this false, even for identical item IDs.
+  final bool preserveEmptyAppend;
+  /// Changes after a successful replacement, including identical page/items.
+  /// Null preserves the existing page/ID inference for other consumers.
+  final int? replacementGeneration;
   final Widget Function(List<VideoItem>) gridBuilder;
   final Widget footer;
   @override
@@ -22,11 +30,23 @@ class RetainedPageSliver extends StatefulWidget {
 class _RetainedPageSliverState extends State<RetainedPageSliver> {
   final _ends = <({int page, int end})>[];
   List<String> _ids = [];
+  int? _replacementGeneration;
   void _update() {
+    if (widget.replacementGeneration != _replacementGeneration) {
+      _ends.clear();
+      _ids = [];
+      _replacementGeneration = widget.replacementGeneration;
+    }
     final ids = widget.items.map((item) => item.id).toList(growable: false);
     final prefix =
         ids.length >= _ids.length &&
         Iterable<int>.generate(_ids.length).every((i) => ids[i] == _ids[i]);
+    if (widget.preserveEmptyAppend &&
+        _ends.isNotEmpty &&
+        prefix &&
+        ids.length == _ids.length) {
+      return;
+    }
     final previousPage = _ends.isEmpty ? widget.page : _ends.last.page;
     if (!prefix ||
         ids.length < _ids.length ||

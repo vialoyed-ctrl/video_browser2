@@ -1,0 +1,697 @@
+{
+  "date": "2026-10-10",
+  "baseline": "7c7e848",
+  "implementation": "fead00d",
+  "tests": {
+    "baselinePassed": 238,
+    "finalPassed": 246,
+    "existingSkipped": 1,
+    "newContractTests": 8,
+    "originalGoldens": 2,
+    "errors": 0,
+    "warnings": 0,
+    "existingInfo": 7
+  },
+  "device": {
+    "model": "PMB110",
+    "android": 16,
+    "mode": "ARM64 Profile",
+    "resolution": [
+      1440,
+      3200
+    ],
+    "hz": 120,
+    "sameProbeEngineSha256": {
+      "before": "8ff2f86d1ac342962699180de16fa66e59f4302392f6af4bc6196b6055c28398",
+      "after": "8ff2f86d1ac342962699180de16fa66e59f4302392f6af4bc6196b6055c28398"
+    }
+  },
+  "before": {
+    "modes": [
+      {
+        "mode": "md-search",
+        "cycles": [
+          {
+            "reset": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "第 2 页加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "BiliVideoCardV": 4,
+              "SliverGrid": 1
+            },
+            "timelineEvents": 7823
+          },
+          {
+            "reset": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "第 2 页加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "BiliVideoCardV": 4,
+              "SliverGrid": 1
+            },
+            "timelineEvents": 7795
+          },
+          {
+            "reset": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "第 2 页加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "BiliVideoCardV": 4,
+              "SliverGrid": 1
+            },
+            "timelineEvents": 7814
+          }
+        ]
+      }
+    ],
+    "successAppend": {
+      "waiting": {
+        "page": 1,
+        "items": 4,
+        "requestPage": 2,
+        "loading": true,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "success": {
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "modes": [
+      {
+        "mode": "md-search",
+        "cycles": [
+          {
+            "reset": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "第 2 页加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "BiliVideoCardV": 0,
+              "SliverGrid": 0
+            },
+            "timelineEvents": 6979
+          },
+          {
+            "reset": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "第 2 页加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "BiliVideoCardV": 0,
+              "SliverGrid": 0
+            },
+            "timelineEvents": 6866
+          },
+          {
+            "reset": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "waiting": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "failure": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": false,
+              "error": "第 2 页加载失败，请重试",
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            },
+            "builds": {
+              "BiliVideoCardV": 0,
+              "SliverGrid": 0
+            },
+            "timelineEvents": 6866
+          }
+        ]
+      }
+    ],
+    "successAppend": {
+      "waiting": {
+        "page": 1,
+        "items": 4,
+        "requestPage": 2,
+        "loading": true,
+        "error": null,
+        "mountedCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "success": {
+        "page": 2,
+        "items": 8,
+        "requestPage": 2,
+        "loading": false,
+        "error": null,
+        "mountedCards": 8,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    }
+  },
+  "pixels": {
+    "crop": [
+      0,
+      160,
+      1440,
+      3088
+    ],
+    "changedBox": null
+  },
+  "formal": {
+    "search": [
+      {
+        "class": "Site91MdSearchController",
+        "totalCount": 1,
+        "instances": [
+          {
+            "_items": {
+              "kind": "_GrowableList",
+              "length": 1
+            },
+            "keyword": {
+              "value": "2026",
+              "kind": "_OneByteString",
+              "length": 4
+            },
+            "page": {
+              "value": "1",
+              "kind": "_Smi"
+            },
+            "firstPage": {
+              "value": "1",
+              "kind": "_Smi"
+            },
+            "hasMore": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "loading": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "loadingMore": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "error": {
+              "value": "null",
+              "kind": "Null"
+            },
+            "searched": {
+              "value": "true",
+              "kind": "bool"
+            },
+            "_disposed": {
+              "value": "false",
+              "kind": "bool"
+            }
+          }
+        ]
+      },
+      {
+        "class": "_Site91MdSearchViewState",
+        "totalCount": 1,
+        "instances": [
+          {
+            "_resultItems": {
+              "kind": "_GrowableList",
+              "length": 1
+            },
+            "_retainedResults": {
+              "kind": "RetainedPageSliver",
+              "length": 8
+            }
+          }
+        ]
+      }
+    ],
+    "retained": {
+      "states": [
+        {
+          "path": "2026",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "1"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        },
+        {
+          "path": "site91md:ChannelType.home:null",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "30"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        }
+      ],
+      "footers": [
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        }
+      ]
+    },
+    "cleared": [
+      {
+        "class": "Site91MdSearchController",
+        "totalCount": 1,
+        "instances": [
+          {
+            "_items": {
+              "kind": "_GrowableList",
+              "length": 0
+            },
+            "keyword": {
+              "value": "",
+              "kind": "_OneByteString",
+              "length": 0
+            },
+            "page": {
+              "value": "1",
+              "kind": "_Smi"
+            },
+            "firstPage": {
+              "value": "1",
+              "kind": "_Smi"
+            },
+            "hasMore": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "loading": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "loadingMore": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "error": {
+              "value": "null",
+              "kind": "Null"
+            },
+            "searched": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "_disposed": {
+              "value": "false",
+              "kind": "bool"
+            }
+          }
+        ]
+      },
+      {
+        "class": "_Site91MdSearchViewState",
+        "totalCount": 1,
+        "instances": [
+          {
+            "_resultItems": {
+              "kind": "_ImmutableList",
+              "length": 0
+            },
+            "_retainedResults": {
+              "value": "null",
+              "kind": "Null"
+            }
+          }
+        ]
+      }
+    ],
+    "closed": [
+      {
+        "class": "Site91MdSearchController",
+        "totalCount": 1,
+        "instances": [
+          {
+            "_items": {
+              "kind": "_GrowableList",
+              "length": 0
+            },
+            "keyword": {
+              "value": "",
+              "kind": "_OneByteString",
+              "length": 0
+            },
+            "page": {
+              "value": "1",
+              "kind": "_Smi"
+            },
+            "firstPage": {
+              "value": "1",
+              "kind": "_Smi"
+            },
+            "hasMore": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "loading": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "loadingMore": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "error": {
+              "value": "null",
+              "kind": "Null"
+            },
+            "searched": {
+              "value": "false",
+              "kind": "bool"
+            },
+            "_disposed": {
+              "value": "true",
+              "kind": "bool"
+            }
+          }
+        ]
+      },
+      {
+        "class": "_Site91MdSearchViewState",
+        "totalCount": 1,
+        "instances": [
+          {
+            "_resultItems": {
+              "kind": "_ImmutableList",
+              "length": 0
+            },
+            "_retainedResults": {
+              "value": "null",
+              "kind": "Null"
+            }
+          }
+        ]
+      }
+    ],
+    "realAppendVerified": false,
+    "realAppendReason": "Keyword 2026 returned one result with hasMore=false; controlled actual-view probe verifies append, real backend append remains unverified.",
+    "finalHome": {
+      "source": "site91",
+      "items": 41,
+      "page": 1,
+      "loadingFirst": false,
+      "loadingPage": false,
+      "error": null,
+      "scrollPixels": 0
+    },
+    "buildNumber": 2008,
+    "pubspec": "2.0.2+3 unchanged",
+    "apkSha256": "23DCEA867384FB7B42CE33DCCE3C31D2E90DA4FC6AD426156D55F81F0DB9CB2F",
+    "threeApksMatch": true,
+    "dataPreserved": true,
+    "measurementDetached": true,
+    "finalAdbForwards": []
+  },
+  "limits": [
+    "Local build reduction is not overall FPS/first-frame/seek/native-memory evidence.",
+    "Pixel comparison excludes system strips and upper 160px; two original test goldens cover full test geometry, not all native fonts.",
+    "Disposed=true and empty cache do not prove GC collection or native-memory absence of leaks.",
+    "Original RetainedPageSliver empty-append/identical-prefix replacement inference remains unchanged."
+  ]
+}

@@ -39,6 +39,7 @@ class _Hanime1SubscriptionsTabState extends State<Hanime1SubscriptionsTab> {
   Widget build(BuildContext context) {
     final auth = Hanime1AuthService.to;
     final ctrl = Hanime1Controller.to;
+    final retainedResults = _buildRetainedResults(ctrl);
 
     return Obx(() {
       final isLoggedIn = auth.isLoggedIn.value;
@@ -118,32 +119,7 @@ class _Hanime1SubscriptionsTabState extends State<Hanime1SubscriptionsTab> {
                     ),
                     slivers: [
                       const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                      RetainedPageSliver(
-                        items: List.of(ctrl.subVideos.toList(growable: false)),
-                        page: ctrl.subscriptionsPage.value,
-                        footer: Hanime1Pagination(
-                          currentPage: ctrl.subscriptionsPage.value,
-                          onNext: ctrl.loadMoreSubscriptions,
-                          hasNext: ctrl.hasMoreSub.value,
-                          error: ctrl.subscriptionsError.value,
-                          totalPages: ctrl.subscriptionsTotalPages.value,
-                          isLoading: ctrl.isLoadingSub.value,
-                          onPageChanged: (page) => ctrl.loadSubscriptions(
-                            creatorQuery: ctrl.selectedCreator.value,
-                            isRefresh: false,
-                            page: page,
-                          ),
-                        ),
-                        gridBuilder: (pageItems) => Hanime1VideoGridSliver(
-                          items: pageItems,
-                          padding: const EdgeInsets.fromLTRB(
-                            Hanime1CardH.horizontalPadding,
-                            0,
-                            Hanime1CardH.horizontalPadding,
-                            24,
-                          ),
-                        ),
-                      ),
+                      retainedResults,
                     ],
                   ),
                 ),
@@ -153,6 +129,42 @@ class _Hanime1SubscriptionsTabState extends State<Hanime1SubscriptionsTab> {
         ],
       );
     });
+  }
+
+  Widget _buildRetainedResults(Hanime1Controller ctrl) {
+    final footer = Obx(
+      () => Hanime1Pagination(
+        currentPage: ctrl.subscriptionsPage.value,
+        onNext: ctrl.loadMoreSubscriptions,
+        hasNext: ctrl.hasMoreSub.value,
+        error: ctrl.subscriptionsError.value,
+        totalPages: ctrl.subscriptionsTotalPages.value,
+        isLoading: ctrl.isLoadingSub.value,
+        onPageChanged: (page) => ctrl.loadSubscriptions(
+          creatorQuery: ctrl.selectedCreator.value,
+          isRefresh: false,
+          page: page,
+        ),
+      ),
+    );
+    return Obx(
+      () => RetainedPageSliver(
+        items: List.of(ctrl.subVideos.toList(growable: false)),
+        page: ctrl.subscriptionsPage.value,
+        preserveEmptyAppend: ctrl.subscriptionsPaging.lastLoadWasAppend,
+        replacementGeneration: ctrl.subscriptionsPaging.replacementGeneration.value,
+        footer: footer,
+        gridBuilder: (pageItems) => Hanime1VideoGridSliver(
+          items: pageItems,
+          padding: const EdgeInsets.fromLTRB(
+            Hanime1CardH.horizontalPadding,
+            0,
+            Hanime1CardH.horizontalPadding,
+            24,
+          ),
+        ),
+      ),
+    );
   }
 
   /// 未登录状态引导卡片

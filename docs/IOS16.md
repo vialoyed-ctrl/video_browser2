@@ -35,3 +35,21 @@ repair, legacy TS-in-MP4 repair, system playback, export, and Documents path
 recovery are preserved. Source updates are merged into this branch instead
 of replacing the iOS files. The build continues to gate IPA compilation on
 real native TS remux/decode regression tests and the complete Flutter suite.
+
+## Source sync 2026-10-15 (2.0.4+2029)
+
+Merged the source checkout at `aa04643777f8673d7066a9fb6b7449e3c2cf14c6`.
+Includes the source's player ownership/disposal and scrub-release changes,
+download cancellation and resume lifecycle, shared paging and tablet/card
+layouts, and account-boundary fixes. Android native media caching remains
+separate from the iOS AVFoundation and Dart loopback playback paths.
+
+All previous iOS media fixes remain: AAC stream parameter probing, TS to MP4,
+HLS timestamp reset handling, legacy TS file repair, playback/export, and
+Documents path recovery. The download merge retains the new run ownership
+checks and continues to reject failed iOS remuxes instead of renaming TS to MP4.
+The source's APK installation feature remains Android-only.
+
+The bundle identifier remains `com.vialoyed.videoBrowser`, minimum iOS 16.0.
+Sign with the same account and bundle ID and update over the existing app;
+do not uninstall if existing downloads must be kept.

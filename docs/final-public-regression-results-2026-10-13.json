@@ -1,0 +1,410 @@
+[
+  {
+    "action": "list",
+    "site": "site91",
+    "items": 41,
+    "page": 1,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 2099,
+    "http": [
+      {
+        "site": "site91",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 0,
+    "disposed": 0
+  },
+  {
+    "action": "page2",
+    "site": "site91",
+    "items": 24,
+    "page": 2,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 692,
+    "http": [
+      {
+        "site": "site91",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 0,
+    "disposed": 0
+  },
+  {
+    "action": "search",
+    "site": "site91",
+    "items": 24,
+    "page": 1,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 623,
+    "http": [
+      {
+        "site": "site91",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 0,
+    "disposed": 0
+  },
+  {
+    "action": "detail",
+    "site": "site91",
+    "status": "ok",
+    "hasMedia": true,
+    "variants": 1,
+    "related": 0,
+    "elapsedMs": 546,
+    "http": [
+      {
+        "site": "site91",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 0,
+    "disposed": 0
+  },
+  {
+    "action": "play",
+    "site": "site91",
+    "status": "ok",
+    "initialized": true,
+    "nativePositionMs": 1878,
+    "hasError": false,
+    "elapsedMs": 4500,
+    "http": [],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "list",
+    "site": "hanime1",
+    "items": 0,
+    "page": 1,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "empty-unverified",
+    "elapsedMs": 804,
+    "http": [
+      {
+        "site": "hanime1",
+        "status": 403
+      }
+    ],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "page2",
+    "site": "hanime1",
+    "items": 0,
+    "page": 2,
+    "hasMore": false,
+    "summaryIsFailure": false,
+    "status": "empty-unverified",
+    "elapsedMs": 225,
+    "http": [
+      {
+        "site": "hanime1",
+        "status": 403
+      }
+    ],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "search",
+    "site": "hanime1",
+    "items": 0,
+    "page": 1,
+    "hasMore": false,
+    "summaryIsFailure": false,
+    "status": "empty-unverified",
+    "elapsedMs": 189,
+    "http": [
+      {
+        "site": "hanime1",
+        "status": 403
+      }
+    ],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "detail",
+    "site": "hanime1",
+    "status": "skipped-no-list",
+    "elapsedMs": 0,
+    "http": [],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "play",
+    "site": "hanime1",
+    "status": "skipped-no-media",
+    "elapsedMs": 0,
+    "http": [],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "list",
+    "site": "pornhub",
+    "items": 31,
+    "page": 1,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 2185,
+    "http": [
+      {
+        "site": "pornhub",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "page2",
+    "site": "pornhub",
+    "items": 43,
+    "page": 2,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 882,
+    "http": [
+      {
+        "site": "pornhub",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "search",
+    "site": "pornhub",
+    "items": 31,
+    "page": 1,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 845,
+    "http": [
+      {
+        "site": "pornhub",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "detail",
+    "site": "pornhub",
+    "status": "ok",
+    "hasMedia": true,
+    "variants": 4,
+    "related": 24,
+    "elapsedMs": 2826,
+    "http": [
+      {
+        "site": "pornhub",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 1,
+    "disposed": 1
+  },
+  {
+    "action": "play",
+    "site": "pornhub",
+    "status": "ok",
+    "initialized": true,
+    "nativePositionMs": 1901,
+    "hasError": false,
+    "elapsedMs": 5143,
+    "http": [],
+    "activePlayers": 0,
+    "created": 2,
+    "disposed": 2
+  },
+  {
+    "action": "list",
+    "site": "site91md",
+    "items": 30,
+    "page": 1,
+    "hasMore": false,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 2210,
+    "http": [
+      {
+        "site": "site91md",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 2,
+    "disposed": 2
+  },
+  {
+    "action": "page2",
+    "site": "site91md",
+    "items": 30,
+    "page": 2,
+    "hasMore": false,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 1788,
+    "http": [
+      {
+        "site": "site91md",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 2,
+    "disposed": 2
+  },
+  {
+    "action": "search",
+    "site": "site91md",
+    "items": 1,
+    "page": 1,
+    "hasMore": false,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 1385,
+    "http": [
+      {
+        "site": "site91md",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 2,
+    "disposed": 2
+  },
+  {
+    "action": "detail",
+    "site": "site91md",
+    "status": "ok",
+    "hasMedia": true,
+    "variants": 1,
+    "related": 8,
+    "elapsedMs": 1169,
+    "http": [
+      {
+        "site": "site91md",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 2,
+    "disposed": 2
+  },
+  {
+    "action": "play",
+    "site": "site91md",
+    "status": "ok",
+    "initialized": true,
+    "nativePositionMs": 1941,
+    "hasError": false,
+    "elapsedMs": 5006,
+    "http": [],
+    "activePlayers": 0,
+    "created": 3,
+    "disposed": 3
+  },
+  {
+    "action": "search",
+    "site": "site91",
+    "items": 24,
+    "page": 1,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 1868,
+    "http": [
+      {
+        "site": "site91",
+        "status": 200
+      }
+    ],
+    "activePlayers": 0,
+    "created": 3,
+    "disposed": 3
+  },
+  {
+    "action": "search",
+    "site": "site91",
+    "items": 24,
+    "page": 1,
+    "hasMore": true,
+    "summaryIsFailure": false,
+    "status": "ok",
+    "elapsedMs": 84,
+    "http": [],
+    "activePlayers": 0,
+    "created": 3,
+    "disposed": 3
+  },
+  {
+    "action": "moreRetry",
+    "site": "pornhub",
+    "status": "ok",
+    "requests": 2,
+    "tab": 1,
+    "elapsedMs": 112,
+    "http": [],
+    "activePlayers": 0,
+    "created": 3,
+    "disposed": 3
+  },
+  {
+    "action": "moreRetry",
+    "site": "pornhub",
+    "status": "ok",
+    "requests": 2,
+    "tab": 2,
+    "elapsedMs": 84,
+    "http": [],
+    "activePlayers": 0,
+    "created": 3,
+    "disposed": 3
+  },
+  {
+    "action": "close",
+    "site": "site91",
+    "status": "closed",
+    "elapsedMs": 0,
+    "http": [],
+    "activePlayers": 0,
+    "created": 3,
+    "disposed": 3
+  }
+]

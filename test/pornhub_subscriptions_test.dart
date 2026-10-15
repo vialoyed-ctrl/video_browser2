@@ -108,16 +108,19 @@ void main() {
     expect(controller.feedVideos.single.id, 'new');
   });
 
-  test('selected creator count is immediate and stops at the total', () async {
+  testWidgets('selected creator count is immediate and stops at the total', (
+    tester,
+  ) async {
     source.counts['/model/c'] = 2;
     controller.selectCreator('/model/c');
-    await Future<void>.delayed(const Duration(milliseconds: 190));
+    await tester.pump(const Duration(milliseconds: 160));
+    await tester.pump();
     expect(source.countRequests, ['/model/c']);
     expect(controller.creatorCounts['/model/c'], 2);
     source.requests.last.result.complete(
       VideoPage(items: [video('1'), video('2')], page: 1, hasMore: true),
     );
-    await Future<void>.delayed(Duration.zero);
+    await tester.pump();
     expect(controller.feedHasMore, false);
     await controller.loadMoreFeed();
     expect(source.requests.length, 1);

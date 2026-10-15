@@ -50,6 +50,7 @@ class VideoItem {
     required this.id,
     required this.title,
     required this.author,
+    this.authorUrl,
     required this.hlsUrl,
     this.detailUrl,
     this.thumbnailUrl,
@@ -69,6 +70,9 @@ class VideoItem {
 
   /// 作者 / 频道名。下载时用于归档目录。
   final String author;
+
+  /// Actual uploader/profile link when supplied by the source.
+  final String? authorUrl;
 
   /// HLS 播放列表地址（.m3u8）。
   final String hlsUrl;
@@ -122,6 +126,7 @@ class VideoItem {
     String? id,
     String? title,
     String? author,
+    String? authorUrl,
     String? hlsUrl,
     String? detailUrl,
     String? thumbnailUrl,
@@ -137,6 +142,7 @@ class VideoItem {
       id: id ?? this.id,
       title: title ?? this.title,
       author: author ?? this.author,
+      authorUrl: authorUrl ?? this.authorUrl,
       hlsUrl: hlsUrl ?? this.hlsUrl,
       detailUrl: detailUrl ?? this.detailUrl,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
@@ -154,6 +160,7 @@ class VideoItem {
     'id': id,
     'title': title,
     'author': author,
+    'authorUrl': authorUrl,
     'hlsUrl': hlsUrl,
     'detailUrl': detailUrl,
     'thumbnailUrl': thumbnailUrl,
@@ -172,6 +179,7 @@ class VideoItem {
       id: json['id'] as String,
       title: json['title'] as String,
       author: json['author'] as String? ?? 'unknown',
+      authorUrl: json['authorUrl'] as String?,
       hlsUrl: json['hlsUrl'] as String? ?? '',
       detailUrl: json['detailUrl'] as String?,
       thumbnailUrl: json['thumbnailUrl'] as String?,

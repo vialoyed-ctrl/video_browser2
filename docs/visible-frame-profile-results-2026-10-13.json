@@ -1,0 +1,366 @@
+{
+  "baseline": "bbf661e",
+  "productionChanged": false,
+  "results": [
+    {
+      "run": "20261013301",
+      "frames": 156,
+      "markerAndVideoVisible": true,
+      "firstVisibleRed": {
+        "markerPts": 16.076133,
+        "visiblePts": 16.752789,
+        "observedDeltaMs": 676.656,
+        "intervalMs": [
+          658.111,
+          725.322
+        ]
+      },
+      "seekVisibleYellow": {
+        "markerPts": 17.1364,
+        "visiblePts": 17.217267,
+        "observedDeltaMs": 80.867,
+        "intervalMs": [
+          14.278,
+          113.867
+        ]
+      },
+      "samples": {
+        "cyan": [
+          0.0,
+          187.33333333333334,
+          209.0
+        ],
+        "orange": [
+          252.0,
+          151.0,
+          0.0
+        ]
+      },
+      "transitions": {
+        "cyan": {
+          "index": 8,
+          "pts": 16.076133,
+          "previousPts": 16.027467,
+          "videoRgb": [
+            252.0,
+            246.0,
+            253.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            246.0,
+            253.0
+          ],
+          "markerRgb": [
+            0.0,
+            187.33333333333334,
+            209.0
+          ]
+        },
+        "red": {
+          "index": 38,
+          "pts": 16.752789,
+          "previousPts": 16.734244,
+          "videoRgb": [
+            104.0,
+            0.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            70.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            0.0,
+            187.33333333333334,
+            209.66666666666666
+          ]
+        },
+        "orange": {
+          "index": 54,
+          "pts": 17.1364,
+          "previousPts": 17.1034,
+          "videoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            252.0,
+            151.0,
+            0.0
+          ]
+        },
+        "yellow": {
+          "index": 56,
+          "pts": 17.217267,
+          "previousPts": 17.150678,
+          "videoRgb": [
+            252.0,
+            253.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            252.66666666666666,
+            150.66666666666666,
+            0.0
+          ]
+        }
+      },
+      "scope": "Encoded capture transitions only; interval is not guaranteed physical display or dispatch latency"
+    },
+    {
+      "run": "20261013302",
+      "frames": 128,
+      "markerAndVideoVisible": true,
+      "firstVisibleRed": {
+        "markerPts": 21.094233,
+        "visiblePts": 21.456256,
+        "observedDeltaMs": 362.023,
+        "intervalMs": [
+          345.689,
+          1084.278
+        ]
+      },
+      "seekVisibleYellow": {
+        "markerPts": 21.857011,
+        "visiblePts": 22.005322,
+        "observedDeltaMs": 148.311,
+        "intervalMs": [
+          33.222,
+          162.666
+        ]
+      },
+      "samples": {
+        "cyan": [
+          0.0,
+          187.33333333333334,
+          209.0
+        ],
+        "orange": [
+          252.0,
+          151.0,
+          0.0
+        ]
+      },
+      "transitions": {
+        "cyan": {
+          "index": 11,
+          "pts": 21.094233,
+          "previousPts": 20.371978,
+          "videoRgb": [
+            252.0,
+            246.0,
+            253.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            246.0,
+            253.0
+          ],
+          "markerRgb": [
+            0.0,
+            187.33333333333334,
+            209.0
+          ]
+        },
+        "red": {
+          "index": 29,
+          "pts": 21.456256,
+          "previousPts": 21.439922,
+          "videoRgb": [
+            104.0,
+            0.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            70.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            0.0,
+            187.33333333333334,
+            209.66666666666666
+          ]
+        },
+        "orange": {
+          "index": 46,
+          "pts": 21.857011,
+          "previousPts": 21.842656,
+          "videoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            252.0,
+            151.0,
+            0.0
+          ]
+        },
+        "yellow": {
+          "index": 49,
+          "pts": 22.005322,
+          "previousPts": 21.890233,
+          "videoRgb": [
+            252.0,
+            253.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            252.66666666666666,
+            150.66666666666666,
+            0.0
+          ]
+        }
+      },
+      "scope": "Encoded capture transitions only; interval is not guaranteed physical display or dispatch latency"
+    },
+    {
+      "run": "20261013303",
+      "frames": 132,
+      "markerAndVideoVisible": true,
+      "firstVisibleRed": {
+        "markerPts": 0.959556,
+        "visiblePts": 1.297189,
+        "observedDeltaMs": 337.633,
+        "intervalMs": [
+          320.233,
+          1297.189
+        ]
+      },
+      "seekVisibleYellow": {
+        "markerPts": 1.697144,
+        "visiblePts": 1.795778,
+        "observedDeltaMs": 98.634,
+        "intervalMs": [
+          16.923,
+          130.222
+        ]
+      },
+      "samples": {
+        "cyan": [
+          0.0,
+          187.33333333333334,
+          209.66666666666666
+        ],
+        "orange": [
+          252.0,
+          151.0,
+          0.0
+        ]
+      },
+      "transitions": {
+        "cyan": {
+          "index": 1,
+          "pts": 0.959556,
+          "previousPts": 0.0,
+          "videoRgb": [
+            252.0,
+            246.0,
+            253.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            246.0,
+            253.0
+          ],
+          "markerRgb": [
+            0.0,
+            187.33333333333334,
+            209.66666666666666
+          ]
+        },
+        "red": {
+          "index": 19,
+          "pts": 1.297189,
+          "previousPts": 1.279789,
+          "videoRgb": [
+            104.0,
+            0.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            70.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            0.0,
+            187.33333333333334,
+            209.66666666666666
+          ]
+        },
+        "orange": {
+          "index": 38,
+          "pts": 1.697144,
+          "previousPts": 1.665556,
+          "videoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            252.0,
+            151.0,
+            0.0
+          ]
+        },
+        "yellow": {
+          "index": 40,
+          "pts": 1.795778,
+          "previousPts": 1.714067,
+          "videoRgb": [
+            252.0,
+            253.0,
+            0.0
+          ],
+          "previousVideoRgb": [
+            252.0,
+            0.0,
+            0.0
+          ],
+          "markerRgb": [
+            252.66666666666666,
+            150.66666666666666,
+            0.0
+          ]
+        }
+      },
+      "scope": "Encoded capture transitions only; interval is not guaranteed physical display or dispatch latency"
+    }
+  ],
+  "limits": [
+    "Encoded recording transitions, not exact physical display or finger latency",
+    "VFR gaps cause wide first-frame intervals",
+    "Single neutral MP4; no HLS visual timing or cold/warm comparison",
+    "No optimization improvement demonstrated"
+  ]
+}

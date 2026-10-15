@@ -20,6 +20,8 @@ class Site91MdSearchController extends ChangeNotifier {
   bool loadingMore = false;
   String? error;
   bool searched = false;
+  bool lastLoadWasAppend = false;
+  int replacementGeneration = 0;
   int _generation = 0;
   bool _disposed = false;
   int? _failedPage;
@@ -72,6 +74,8 @@ class Site91MdSearchController extends ChangeNotifier {
         page: target,
       );
       if (_disposed || generation != _generation) return;
+      lastLoadWasAppend = append;
+      if (!append) replacementGeneration++;
       // Keep the website's exact ordering, including repeated cards across pages.
       if (!append) {
         _items.clear();

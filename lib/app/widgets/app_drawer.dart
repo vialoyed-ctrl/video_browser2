@@ -24,6 +24,7 @@ import '../modules/pornhub/pornhub_controller.dart';
 import '../modules/root/root_controller.dart';
 import '../services/hanime1_auth_service.dart';
 import 'app_toast.dart';
+import 'grid_layout_settings_tile.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -105,6 +106,7 @@ class AppDrawer extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 children: [
+                  const GridLayoutSettingsTile(),
                   if (is91) ...[
                     // 91 原始版面菜单（绝不修改 91 的板块与分类）
                     _buildSingleTile(

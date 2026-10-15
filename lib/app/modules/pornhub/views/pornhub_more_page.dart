@@ -12,6 +12,9 @@ import '../../../widgets/retained_page_sliver.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../widgets/adaptive_card_grid.dart';
+import '../widgets/pornhub_playlist_card.dart';
+
 import '../../../data/models/pornhub_models.dart';
 import '../../../data/models/video_item.dart';
 import '../../../data/sources/pornhub_source.dart';
@@ -78,14 +81,13 @@ class _CategoriesPane extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final categories = PornHubCategories.categoryList;
-    return GridView.builder(
+    return AdaptiveCardGrid(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 132,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-        childAspectRatio: 2.35,
-      ),
+
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+      childAspectRatio: 2.35,
+
       itemCount: categories.length,
       itemBuilder: (context, index) {
         final category = categories[index];
@@ -219,7 +221,7 @@ class _PlaylistsPane extends StatefulWidget {
 
 class _PlaylistsPaneState extends State<_PlaylistsPane> {
   final List<PornHubPlaylist> _items = <PornHubPlaylist>[];
-  bool _loading = true;
+  bool _loading = false;
   String? _error;
 
   @override
@@ -229,6 +231,7 @@ class _PlaylistsPaneState extends State<_PlaylistsPane> {
   }
 
   Future<void> _load() async {
+    if (!mounted || _loading) return;
     setState(() {
       _loading = true;
       _error = null;
@@ -253,61 +256,26 @@ class _PlaylistsPaneState extends State<_PlaylistsPane> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     if (_loading) return const Center(child: CircularProgressIndicator());
     if (_error != null && _items.isEmpty) {
       return SingleChildScrollView(
         child: PornHubErrorBlock(message: _error!, onRetry: _load),
       );
     }
-    return ListView.separated(
+    return AdaptiveCardGrid(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 20),
+      childAspectRatio: 1.15,
       itemCount: _items.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (context, index) {
         final playlist = _items[index];
-        return Material(
-          color: theme.colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(10),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () => Navigator.of(context).push<void>(
-              MaterialPageRoute<void>(
-                builder: (_) => _CollectionPage(
-                  title: playlist.title,
-                  fetcher: (page) => widget.source.fetchPlaylistVideos(
-                    playlist.id,
-                    page: page,
-                  ),
-                ),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.queue_music_rounded,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      playlist.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '${playlist.videoCount} 个',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+        return PornHubPlaylistCard(
+          playlist: playlist,
+          onTap: () => Navigator.of(context).push<void>(
+            MaterialPageRoute<void>(
+              builder: (_) => _CollectionPage(
+                title: playlist.title,
+                fetcher: (page) =>
+                    widget.source.fetchPlaylistVideos(playlist.id, page: page),
               ),
             ),
           ),
@@ -317,7 +285,6 @@ class _PlaylistsPaneState extends State<_PlaylistsPane> {
   }
 }
 
-/// 明星面板。
 class _StarsPane extends StatefulWidget {
   const _StarsPane({required this.source});
 
@@ -329,7 +296,7 @@ class _StarsPane extends StatefulWidget {
 
 class _StarsPaneState extends State<_StarsPane> {
   final List<PornHubStar> _items = <PornHubStar>[];
-  bool _loading = true;
+  bool _loading = false;
   String? _error;
 
   @override
@@ -339,6 +306,7 @@ class _StarsPaneState extends State<_StarsPane> {
   }
 
   Future<void> _load() async {
+    if (!mounted || _loading) return;
     setState(() {
       _loading = true;
       _error = null;
@@ -370,14 +338,13 @@ class _StarsPaneState extends State<_StarsPane> {
         child: PornHubErrorBlock(message: _error!, onRetry: _load),
       );
     }
-    return GridView.builder(
+    return AdaptiveCardGrid(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 130,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: 0.78,
-      ),
+
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      childAspectRatio: 0.78,
+
       itemCount: _items.length,
       itemBuilder: (context, index) {
         final star = _items[index];

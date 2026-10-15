@@ -680,6 +680,7 @@ class PornHubSource implements VideoSource {
       id: vkey,
       title: title,
       author: _text(userEl).isEmpty ? 'unknown' : _text(userEl),
+      authorUrl: userEl?.attributes['href'],
       // 列表页拿不到播放地址：官网把 mediaDefinitions 放在详情页。
       hlsUrl: '',
       detailUrl: detailUrl,
@@ -1340,6 +1341,7 @@ class PornHubSource implements VideoSource {
         id: normId,
         title: title,
         author: author,
+        authorUrl: _extractUploaderPath(html),
         hlsUrl: preferred.url,
         detailUrl: url,
         thumbnailUrl: thumbnail,
@@ -1946,6 +1948,7 @@ class PornHubSource implements VideoSource {
       id: '$_clipIdPrefix$viewkey',
       title: title,
       author: _text(userEl).isEmpty ? 'unknown' : _text(userEl),
+      authorUrl: userEl?.attributes['href'],
       // 列表页拿不到播放地址：官网把 mediaDefinitions 放在详情页。
       hlsUrl: '',
       detailUrl: detailUrl,

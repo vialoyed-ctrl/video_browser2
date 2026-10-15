@@ -13,13 +13,16 @@ import '../../widgets/retained_page_sliver.dart';
 import '../../widgets/pull_to_next_page.dart';
 import '../../widgets/append_pagination_footer.dart';
 
+import '../../widgets/adaptive_sliver_layout.dart';
+
 import 'package:flutter/material.dart' hide SearchController;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 
 import '../../core/app_logger.dart';
 import '../../core/app_theme.dart';
-import '../../core/responsive_utils.dart';
+import '../../widgets/video_grid_sliver.dart';
+import '../../widgets/grid_layout_scope.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/video_source.dart';
 import '../../routes/app_navigator.dart';
@@ -60,7 +63,13 @@ class _Hanime1PinnedHeader extends SliverPersistentHeaderDelegate {
     BuildContext context,
     double shrinkOffset,
     bool overlapsContent,
-  ) => child;
+  ) => SizedBox(
+    height: height,
+    child: Align(
+      alignment: Alignment.topCenter,
+      child: SizedBox(width: double.infinity, child: child),
+    ),
+  );
 
   @override
   bool shouldRebuild(covariant _Hanime1PinnedHeader oldDelegate) =>
@@ -157,76 +166,82 @@ class _Hanime1StudioGridSliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 7),
-      sliver: SliverGrid(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 7,
-          mainAxisSpacing: 10,
-          childAspectRatio: 0.77,
-        ),
-        delegate: SliverChildBuilderDelegate((context, index) {
-          final item = items[index];
-          return InkWell(
-            onTap: () => onTapItem(item),
-            borderRadius: BorderRadius.circular(3),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
-                    child: ColoredBox(
-                      color: context.cImagePlaceholder,
-                      child: item.thumbnailUrl == null
-                          ? Icon(
-                              Icons.business,
-                              color: context.cTextFaint,
-                              size: 34,
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: item.thumbnailUrl!,
-                              fit: BoxFit.contain,
-                              placeholder: (_, _) =>
-                                  ColoredBox(color: context.cImagePlaceholder),
-                              errorWidget: (_, _, _) => Icon(
+    return adaptiveSliverLayout(
+      (context, constraints) => SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 7),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: GridLayoutScope.columnsOf(
+              context,
+              constraints.crossAxisExtent,
+            ),
+            crossAxisSpacing: 7,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.77,
+          ),
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final item = items[index];
+            return InkWell(
+              onTap: () => onTapItem(item),
+              borderRadius: BorderRadius.circular(3),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: ColoredBox(
+                        color: context.cImagePlaceholder,
+                        child: item.thumbnailUrl == null
+                            ? Icon(
                                 Icons.business,
                                 color: context.cTextFaint,
                                 size: 34,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: item.thumbnailUrl!,
+                                fit: BoxFit.contain,
+                                placeholder: (_, _) => ColoredBox(
+                                  color: context.cImagePlaceholder,
+                                ),
+                                errorWidget: (_, _, _) => Icon(
+                                  Icons.business,
+                                  color: context.cTextFaint,
+                                  size: 34,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  item.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: context.cTextMain,
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w700,
-                    height: 1.2,
+                  const SizedBox(height: 4),
+                  Text(
+                    item.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: context.cTextMain,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  item.viewsStr ?? '',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: context.cTextSub,
-                    fontSize: 9.5,
-                    height: 1.2,
+                  const SizedBox(height: 2),
+                  Text(
+                    item.viewsStr ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: context.cTextSub,
+                      fontSize: 9.5,
+                      height: 1.2,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }, childCount: items.length),
+                ],
+              ),
+            );
+          }, childCount: items.length),
+        ),
       ),
     );
   }
@@ -285,6 +300,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final retainedResults = _buildRetainedResults(context);
 
     return Scaffold(
       backgroundColor: controller.isHanime1
@@ -477,58 +493,7 @@ class _SearchViewState extends State<SearchView> {
                                 items: results.toList(growable: false),
                               )
                       else
-                        RetainedPageSliver(
-                          key: ValueKey(
-                            "${controller.keyword.value}:${controller.searchType.value}",
-                          ),
-                          items: List.of(results),
-                          page: controller.currentPage.value,
-                          footer: _buildPaginationBar(context),
-                          gridBuilder: (pageItems) => SliverPadding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            sliver: Builder(
-                              builder: (context) {
-                                final screenWidth = MediaQuery.sizeOf(context)
-                                    .width;
-                                final columnCount =
-                                    ResponsiveLayout.gridColumnCount(
-                                      screenWidth,
-                                    );
-                                final columnWidth =
-                                    (screenWidth - 16 - (columnCount - 1) * 6) /
-                                    columnCount;
-                                final childAspectRatio =
-                                    ResponsiveLayout.cardAspectRatio(
-                                      columnWidth,
-                                    );
-
-                                return SliverGrid(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: columnCount,
-                                        crossAxisSpacing: 6,
-                                        mainAxisSpacing: 6,
-                                        childAspectRatio: childAspectRatio,
-                                      ),
-                                  delegate: SliverChildBuilderDelegate((
-                                    context,
-                                    index,
-                                  ) {
-                                    final video = pageItems[index];
-                                    return BiliVideoCardV(
-                                      video: video,
-                                      onTap: () => AppNavigator.toPlayer(video),
-                                      onDownload: () => _enqueue(video),
-                                    );
-                                  }, childCount: pageItems.length),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+                        retainedResults,
                     ],
                   ],
                 ),
@@ -537,8 +502,50 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
+  /// Flags and summaries update their own widgets without replacing result grids.
+  Widget _buildRetainedResults(BuildContext context, {bool hanime1 = false}) {
+    final footer = _buildPaginationBar(context);
+    return Obx(() {
+      final results = List<VideoItem>.of(controller.results);
+      final artistDirectory =
+          controller.searchType.value == SearchType.authorId;
+      final usesPosterGrid = hanime1 && _hanime1UsesPosterGrid(controller);
+      return RetainedPageSliver(
+        key: ValueKey(
+          "${controller.keyword.value}:${controller.searchType.value}",
+        ),
+        items: results,
+        page: controller.currentPage.value,
+        preserveEmptyAppend: controller.paging.lastLoadWasAppend,
+        replacementGeneration: controller.paging.replacementGeneration.value,
+        footer: footer,
+        gridBuilder: (pageItems) => hanime1
+            ? artistDirectory
+                  ? _Hanime1StudioGridSliver(
+                      items: pageItems,
+                      onTapItem: (studio) =>
+                          controller.searchVideosForArtist(studio.title),
+                    )
+                  : usesPosterGrid
+                  ? Hanime1PosterGridSliver(items: pageItems)
+                  : Hanime1VideoGridSliver(items: pageItems)
+            : VideoGridSliver(
+                items: pageItems,
+                availableWidth: MediaQuery.sizeOf(context).width,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                itemBuilder: (_, video) => BiliVideoCardV(
+                  video: video,
+                  onTap: () => AppNavigator.toPlayer(video),
+                  onDownload: () => _enqueue(video),
+                ),
+              ),
+      );
+    });
+  }
+
   /// Hanime1 的搜索页使用官网手机端结构；91 继续沿用下方原搜索视图。
   Widget _buildHanime1Search(BuildContext context) {
+    final retainedResults = _buildRetainedResults(context, hanime1: true);
     return Obx(() {
       final results = controller.results;
       final isLoading = controller.loading.value;
@@ -612,23 +619,7 @@ class _SearchViewState extends State<SearchView> {
                 ),
               )
             else ...[
-              RetainedPageSliver(
-                key: ValueKey(
-                  "${controller.keyword.value}:${controller.searchType.value}",
-                ),
-                items: List.of(results),
-                page: controller.currentPage.value,
-                footer: _buildPaginationBar(context),
-                gridBuilder: (pageItems) => artistDirectory
-                    ? _Hanime1StudioGridSliver(
-                        items: pageItems,
-                        onTapItem: (studio) =>
-                            controller.searchVideosForArtist(studio.title),
-                      )
-                    : _hanime1UsesPosterGrid(controller)
-                    ? Hanime1PosterGridSliver(items: pageItems)
-                    : Hanime1VideoGridSliver(items: pageItems),
-              ),
+              retainedResults,
             ],
           ],
         ),

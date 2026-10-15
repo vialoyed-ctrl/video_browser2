@@ -18,6 +18,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import '../../core/app_logger.dart';
+import '../../core/paging/paged_list_state.dart';
 import '../../data/models/pornhub_models.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/pornhub_source.dart';
@@ -219,8 +220,11 @@ class PornHubController extends GetxController {
       if (page.summary == PornHubSource.requestFailureMessage) {
         st.error.value = page.summary;
         st.hasMore.value = true;
-        if (!isRefresh) st.page = st.page > 1 ? st.page - 1 : 1;
         return;
+      }
+      st.lastLoadWasAppend = !isRefresh;
+      if (isRefresh) {
+        st.replacementGeneration++;
       }
       if (isRefresh) {
         st.items.assignAll(page.items);
@@ -242,7 +246,6 @@ class PornHubController extends GetxController {
       if (request != st.request) return;
       st.error.value = '获取失败，请重试';
       st.hasMore.value = true;
-      if (!isRefresh) st.page = st.page > 1 ? st.page - 1 : 1;
     } finally {
       if (request == st.request) {
         st.isLoading.value = false;
@@ -256,8 +259,7 @@ class PornHubController extends GetxController {
     if (st.isLoading.value || st.isLoadingMore.value || !st.hasMore.value) {
       return;
     }
-    st.page++;
-    await loadList(path, isRefresh: false);
+    await loadList(path, isRefresh: false, targetPage: st.page + 1);
   }
 
   Future<void> jumpListPage(String path, int page) async {
@@ -1142,12 +1144,20 @@ class PornHubController extends GetxController {
 
 /// 某个路径下的列表分页状态。
 class PornHubListState {
-  final RxList<VideoItem> items = <VideoItem>[].obs;
-  final RxBool isLoading = false.obs;
-  final RxBool isLoadingMore = false.obs;
-  final RxBool hasMore = true.obs;
-  final RxnString error = RxnString();
-  int page = 1;
+  final paging = PagedListState<VideoItem>();
+  RxList<VideoItem> get items => paging.items;
+  RxBool get isLoading => paging.loadingFirst;
+  RxBool get isLoadingMore => paging.loadingPage;
+  RxBool get hasMore => paging.hasMore;
+  RxnString get error => paging.error;
+  int get page => paging.page.value;
+  set page(int value) => paging.page.value = value;
+
+  // Only successful responses choose whether retained sections append or reset.
+  bool lastLoadWasAppend = false;
+  int replacementGeneration = 0;
+
+  // Keep the controller's existing writable request epoch and retry policy.
   int request = 0;
 }
 

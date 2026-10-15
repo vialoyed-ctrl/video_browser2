@@ -196,6 +196,8 @@ public final class VideoPlayerTest {
     videoPlayer.setScrubbingMode(true);
     verify(mockExoPlayer).setScrubbingModeEnabled(true);
 
+    // Mockito does not update query state when the enable command is invoked.
+    when(mockExoPlayer.isScrubbingModeEnabled()).thenReturn(true);
     videoPlayer.setScrubbingMode(false);
     verify(mockExoPlayer).setScrubbingModeEnabled(false);
 

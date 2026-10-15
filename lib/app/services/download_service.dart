@@ -12,6 +12,7 @@ library;
 import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
@@ -56,7 +57,14 @@ class DownloadService extends GetxService {
     this.maxConcurrentTasks = 3,
     this.maxConcurrentSegments = 4,
     this.maxAttemptsPerSegment = 3,
-  }) : _dio = dio ?? _defaultDio();
+    this.mp4DownloadTimeout = const Duration(minutes: 60),
+  }) : _dio = dio ?? _defaultDio() {
+    if (_dio.httpClientAdapter is! _DownloadTransportAdapter) {
+      _dio.httpClientAdapter = _DownloadTransportAdapter(
+        _dio.httpClientAdapter,
+      );
+    }
+  }
 
   static const String _ua =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
@@ -73,11 +81,16 @@ class DownloadService extends GetxService {
   /// 单个分片的最大尝试次数。
   final int maxAttemptsPerSegment;
 
-  /// UI 绑定用的响应式列表。
+  final Duration mp4DownloadTimeout;
+
+  /// 下载列表仍在每次进度变化时更新，供下载管理页展示实时进度。
   final RxList<DownloadTask> tasks = <DownloadTask>[].obs;
 
+  /// 仅当活跃任务数量改变时通知角标，避免下载进度引起首页图标反复构建。
+  final RxInt activeTaskCount = 0.obs;
+
   final Set<String> _canceled = <String>{};
-  final Set<String> _running = <String>{};
+  final Map<String, _DownloadRun> _runs = {};
   late final Semaphore _taskGate = Semaphore(maxConcurrentTasks);
   bool _disposed = false;
 
@@ -96,7 +109,7 @@ class DownloadService extends GetxService {
   /// 从磁盘恢复任务列表。在 `main()` 中 await。
   Future<DownloadService> init() async {
     await TaskRepository.instance.load();
-    tasks.assignAll(TaskRepository.instance.all);
+    _publishTasks(TaskRepository.instance.all);
     // 恢复后自动接续未完成的任务。
     for (final t in tasks.where((t) => t.status == DownloadStatus.pending)) {
       unawaited(_schedule(t));
@@ -111,6 +124,7 @@ class DownloadService extends GetxService {
     final existing = TaskRepository.instance.byId(video.id);
     if (existing != null && existing.isActive) return existing;
 
+    _canceled.remove(video.id);
     final task = DownloadTask(video: video);
     TaskRepository.instance.upsert(task);
     _syncFromRepository();
@@ -120,6 +134,11 @@ class DownloadService extends GetxService {
 
   void cancel(String taskId) {
     _canceled.add(taskId);
+    final run = _runs[taskId];
+    if (run != null) {
+      run.revoked = true;
+      run.token.cancel('Task canceled');
+    }
     final task = TaskRepository.instance.byId(taskId);
     if (task != null && task.status != DownloadStatus.completed) {
       task.status = DownloadStatus.canceled;
@@ -133,7 +152,7 @@ class DownloadService extends GetxService {
   Future<void> retry(String taskId) async {
     final task = TaskRepository.instance.byId(taskId);
     if (task == null || task.isActive) return;
-    _canceled.remove(taskId);
+    final previous = _runs[taskId];
 
     // 立即更新状态为 pending 防止重复点击触发多次 retry
     _update(task, () {
@@ -143,9 +162,22 @@ class DownloadService extends GetxService {
       task.error = null;
     });
 
+    // Old network and file writes must settle before touching the same files.
+    if (previous != null) await previous.done.future;
+    if (_disposed ||
+        !identical(TaskRepository.instance.byId(taskId), task) ||
+        task.status != DownloadStatus.pending) {
+      return;
+    }
+
     // 重试时清理之前的分片，避免坏块导致继续失败，必须 await！否则会导致执行一半时目录被删！
     try {
       final dir = await StoragePaths.tempDir(taskId);
+      if (_disposed ||
+          !identical(TaskRepository.instance.byId(taskId), task) ||
+          task.status != DownloadStatus.pending) {
+        return;
+      }
       if (dir.existsSync()) {
         dir.deleteSync(recursive: true);
       }
@@ -155,7 +187,19 @@ class DownloadService extends GetxService {
       AppLogger.w('Downloader', '重试前清理残留分片失败 taskId=$taskId，本次重试可能因坏块再次失败: $e');
     }
 
+    if (_disposed ||
+        !identical(TaskRepository.instance.byId(taskId), task) ||
+        task.status != DownloadStatus.pending) {
+      return;
+    }
+    _canceled.remove(taskId);
     unawaited(_schedule(task));
+  }
+
+  /// Waits for the current execution's network and file work to stop.
+  Future<void> whenTaskSettled(String taskId) async {
+    final run = _runs[taskId];
+    if (run != null) await run.done.future;
   }
 
   void remove(String taskId) {
@@ -172,30 +216,53 @@ class DownloadService extends GetxService {
   // ---------------------------------------------------------------- 队列调度
 
   Future<void> _schedule(DownloadTask task) async {
-    if (_disposed || _running.contains(task.id)) return;
-    if (task.status == DownloadStatus.completed) return;
-
-    _running.add(task.id);
-    await _taskGate.acquire();
-    try {
-      if (_canceled.contains(task.id)) {
-        _markCanceled(task);
+    if (_disposed || task.status == DownloadStatus.completed) return;
+    final previous = _runs[task.id];
+    if (previous != null) {
+      if (!previous.revoked) return;
+      await previous.done.future;
+      if (_disposed ||
+          !identical(TaskRepository.instance.byId(task.id), task) ||
+          task.status != DownloadStatus.pending) {
         return;
       }
-      await _execute(task);
+    }
+    final run = _DownloadRun(task.id);
+    _runs[task.id] = run;
+    await _taskGate.acquire();
+    try {
+      if (!_owns(run)) return;
+      await _execute(task, run);
     } finally {
+      await run.cleanCanceledParts();
       _taskGate.release();
-      _running.remove(task.id);
+      if (identical(_runs[task.id], run)) _runs.remove(task.id);
+      run.done.complete();
       if (!_disposed) unawaited(TaskRepository.instance.flush());
     }
   }
 
+  bool _owns(_DownloadRun run) =>
+      !_disposed &&
+      !run.revoked &&
+      identical(_runs[run.id], run) &&
+      !_canceled.contains(run.id) &&
+      TaskRepository.instance.byId(run.id) != null;
+
+  void _updateOwned(
+    _DownloadRun run,
+    DownloadTask task,
+    void Function() mutate,
+  ) {
+    if (_owns(run)) _update(task, mutate);
+  }
+
   // ---------------------------------------------------------------- 核心流程
 
-  Future<void> _execute(DownloadTask task) async {
+  Future<void> _execute(DownloadTask task, _DownloadRun run) async {
     var video = task.video;
     try {
-      _update(task, () {
+      _updateOwned(run, task, () {
         task.status = DownloadStatus.running;
         task.progress = 0;
         task.completedSegments = 0;
@@ -215,6 +282,7 @@ class DownloadService extends GetxService {
             targetUrl,
             forceRefresh: true,
           );
+          if (!_owns(run)) return;
           if (detail != null && detail.video.hlsUrl.isNotEmpty) {
             video = video.copyWith(
               hlsUrl: detail.video.hlsUrl,
@@ -245,36 +313,14 @@ class DownloadService extends GetxService {
       if (video.hlsUrl.contains('.mp4') && !video.hlsUrl.contains('.m3u8')) {
         AppLogger.i('Downloader', '检测到 MP4 直链，开始直接下载...');
         final authorDir = await StoragePaths.authorDir(video.author);
+        if (!_owns(run)) return;
         final output = File(
           '${authorDir.path}${Platform.pathSeparator}${video.downloadBaseName}.mp4',
         );
 
-        // Single file download directly to output
-        await _dio
-            .download(
-              video.hlsUrl,
-              output.path,
-              options: Options(
-                headers: <String, dynamic>{
-                  'User-Agent': _ua,
-                  'Accept': '*/*',
-                  'Referer': downloadReferer,
-                },
-              ),
-              onReceiveProgress: (count, total) {
-                if (total > 0 && total != -1) {
-                  _update(task, () {
-                    task.progress = count / total;
-                  });
-                }
-              },
-            )
-            .timeout(
-              const Duration(minutes: 60),
-              onTimeout: () => throw TimeoutException('MP4下载超时'),
-            );
+        await _downloadMp4(video.hlsUrl, output, downloadReferer, task, run);
 
-        _update(task, () {
+        _updateOwned(run, task, () {
           task.status = DownloadStatus.completed;
           task.progress = 1.0;
           task.completedSegments = 1;
@@ -289,14 +335,16 @@ class DownloadService extends GetxService {
       var playlist = await _fetchPlaylist(
         Uri.parse(video.hlsUrl),
         downloadReferer,
+        run.token,
       );
       AppLogger.i('Downloader', 'M3U8 播放列表请求完成，isMaster: ${playlist.isMaster}');
       if (playlist.isMaster) {
         final best = HlsParser.pickBest(playlist.variants);
-        playlist = await _fetchPlaylist(best.uri, downloadReferer);
+        playlist = await _fetchPlaylist(best.uri, downloadReferer, run.token);
         AppLogger.i('Downloader', 'Media 播放列表请求完成');
       }
 
+      if (!_owns(run)) return;
       if (playlist.isEncrypted) {
         throw Exception(
           '该流使用 ${playlist.encryptionMethod} 加密，'
@@ -315,10 +363,13 @@ class DownloadService extends GetxService {
 
       AppLogger.i('Downloader', '准备获取临时文件夹路径...');
       final tempDir = await StoragePaths.tempDir(task.id);
+      run.partsDirectory = tempDir;
       AppLogger.i('Downloader', '获取临时文件夹路径成功: ${tempDir.path}');
+      if (!_owns(run)) return;
       final alreadyDone = await _countExisting(tempDir, parts.length);
+      if (!_owns(run)) return;
 
-      _update(task, () {
+      _updateOwned(run, task, () {
         task.totalSegments = parts.length;
         task.completedSegments = alreadyDone;
         task.progress = alreadyDone / parts.length;
@@ -335,17 +386,22 @@ class DownloadService extends GetxService {
         jobs.add(() async {
           await gate.acquire();
           try {
-            if (_canceled.contains(task.id)) return;
+            if (!_owns(run)) return;
 
             final target = File(_partPath(tempDir, index));
             // 续传：已存在且非空的分片直接跳过。
             if (target.existsSync() && await target.length() > 0) return;
 
-            final bytes = await _downloadPart(parts[index], downloadReferer);
+            final bytes = await _downloadPart(
+              parts[index],
+              downloadReferer,
+              run.token,
+            );
+            if (!_owns(run)) return;
             await target.writeAsBytes(bytes, flush: false);
 
             done++;
-            _update(task, () {
+            _updateOwned(run, task, () {
               task.completedSegments = done;
               task.progress = done / parts.length;
             });
@@ -357,13 +413,11 @@ class DownloadService extends GetxService {
 
       await Future.wait(jobs);
 
-      if (_canceled.contains(task.id)) {
-        _markCanceled(task);
-        return;
-      }
+      if (!_owns(run)) return;
 
       // 第 4 步：按序号合并为单文件，并统一封装为 .mp4 格式。
       final authorDir = await StoragePaths.authorDir(video.author);
+      if (!_owns(run)) return;
       final finalMp4File = File(
         '${authorDir.path}${Platform.pathSeparator}'
         '${video.downloadBaseName}.mp4',
@@ -380,11 +434,13 @@ class DownloadService extends GetxService {
         await _merge(tempDir, tempTsFile, parts.length);
 
         AppLogger.i('Downloader', '正在将 TS 流封装为 MP4: ${finalMp4File.path}');
+        if (!_owns(run)) return;
         final remuxOk = await MediaUtils.remuxTsToMp4(
           inputPath: tempTsFile.path,
           outputPath: finalMp4File.path,
         );
 
+        if (!_owns(run)) return;
         if (remuxOk &&
             finalMp4File.existsSync() &&
             await finalMp4File.length() > 0) {
@@ -407,13 +463,14 @@ class DownloadService extends GetxService {
       }
 
       // 通知系统媒体库立即扫描刷新该视频
+      if (!_owns(run)) return;
       await MediaUtils.scanFile(finalMp4File.path);
 
       try {
         await tempDir.delete(recursive: true);
       } catch (_) {}
 
-      _update(task, () {
+      _updateOwned(run, task, () {
         task.status = DownloadStatus.completed;
         task.progress = 1;
         task.completedSegments = parts.length;
@@ -421,37 +478,109 @@ class DownloadService extends GetxService {
         task.error = null;
       });
     } catch (e, stackTrace) {
+      if (!_owns(run)) return;
       final message = e is HlsParseException ? e.message : e.toString();
       AppLogger.e('Downloader', '任务执行失败: $message\n$stackTrace');
 
-      _update(task, () {
+      _updateOwned(run, task, () {
         task.status = DownloadStatus.failed;
         task.error = message;
       });
     }
   }
 
-  Future<void> _markCanceled(DownloadTask task) async {
-    _update(task, () {
-      task.status = DownloadStatus.canceled;
-      task.error = null;
+  Future<void> _downloadMp4(
+    String url,
+    File output,
+    String referer,
+    DownloadTask task,
+    _DownloadRun run,
+  ) async {
+    RandomAccessFile? writer;
+    StreamIterator<List<int>>? reader;
+    Future<void>? stopping;
+    bool opened = false;
+    Future<void> stopReading() =>
+        stopping ??= reader?.cancel() ?? Future<void>.value();
+    final timeout = Timer(mp4DownloadTimeout, () {
+      run.timedOut = true;
+      run.token.cancel('MP4 download timeout');
     });
-    final tempDir = await StoragePaths.tempDir(task.id);
-    if (tempDir.existsSync()) {
+    try {
+      final response = await _dio.get<ResponseBody>(
+        url,
+        cancelToken: run.token,
+        options: Options(
+          responseType: ResponseType.stream,
+          extra: {'videoBrowserDownloadRun': run},
+          headers: {'User-Agent': _ua, 'Accept': '*/*', 'Referer': referer},
+        ),
+      );
+      if (run.token.isCancelled) throw run.token.cancelError!;
+      final body = response.data!;
+      reader = StreamIterator<List<int>>(body.stream);
+      run.token.whenCancel.then((_) => stopReading()).ignore();
+      writer = await output.open(mode: FileMode.write);
+      opened = true;
+      final encoding = response.headers.value(Headers.contentEncodingHeader);
+      final compressed =
+          encoding != null &&
+          ['gzip', 'deflate', 'compress'].contains(encoding);
+      final total = compressed
+          ? -1
+          : int.tryParse(
+                  response.headers.value(Headers.contentLengthHeader) ?? '',
+                ) ??
+                -1;
+      var count = 0;
+      while (await reader.moveNext()) {
+        if (run.token.isCancelled) throw run.token.cancelError!;
+        final bytes = reader.current;
+        await writer.writeFrom(bytes);
+        if (run.token.isCancelled) throw run.token.cancelError!;
+        count += bytes.length;
+        if (total > 0) {
+          _updateOwned(run, task, () {
+            task.progress = count / total;
+          });
+        }
+      }
+      if (run.token.isCancelled) throw run.token.cancelError!;
+      if (total > 0 && count != total) {
+        throw StateError('MP4下载不完整: 预期$total字节，实际$count字节');
+      }
+    } catch (_) {
+      await stopReading();
+      await run.transportDrain;
+      if (writer != null) {
+        await writer.close();
+        writer = null;
+      }
+      if (opened && output.existsSync()) await output.delete();
+      if (run.timedOut) throw TimeoutException('MP4下载超时');
+      rethrow;
+    } finally {
+      timeout.cancel();
       try {
-        await tempDir.delete(recursive: true);
-      } on FileSystemException {
-        // 忽略：文件可能被占用。
+        await stopReading();
+        await run.transportDrain;
+      } finally {
+        if (writer != null) await writer.close();
       }
     }
   }
 
   // ---------------------------------------------------------------- 网络
 
-  Future<HlsPlaylist> _fetchPlaylist(Uri uri, String referer) async {
+  Future<HlsPlaylist> _fetchPlaylist(
+    Uri uri,
+    String referer,
+    CancelToken token,
+  ) async {
     final response = await _dio
         .get<String>(
           uri.toString(),
+          cancelToken: token,
           options: Options(
             responseType: ResponseType.plain,
             headers: <String, dynamic>{
@@ -473,7 +602,11 @@ class DownloadService extends GetxService {
     return HlsParser.parse(body, uri);
   }
 
-  Future<List<int>> _downloadPart(Uri uri, String referer) async {
+  Future<List<int>> _downloadPart(
+    Uri uri,
+    String referer,
+    CancelToken token,
+  ) async {
     Object? lastError;
 
     for (var attempt = 1; attempt <= maxAttemptsPerSegment; attempt++) {
@@ -481,6 +614,7 @@ class DownloadService extends GetxService {
         final response = await _dio
             .get<List<int>>(
               uri.toString(),
+              cancelToken: token,
               options: Options(
                 responseType: ResponseType.bytes,
                 headers: <String, dynamic>{
@@ -501,6 +635,7 @@ class DownloadService extends GetxService {
         }
         return data;
       } catch (e) {
+        if (token.isCancelled) rethrow;
         lastError = e;
         if (attempt < maxAttemptsPerSegment) {
           // 线性退避，给源站恢复时间。
@@ -558,9 +693,15 @@ class DownloadService extends GetxService {
 
   void syncFromRepository() {
     if (_disposed) return;
-    final latest = TaskRepository.instance.all;
-    // 逐项替换以触发 GetX 的细粒度更新。
+    _publishTasks(TaskRepository.instance.all);
+  }
+
+  void _publishTasks(List<DownloadTask> latest) {
+    final count = latest.where((task) => task.isActive).length;
+    // 原任务列表通知保持不变：下载管理页面仍可实时展示下载进度。
     tasks.assignAll(latest);
+    // 角标只关心数量。进度/速度更新不应令它重新构建。
+    if (activeTaskCount.value != count) activeTaskCount.value = count;
   }
 
   void _syncFromRepository() => syncFromRepository();
@@ -568,7 +709,67 @@ class DownloadService extends GetxService {
   @override
   void onClose() {
     _disposed = true;
+    for (final run in _runs.values) {
+      run.revoked = true;
+      run.token.cancel('Download service disposed');
+    }
     unawaited(TaskRepository.instance.flush());
     super.onClose();
   }
+}
+
+class _DownloadRun {
+  _DownloadRun(this.id);
+  final String id;
+  final CancelToken token = CancelToken();
+  final Completer<void> done = Completer<void>();
+  Directory? partsDirectory;
+  Future<void>? transportDrain;
+  bool revoked = false;
+  bool timedOut = false;
+
+  Future<void> cleanCanceledParts() async {
+    if (!revoked) return;
+    try {
+      final dir = partsDirectory ?? await StoragePaths.tempDir(id);
+      if (dir.existsSync()) await dir.delete(recursive: true);
+    } on FileSystemException {
+      // Preserve existing cancellation behavior for temporarily locked files.
+    }
+  }
+}
+
+// Dio's response wrapper cancels the raw subscription without awaiting it.
+// Track only this service's MP4 responses so settlement includes adapter cleanup.
+class _DownloadTransportAdapter implements HttpClientAdapter {
+  _DownloadTransportAdapter(this.delegate);
+  final HttpClientAdapter delegate;
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    final response = await delegate.fetch(options, requestStream, cancelFuture);
+    final run = options.extra['videoBrowserDownloadRun'];
+    if (run is! _DownloadRun) return response;
+    final source = response.stream;
+    final tracked = StreamController<Uint8List>();
+    late StreamSubscription<Uint8List> subscription;
+    tracked.onListen = () {
+      subscription = source.listen(
+        tracked.add,
+        onError: tracked.addError,
+        onDone: tracked.close,
+      );
+    };
+    tracked.onPause = () => subscription.pause();
+    tracked.onResume = () => subscription.resume();
+    tracked.onCancel = () => run.transportDrain ??= subscription.cancel();
+    response.stream = tracked.stream;
+    return response;
+  }
+
+  @override
+  void close({bool force = false}) => delegate.close(force: force);
 }

@@ -70,7 +70,10 @@ jobs:
         run: |
           mkdir -p build/relink
           cp -R ios/MediaRemux/Vendor build/relink/
-          cp tool/build_ios_remux.sh build/relink/
+          mkdir -p build/relink/tool build/relink/ios/MediaRemux/Sources
+          cp tool/build_ios_remux.sh tool/remux_ffmpeg_flags.sh build/relink/tool/
+          cp ios/MediaRemux/Sources/* build/relink/ios/MediaRemux/Sources/
+          cp ios/MediaRemux/MediaRemux.podspec build/relink/ios/MediaRemux/
           find build/ios -name '*.o' -exec cp '{}' build/relink/ \;
           tar -czf build/ios-remux-relink.tar.gz -C build/relink .
       - uses: actions/upload-artifact@v4

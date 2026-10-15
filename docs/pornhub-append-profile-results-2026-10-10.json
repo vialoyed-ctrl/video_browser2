@@ -1,0 +1,475 @@
+{
+  "date": "2026-10-10",
+  "project": "E:\\projects\\video_browser2",
+  "baseline": "7046392c077d868e8679f72b37010e5acb2b0fb9",
+  "fixCommit": "2061b498b04df770c573ace7e935c524c5ac5898",
+  "device": {
+    "model": "PMB110",
+    "serial": "BUPR8HWKLZTCHAPN",
+    "androidApi": 36,
+    "refreshHz": 120,
+    "mode": "ARM64 Profile"
+  },
+  "tests": {
+    "baselinePassed": 203,
+    "passed": 213,
+    "existingSkipped": 1,
+    "targetedPassed": 36,
+    "appAnalyze": {
+      "errors": 0,
+      "warnings": 0,
+      "existingInfo": 7
+    }
+  },
+  "probe": {
+    "method": "Same real controller/view; held Completer fetch; 4 neutral cards; three 1s pending windows; Flutter widget build timeline B/X events",
+    "before": {
+      "cycles": [
+        {
+          "waiting": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "footers": [
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 4
+          },
+          "success": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 8,
+            "loading": false,
+            "error": null,
+            "footers": [
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 8
+          },
+          "cardBuilds": 4,
+          "gridBuilds": 1,
+          "observerBuilds": 3,
+          "timelineEvents": 8075
+        },
+        {
+          "waiting": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "footers": [
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 4
+          },
+          "success": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 8,
+            "loading": false,
+            "error": null,
+            "footers": [
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 8
+          },
+          "cardBuilds": 4,
+          "gridBuilds": 1,
+          "observerBuilds": 3,
+          "timelineEvents": 8099
+        },
+        {
+          "waiting": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "footers": [
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 4
+          },
+          "success": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 8,
+            "loading": false,
+            "error": null,
+            "footers": [
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 8
+          },
+          "cardBuilds": 4,
+          "gridBuilds": 1,
+          "observerBuilds": 3,
+          "timelineEvents": 8085
+        }
+      ],
+      "failureAndRetry": {
+        "reset": {
+          "displayPage": 1,
+          "requestedPage": null,
+          "items": 4,
+          "loading": false,
+          "error": null,
+          "footers": [
+            {
+              "page": 1,
+              "active": true
+            }
+          ],
+          "mountedCards": 4
+        },
+        "waiting": {
+          "displayPage": 2,
+          "requestedPage": 2,
+          "items": 4,
+          "loading": true,
+          "error": null,
+          "footers": [
+            {
+              "page": 2,
+              "active": true
+            }
+          ],
+          "mountedCards": 4
+        },
+        "failure": {
+          "displayPage": 1,
+          "requestedPage": 2,
+          "items": 4,
+          "loading": false,
+          "error": "获取失败，请重试",
+          "footers": [
+            {
+              "page": 1,
+              "active": true
+            }
+          ],
+          "mountedCards": 4
+        },
+        "retryWaiting": {
+          "displayPage": 2,
+          "requestedPage": 2,
+          "items": 4,
+          "loading": true,
+          "error": null,
+          "footers": [
+            {
+              "page": 2,
+              "active": true
+            }
+          ],
+          "mountedCards": 4
+        },
+        "retrySuccess": {
+          "displayPage": 2,
+          "requestedPage": 2,
+          "items": 8,
+          "loading": false,
+          "error": null,
+          "footers": [
+            {
+              "page": 2,
+              "active": true
+            }
+          ],
+          "mountedCards": 8
+        }
+      }
+    },
+    "after": {
+      "cycles": [
+        {
+          "waiting": {
+            "displayPage": 1,
+            "requestedPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ],
+            "mountedCards": 4
+          },
+          "success": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 8,
+            "loading": false,
+            "error": null,
+            "footers": [
+              {
+                "page": 1,
+                "active": false
+              },
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 8
+          },
+          "cardBuilds": 0,
+          "gridBuilds": 0,
+          "observerBuilds": 1,
+          "timelineEvents": 6925
+        },
+        {
+          "waiting": {
+            "displayPage": 1,
+            "requestedPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ],
+            "mountedCards": 4
+          },
+          "success": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 8,
+            "loading": false,
+            "error": null,
+            "footers": [
+              {
+                "page": 1,
+                "active": false
+              },
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 8
+          },
+          "cardBuilds": 0,
+          "gridBuilds": 0,
+          "observerBuilds": 1,
+          "timelineEvents": 7024
+        },
+        {
+          "waiting": {
+            "displayPage": 1,
+            "requestedPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ],
+            "mountedCards": 4
+          },
+          "success": {
+            "displayPage": 2,
+            "requestedPage": 2,
+            "items": 8,
+            "loading": false,
+            "error": null,
+            "footers": [
+              {
+                "page": 1,
+                "active": false
+              },
+              {
+                "page": 2,
+                "active": true
+              }
+            ],
+            "mountedCards": 8
+          },
+          "cardBuilds": 0,
+          "gridBuilds": 0,
+          "observerBuilds": 1,
+          "timelineEvents": 6956
+        }
+      ],
+      "failureAndRetry": {
+        "reset": {
+          "displayPage": 1,
+          "requestedPage": null,
+          "items": 4,
+          "loading": false,
+          "error": null,
+          "footers": [
+            {
+              "page": 1,
+              "active": true
+            }
+          ],
+          "mountedCards": 4
+        },
+        "waiting": {
+          "displayPage": 1,
+          "requestedPage": 2,
+          "items": 4,
+          "loading": true,
+          "error": null,
+          "footers": [
+            {
+              "page": 1,
+              "active": true
+            }
+          ],
+          "mountedCards": 4
+        },
+        "failure": {
+          "displayPage": 1,
+          "requestedPage": 2,
+          "items": 4,
+          "loading": false,
+          "error": "获取失败，请重试",
+          "footers": [
+            {
+              "page": 1,
+              "active": true
+            }
+          ],
+          "mountedCards": 4
+        },
+        "retryWaiting": {
+          "displayPage": 1,
+          "requestedPage": 2,
+          "items": 4,
+          "loading": true,
+          "error": null,
+          "footers": [
+            {
+              "page": 1,
+              "active": true
+            }
+          ],
+          "mountedCards": 4
+        },
+        "retrySuccess": {
+          "displayPage": 2,
+          "requestedPage": 2,
+          "items": 8,
+          "loading": false,
+          "error": null,
+          "footers": [
+            {
+              "page": 1,
+              "active": false
+            },
+            {
+              "page": 2,
+              "active": true
+            }
+          ],
+          "mountedCards": 8
+        }
+      }
+    }
+  },
+  "formal": {
+    "rootRestored": "site91",
+    "homeItems": 41,
+    "homePage": 1,
+    "homeLoading": false,
+    "homePageError": null,
+    "homeScroll": 0,
+    "pornhubRecommended": {
+      "itemsBefore": 21,
+      "itemsAfter": 105,
+      "pageAfter": 5,
+      "loading": false,
+      "error": null,
+      "retainedSections": [
+        {
+          "page": 1,
+          "end": 21
+        },
+        {
+          "page": 2,
+          "end": 42
+        },
+        {
+          "page": 3,
+          "end": 63
+        },
+        {
+          "page": 4,
+          "end": 84
+        },
+        {
+          "page": 5,
+          "end": 105
+        }
+      ]
+    },
+    "afterOnlyScroll": {
+      "actions": 11,
+      "elapsedMs": 14896,
+      "build": {
+        "count": 1699,
+        "p95Us": 1666,
+        "maxUs": 13089,
+        "over8333": 7,
+        "over16667": 0
+      },
+      "raster": {
+        "count": 1699,
+        "p95Us": 8790,
+        "maxUs": 49921,
+        "over8333": 121,
+        "over16667": 3
+      },
+      "timelineEvents": 32383,
+      "afterGc": {
+        "type": "MemoryUsage",
+        "heapUsage": 29439952,
+        "heapCapacity": 40222720,
+        "externalUsage": 288656
+      },
+      "note": "After-only smoke sample; no before comparison or FPS/native-memory improvement claim"
+    },
+    "apkSha256": "0A257428E7605C7805C2537D1764A248DE8718575CA48782100EDCA54CE8CAE0",
+    "buildNumber": 2005,
+    "pubspecChanged": false,
+    "temporaryForwardsRemoved": [
+      8202,
+      8203,
+      8204
+    ]
+  },
+  "limitations": [
+    "Controlled probe does not measure actual HTTP latency, whole-app FPS, playback first frame, seek, or native memory.",
+    "Empty append and same-ID jump are covered by regression tests, not a real-server empty-page experiment.",
+    "Four-site full regression and remaining module/player refactoring are incomplete."
+  ]
+}

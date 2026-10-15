@@ -1,0 +1,42 @@
+import 'package:get/get.dart';
+
+/// Independent reactive state for one paged list.
+///
+/// Controllers retain their source-specific fetch, merge, retry and scroll
+/// policies. Flags and request epochs never implicitly notify the item list.
+class PagedListState<T> {
+  PagedListState({bool initiallyLoading = false, bool initiallyHasMore = true})
+    : loadingFirst = initiallyLoading.obs,
+      hasMore = initiallyHasMore.obs;
+
+  final RxList<T> items = <T>[].obs;
+  final RxInt page = 1.obs;
+  final RxInt totalPages = 1.obs;
+  final RxInt totalItems = 0.obs;
+  final RxBool loadingFirst;
+  final RxBool loadingPage = false.obs;
+  final RxBool hasMore;
+  final RxnString error = RxnString();
+  final RxnString pageError = RxnString();
+
+  // Only accepted successful replies change section ownership. Loading,
+  // errors and stale replies leave the previously rendered sections intact.
+  bool lastLoadWasAppend = false;
+  final RxInt replacementGeneration = 0.obs;
+
+  void recordSuccess({required bool append}) {
+    lastLoadWasAppend = append;
+    if (!append) replacementGeneration.value++;
+  }
+
+  int _generation = 0;
+  int get requestGeneration => _generation;
+
+  /// Starts a new request family, invalidating earlier replies and cleanup.
+  int beginRequest() => ++_generation;
+
+  bool isCurrent(int generation) => generation == _generation;
+
+  /// Invalidates pending replies when the owning controller is closed.
+  void invalidateRequests() => ++_generation;
+}

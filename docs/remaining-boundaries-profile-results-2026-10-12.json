@@ -1,0 +1,2877 @@
+{
+  "baseline": "a594fc5",
+  "implementation": "6f01e5b",
+  "test_stabilization": "d3a00c6",
+  "device": {
+    "model": "PLK110",
+    "serial": "3B161G0043L00000",
+    "api": 37,
+    "size": [
+      1272,
+      2772
+    ]
+  },
+  "before": {
+    "rows": [
+      {
+        "mode": "home",
+        "scenario": "empty",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "home",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ],
+        "cleanup": {
+          "mode": "home",
+          "action": "fourth",
+          "items": 12,
+          "page": 4,
+          "footers": [
+            {
+              "page": 3,
+              "active": false
+            },
+            {
+              "page": 4,
+              "active": true
+            }
+          ]
+        }
+      },
+      {
+        "mode": "home",
+        "scenario": "empty",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "home",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ],
+        "cleanup": {
+          "mode": "home",
+          "action": "fourth",
+          "items": 12,
+          "page": 4,
+          "footers": [
+            {
+              "page": 3,
+              "active": false
+            },
+            {
+              "page": 4,
+              "active": true
+            }
+          ]
+        }
+      },
+      {
+        "mode": "home",
+        "scenario": "empty",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "home",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ],
+        "cleanup": {
+          "mode": "home",
+          "action": "fourth",
+          "items": 12,
+          "page": 4,
+          "footers": [
+            {
+              "page": 3,
+              "active": false
+            },
+            {
+              "page": 4,
+              "active": true
+            }
+          ]
+        }
+      },
+      {
+        "mode": "home",
+        "scenario": "replace",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "home",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "home",
+        "scenario": "replace",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "home",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "home",
+        "scenario": "replace",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "home",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "empty",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "search",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "empty",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "search",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "empty",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "search",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "replace",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "search",
+              "action": "replace",
+              "items": 8,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "replace",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "search",
+              "action": "replace",
+              "items": 8,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "replace",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "search",
+              "action": "replace",
+              "items": 8,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "empty",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "ph",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "empty",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "ph",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "empty",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "ph",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "replace",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "ph",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "replace",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "ph",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "replace",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "ph",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "rows": [
+      {
+        "mode": "home",
+        "scenario": "empty",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "home",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ],
+        "cleanup": {
+          "mode": "home",
+          "action": "fourth",
+          "items": 12,
+          "page": 4,
+          "footers": [
+            {
+              "page": 1,
+              "active": false
+            },
+            {
+              "page": 2,
+              "active": false
+            },
+            {
+              "page": 4,
+              "active": true
+            }
+          ]
+        }
+      },
+      {
+        "mode": "home",
+        "scenario": "empty",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "home",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ],
+        "cleanup": {
+          "mode": "home",
+          "action": "fourth",
+          "items": 12,
+          "page": 4,
+          "footers": [
+            {
+              "page": 1,
+              "active": false
+            },
+            {
+              "page": 2,
+              "active": false
+            },
+            {
+              "page": 4,
+              "active": true
+            }
+          ]
+        }
+      },
+      {
+        "mode": "home",
+        "scenario": "empty",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "home",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ],
+        "cleanup": {
+          "mode": "home",
+          "action": "fourth",
+          "items": 12,
+          "page": 4,
+          "footers": [
+            {
+              "page": 1,
+              "active": false
+            },
+            {
+              "page": 2,
+              "active": false
+            },
+            {
+              "page": 4,
+              "active": true
+            }
+          ]
+        }
+      },
+      {
+        "mode": "home",
+        "scenario": "replace",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "home",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "home",
+        "scenario": "replace",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "home",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "home",
+        "scenario": "replace",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "home",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "home",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "home",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "empty",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "search",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "empty",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "search",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "empty",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "search",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "replace",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "search",
+              "action": "replace",
+              "items": 8,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "replace",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "search",
+              "action": "replace",
+              "items": 8,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "search",
+        "scenario": "replace",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "search",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "search",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "search",
+              "action": "replace",
+              "items": 8,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "empty",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "ph",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "empty",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "ph",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "empty",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "mode": "ph",
+              "action": "empty",
+              "items": 8,
+              "page": 3,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "replace",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "ph",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "replace",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "ph",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "mode": "ph",
+        "scenario": "replace",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "mode": "ph",
+              "action": "mode",
+              "items": 4,
+              "page": 1,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "second",
+            "result": {
+              "mode": "ph",
+              "action": "second",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "mode": "ph",
+              "action": "replace",
+              "items": 8,
+              "page": 2,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "targeted": 60,
+    "full_pass": 294,
+    "existing_skip": 1,
+    "analyzer_info": 7,
+    "errors": 0,
+    "warnings": 0
+  },
+  "formal": {
+    "build": 2014,
+    "home_first": {
+      "items": {
+        "length": 41
+      },
+      "page": {
+        "value": "1"
+      },
+      "loadingFirst": {
+        "value": "false"
+      },
+      "loadingPage": {
+        "value": "false"
+      },
+      "hasMore": {
+        "value": "true"
+      },
+      "pageError": {
+        "value": "null"
+      }
+    },
+    "home_after": {
+      "items": {
+        "length": 129
+      },
+      "page": {
+        "value": "5"
+      },
+      "loadingFirst": {
+        "value": "false"
+      },
+      "loadingPage": {
+        "value": "false"
+      },
+      "hasMore": {
+        "value": "true"
+      },
+      "pageError": {
+        "value": "null"
+      }
+    },
+    "home_sections": {
+      "states": [
+        {
+          "path": "site91:ChannelType.home:null",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "41"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "65"
+                },
+                {
+                  "name": "page",
+                  "value": "2"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "89"
+                },
+                {
+                  "name": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "112"
+                },
+                {
+                  "name": "page",
+                  "value": "4"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "129"
+                },
+                {
+                  "name": "page",
+                  "value": "5"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        }
+      ],
+      "footers": [
+        {
+          "page": "5",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "false"
+        },
+        {
+          "page": "2",
+          "active": "false"
+        },
+        {
+          "page": "3",
+          "active": "false"
+        },
+        {
+          "page": "4",
+          "active": "false"
+        }
+      ]
+    },
+    "search_first": [
+      {
+        "class": "SearchController",
+        "keyword": {
+          "value": "2026",
+          "kind": "_OneByteString",
+          "length": 4
+        },
+        "searchType": {
+          "kind": "SearchType",
+          "length": 3
+        },
+        "category": {
+          "value": "",
+          "kind": "_OneByteString",
+          "length": 0
+        },
+        "paging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 0
+          },
+          "page": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "检索网络请求失败，请检查网络或点击重试",
+            "kind": "_TwoByteString",
+            "length": 19
+          }
+        },
+        "hasSearched": {
+          "value": "true",
+          "kind": "bool"
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "site91",
+          "kind": "_OneByteString",
+          "length": 6
+        }
+      }
+    ],
+    "search_retry": [
+      {
+        "class": "SearchController",
+        "keyword": {
+          "value": "2026",
+          "kind": "_OneByteString",
+          "length": 4
+        },
+        "searchType": {
+          "kind": "SearchType",
+          "length": 3
+        },
+        "category": {
+          "value": "",
+          "kind": "_OneByteString",
+          "length": 0
+        },
+        "paging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 24
+          },
+          "page": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "3",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "hasSearched": {
+          "value": "true",
+          "kind": "bool"
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "site91",
+          "kind": "_OneByteString",
+          "length": 6
+        }
+      }
+    ],
+    "ph_first": [
+      {
+        "class": "_PornHubSearchPageState",
+        "_element": {
+          "kind": "StatefulElement",
+          "length": 16
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 31
+        },
+        "_cachedResults": {
+          "kind": "RetainedPageSliver",
+          "length": 8
+        }
+      },
+      {
+        "class": "PornHubSearchController",
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 31
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_kind": {
+          "value": "videos",
+          "kind": "_OneByteString",
+          "length": 6
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_disposed": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_nextPage": {
+          "value": "2",
+          "kind": "_Smi"
+        }
+      }
+    ],
+    "ph_after": [
+      {
+        "class": "_PornHubSearchPageState",
+        "_element": {
+          "kind": "StatefulElement",
+          "length": 16
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 74
+        },
+        "_cachedResults": {
+          "kind": "RetainedPageSliver",
+          "length": 8
+        }
+      },
+      {
+        "class": "PornHubSearchController",
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 74
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_kind": {
+          "value": "videos",
+          "kind": "_OneByteString",
+          "length": 6
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_disposed": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_nextPage": {
+          "value": "3",
+          "kind": "_Smi"
+        }
+      }
+    ],
+    "ph_sections": {
+      "states": [
+        {
+          "path": "/video?o=ht",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "31"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        },
+        {
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "18"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        },
+        {
+          "path": "/recommended?o=time",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "21"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        },
+        {
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "31"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "74"
+                },
+                {
+                  "name": "page",
+                  "value": "2"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "1"
+        },
+        {
+          "path": "ALL:false",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "35"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        }
+      ],
+      "footers": [
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "false"
+        },
+        {
+          "page": "2",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        }
+      ]
+    },
+    "ph_closed": [
+      {
+        "class": "_PornHubSearchPageState",
+        "_element": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_resultSnapshot": {
+          "kind": "_GrowableList",
+          "length": 74
+        },
+        "_cachedResults": {
+          "kind": "RetainedPageSliver",
+          "length": 8
+        }
+      },
+      {
+        "class": "PornHubSearchController",
+        "_videos": {
+          "kind": "_GrowableList",
+          "length": 74
+        },
+        "_creators": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_playlists": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "_kind": {
+          "value": "videos",
+          "kind": "_OneByteString",
+          "length": 6
+        },
+        "_loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "_hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_disposed": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "_error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_nextPage": {
+          "value": "3",
+          "kind": "_Smi"
+        }
+      }
+    ],
+    "final_home": {
+      "items": {
+        "length": 41
+      },
+      "page": {
+        "value": "1"
+      },
+      "loadingFirst": {
+        "value": "false"
+      },
+      "loadingPage": {
+        "value": "false"
+      },
+      "hasMore": {
+        "value": "true"
+      },
+      "pageError": {
+        "value": "null"
+      }
+    },
+    "final_root": {
+      "class": "RootController",
+      "activePlatform": {
+        "value": "site91",
+        "kind": "_OneByteString",
+        "length": 6
+      }
+    },
+    "apk_hashes": [
+      {
+        "Path": "E:\\projects\\video_browser2\\build\\app\\outputs\\flutter-apk\\app-profile.apk",
+        "Hash": "AA19C5F370FB97DC17DCEDDA1EDA2F3F9A99BCDF0935D18E059D5BFB0BA36FD5"
+      },
+      {
+        "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\remaining-boundaries\\formal-after.apk",
+        "Hash": "AA19C5F370FB97DC17DCEDDA1EDA2F3F9A99BCDF0935D18E059D5BFB0BA36FD5"
+      },
+      {
+        "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\remaining-boundaries\\device-base.apk",
+        "Hash": "AA19C5F370FB97DC17DCEDDA1EDA2F3F9A99BCDF0935D18E059D5BFB0BA36FD5"
+      }
+    ]
+  },
+  "current_window": {
+    "actions": 14,
+    "captureWindow": {
+      "startMicros": 65632407287,
+      "endMicros": 65650856760
+    },
+    "buildUs": {
+      "count": 2107,
+      "p50": 512,
+      "p95": 1152,
+      "max": 10212,
+      "over16667": 0
+    },
+    "rasterUs": {
+      "count": 2107,
+      "p50": 2689,
+      "p95": 4093,
+      "max": 7988,
+      "over16667": 0
+    },
+    "dart_before": {
+      "type": "MemoryUsage",
+      "heapUsage": 40250784,
+      "heapCapacity": 43573248,
+      "externalUsage": 525152
+    },
+    "dart_afterGc": {
+      "type": "MemoryUsage",
+      "heapUsage": 32953104,
+      "heapCapacity": 43835392,
+      "externalUsage": 243712
+    }
+  },
+  "cleanup": {
+    "detached": true,
+    "forwards_removed": [
+      4476,
+      5180,
+      13338,
+      3006,
+      11441
+    ],
+    "forward_reverse_lists_empty": true
+  },
+  "limits": [
+    "Current frame window only; no before/after FPS or native-memory improvement claim.",
+    "Neutral source controls data; actual Home/PH network also checked, Site91 search failed twice and remains to diagnose.",
+    "Probe replacement uses actual view/footer callback including same-page target; no claim that disabled current-page numeric button was tapped.",
+    "First combined probe compile errors fixed before baseline; failed collector after restarting attached app excluded, reattached valid after sample.",
+    "Shared RetainedPageSliver inference remains unchanged for other consumers."
+  ]
+}

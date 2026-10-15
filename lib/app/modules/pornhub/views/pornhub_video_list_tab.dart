@@ -67,61 +67,52 @@ class _PornHubVideoListTabState extends State<PornHubVideoListTab> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final st = _ctrl.stateOf(_effectivePath);
-      final videos = st.items;
-      final isLoading = st.isLoading.value;
-      final error = st.error.value;
+  Widget build(BuildContext context) => widget.showSortBar
+      ? Obx(() => _buildPath(context, _ctrl.hotPathSelected.value))
+      : _buildPath(context, widget.path);
 
-      return RefreshIndicator(
-        onRefresh: () => _ctrl.loadList(_effectivePath),
-        child: CustomScrollView(
-          controller: _scroll,
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          slivers: <Widget>[
-            if (widget.showSortBar)
-              SliverToBoxAdapter(child: _buildSortBar(context)),
-            if (isLoading && videos.isEmpty)
-              const SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: CircularProgressIndicator()),
-              )
-            else if (error != null && videos.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: PornHubErrorBlock(
-                  message: error,
-                  onRetry: () => _ctrl.loadList(_effectivePath),
-                ),
-              )
-            else ...<Widget>[
-              RetainedPageSliver(
-                key: ValueKey(_effectivePath),
-                items: List.of(videos),
-                page: st.page,
-                footer: PornHubListFooter(
-                  isLoadingMore: st.isLoadingMore.value,
-                  currentPage: st.page,
-                  onJump: (page) => _ctrl.jumpListPage(_effectivePath, page),
-                  hasMore: st.hasMore.value,
-                  onLoadMore: () => _ctrl.loadMore(_effectivePath),
-                  errorText: error,
-                  isEmpty: videos.isEmpty,
-                  emptyHint: '暂无内容',
-                ),
-                gridBuilder: (pageItems) => SliverPornHubGrid(
-                  videos: pageItems,
-                  onDownload: enqueuePornHubDownload,
-                ),
-              ),
-            ],
-          ],
+  Widget _buildPath(BuildContext context, String path) {
+    final state = _ctrl.stateOf(path);
+    // Reuse this widget while only the empty/loading/error branch changes.
+    final grid = _PornHubRetainedGrid(
+      controller: _ctrl,
+      state: state,
+      path: path,
+    );
+    return RefreshIndicator(
+      onRefresh: () => _ctrl.loadList(path),
+      child: CustomScrollView(
+        controller: _scroll,
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
         ),
-      );
-    });
+        slivers: <Widget>[
+          if (widget.showSortBar)
+            SliverToBoxAdapter(child: _buildSortBar(context)),
+          Obx(() {
+            if (state.items.isEmpty) {
+              if (state.isLoading.value) {
+                return const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final error = state.error.value;
+              if (error != null) {
+                return SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: PornHubErrorBlock(
+                    message: error,
+                    onRetry: () => _ctrl.loadList(path),
+                  ),
+                );
+              }
+            }
+            return grid;
+          }),
+        ],
+      ),
+    );
   }
 
   /// 排序切换条（最热 / 最高分 / 最多观看 / 最新）。
@@ -154,6 +145,48 @@ class _PornHubVideoListTabState extends State<PornHubVideoListTab> {
           },
         );
       }),
+    );
+  }
+}
+
+/// List/page changes rebuild the retained slivers; flags only rebuild footers.
+class _PornHubRetainedGrid extends StatelessWidget {
+  const _PornHubRetainedGrid({
+    required this.controller,
+    required this.state,
+    required this.path,
+  });
+  final PornHubController controller;
+  final PornHubListState state;
+  final String path;
+
+  @override
+  Widget build(BuildContext context) {
+    final footer = Obx(
+      () => PornHubListFooter(
+        isLoadingMore: state.isLoadingMore.value,
+        currentPage: state.page,
+        onJump: (page) => controller.jumpListPage(path, page),
+        hasMore: state.hasMore.value,
+        onLoadMore: () => controller.loadMore(path),
+        errorText: state.error.value,
+        isEmpty: state.items.isEmpty,
+        emptyHint: '暂无内容',
+      ),
+    );
+    return Obx(
+      () => RetainedPageSliver(
+        key: ValueKey(path),
+        items: List.of(state.items),
+        page: state.page,
+        preserveEmptyAppend: state.lastLoadWasAppend,
+        replacementGeneration: state.replacementGeneration,
+        footer: footer,
+        gridBuilder: (items) => SliverPornHubGrid(
+          videos: items,
+          onDownload: enqueuePornHubDownload,
+        ),
+      ),
     );
   }
 }

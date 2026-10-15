@@ -6,6 +6,7 @@ import 'package:video_browser/app/data/sources/hanime1_source.dart';
 import 'package:video_browser/app/data/sources/site91_source.dart';
 import 'package:video_browser/app/data/sources/video_source.dart';
 import 'package:video_browser/app/modules/search/search_controller.dart';
+import 'package:video_browser/app/services/preload_service.dart';
 
 class _DelayedSource extends Hanime1Source {
   final requests = <String, Completer<VideoPage>>{};
@@ -50,38 +51,53 @@ VideoPage _summaryPage(String summary) => VideoPage(
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
-  test('append, jump and failed jump retry preserve the correct page', () async {
-    final source = _DelayedSource();
-    final controller = SearchController(source);
-    addTearDown(controller.onClose);
-    controller.keyword.value = 'paging';
-    VideoPage response(int page) => VideoPage(
-      items: [VideoItem(id: '$page', title: 'sample', author: '', hlsUrl: '')],
-      page: page, totalPages: 20, hasMore: true,
-    );
-    final first = controller.runSearch();
-    source.requests['paging']!.complete(response(1));
-    await first;
-    final append = controller.goToPage(2, append: true);
-    source.requests['paging']!.complete(response(2));
-    await append;
-    expect(controller.results.map((v) => v.id), ['1', '2']);
-    final jump = controller.goToPage(10);
-    source.requests['paging']!.completeError(StateError('offline'));
-    await jump;
-    expect(controller.currentPage.value, 2);
-    expect(controller.results.map((v) => v.id), ['1', '2']);
-    controller.nextPage();
-    source.requests['paging']!.complete(response(10));
-    await Future<void>.delayed(Duration.zero);
-    expect(controller.currentPage.value, 10);
-    expect(controller.results.single.id, '10');
-    final following = controller.goToPage(11, append: true);
-    source.requests['paging']!.complete(response(11));
-    await following;
-    expect(controller.results.map((v) => v.id), ['10', '11']);
+  late int previousPreloadCount;
+  setUp(() {
+    previousPreloadCount = PreloadService.instance.preloadCount.value;
+    PreloadService.instance.preloadCount.value = 0;
   });
+  tearDown(
+    () => PreloadService.instance.preloadCount.value = previousPreloadCount,
+  );
+
+  test(
+    'append, jump and failed jump retry preserve the correct page',
+    () async {
+      final source = _DelayedSource();
+      final controller = SearchController(source);
+      addTearDown(controller.onClose);
+      controller.keyword.value = 'paging';
+      VideoPage response(int page) => VideoPage(
+        items: [
+          VideoItem(id: '$page', title: 'sample', author: '', hlsUrl: ''),
+        ],
+        page: page,
+        totalPages: 20,
+        hasMore: true,
+      );
+      final first = controller.runSearch();
+      source.requests['paging']!.complete(response(1));
+      await first;
+      final append = controller.goToPage(2, append: true);
+      source.requests['paging']!.complete(response(2));
+      await append;
+      expect(controller.results.map((v) => v.id), ['1', '2']);
+      final jump = controller.goToPage(10);
+      source.requests['paging']!.completeError(StateError('offline'));
+      await jump;
+      expect(controller.currentPage.value, 2);
+      expect(controller.results.map((v) => v.id), ['1', '2']);
+      controller.nextPage();
+      source.requests['paging']!.complete(response(10));
+      await Future<void>.delayed(Duration.zero);
+      expect(controller.currentPage.value, 10);
+      expect(controller.results.single.id, '10');
+      final following = controller.goToPage(11, append: true);
+      source.requests['paging']!.complete(response(11));
+      await following;
+      expect(controller.results.map((v) => v.id), ['10', '11']);
+    },
+  );
 
   test(
     'new Hanime filter runs immediately and stale results cannot replace it',
@@ -127,4 +143,47 @@ void main() {
       expect(controller.loading.value, isFalse);
     },
   );
+
+  test(
+    'a new keyword invalidates a pending page reply and its loading cleanup',
+    () async {
+      final source = _DelayedSource();
+      final controller = SearchController(source);
+      addTearDown(controller.onClose);
+      controller.keyword.value = 'old';
+      final first = controller.runSearch();
+      source.requests['old']!.complete(
+        VideoPage(
+          items: _page('a').items,
+          page: 1,
+          hasMore: true,
+          totalPages: 4,
+        ),
+      );
+      await first;
+      final oldPage = controller.goToPage(2, append: true);
+      final oldReply = source.requests['old']!;
+      controller.keyword.value = 'new';
+      final current = controller.runSearch();
+      source.requests['new']!.complete(_page('new'));
+      await current;
+      oldReply.complete(_page('stale-page'));
+      await oldPage;
+      expect(controller.results.single.id, 'new');
+      expect(controller.currentPage.value, 1);
+      expect(controller.loading.value, isFalse);
+      expect(controller.pageLoading.value, isFalse);
+    },
+  );
+
+  test('closing invalidates a pending search reply', () async {
+    final source = _DelayedSource();
+    final controller = SearchController(source);
+    controller.keyword.value = 'close';
+    final pending = controller.runSearch();
+    controller.onClose();
+    source.requests['close']!.complete(_page('late'));
+    await pending;
+    expect(controller.results, isEmpty);
+  });
 }

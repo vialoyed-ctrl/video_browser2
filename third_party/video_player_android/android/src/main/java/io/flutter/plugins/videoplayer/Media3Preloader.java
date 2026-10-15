@@ -196,12 +196,12 @@ final class Media3Preloader {
             // Cancelation is a normal outcome, not a failure worth surfacing.
             failure = null;
           } catch (IOException error) {
-            if (!entry.throttleProgress || !entry.cancelled) {
+            if (!entry.cancelled) {
               failure = error.toString();
               Log.w(TAG, "Preload failed for " + taskId, error);
             }
           } catch (Exception error) {
-            if (!entry.throttleProgress || !entry.cancelled) {
+            if (!entry.cancelled) {
               failure = error.toString();
               Log.w(TAG, "Preload aborted for " + taskId, error);
             }
@@ -209,7 +209,7 @@ final class Media3Preloader {
             // Only the entry that is still registered may clear the slot; a replacement task for
             // the same id owns it otherwise.
             final boolean ownsSlot = TASKS.remove(taskId, entry);
-            final boolean mayReport = !entry.throttleProgress || (ownsSlot && !entry.cancelled);
+            final boolean mayReport = ownsSlot && !entry.cancelled;
             if (mayReport && failure != null) {
               report(listener, taskId, C.LENGTH_UNSET, 0, C.PERCENTAGE_UNSET, false, failure);
             } else if (mayReport && !entry.cancelled) {

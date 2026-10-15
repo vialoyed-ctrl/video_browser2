@@ -1,0 +1,215 @@
+{
+  "date": "2026-10-13",
+  "baseline": "ce6fe03",
+  "implementation": "260153c",
+  "tests": {
+    "redPass": 1,
+    "redFail": 2,
+    "targetedPass": 19,
+    "fullPass": 349,
+    "existingSkip": 1,
+    "analysisErrors": 0,
+    "analysisWarnings": 0,
+    "existingInfo": 7
+  },
+  "device": {
+    "model": "PMB110",
+    "serial": "BUPR8HWKLZTCHAPN",
+    "api": 36,
+    "resolution": [
+      1440,
+      3200
+    ]
+  },
+  "profile": {
+    "nativeBackend": "AndroidVideoPlayer",
+    "fixture": "Repository Butterfly MP4 via loopback range server",
+    "fault": "pause reply held after real Android pause; real create/events/play/dispose",
+    "before": [
+      {
+        "operation": "close",
+        "round": 0,
+        "oldId": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1004,
+        "ownsNewVideo": false,
+        "activeIds": [
+          1
+        ],
+        "switchObservedMs": null,
+        "switchCompleteMs": null
+      },
+      {
+        "operation": "close",
+        "round": 1,
+        "oldId": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1004,
+        "ownsNewVideo": false,
+        "activeIds": [
+          2
+        ],
+        "switchObservedMs": null,
+        "switchCompleteMs": null
+      },
+      {
+        "operation": "close",
+        "round": 2,
+        "oldId": 3,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1005,
+        "ownsNewVideo": false,
+        "activeIds": [
+          3
+        ],
+        "switchObservedMs": null,
+        "switchCompleteMs": null
+      },
+      {
+        "operation": "switch",
+        "round": 0,
+        "oldId": 4,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1003,
+        "ownsNewVideo": false,
+        "activeIds": [
+          4
+        ],
+        "switchObservedMs": 1003,
+        "switchCompleteMs": null
+      },
+      {
+        "operation": "switch",
+        "round": 1,
+        "oldId": 6,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1006,
+        "ownsNewVideo": false,
+        "activeIds": [
+          6
+        ],
+        "switchObservedMs": 1006,
+        "switchCompleteMs": null
+      },
+      {
+        "operation": "switch",
+        "round": 2,
+        "oldId": 8,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1004,
+        "ownsNewVideo": false,
+        "activeIds": [
+          8
+        ],
+        "switchObservedMs": 1004,
+        "switchCompleteMs": null
+      }
+    ],
+    "after": [
+      {
+        "operation": "close",
+        "round": 0,
+        "oldId": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 77,
+        "switchCompleteMs": null,
+        "ownsNewVideo": false,
+        "activeIds": []
+      },
+      {
+        "operation": "close",
+        "round": 1,
+        "oldId": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 70,
+        "switchCompleteMs": null,
+        "ownsNewVideo": false,
+        "activeIds": []
+      },
+      {
+        "operation": "close",
+        "round": 2,
+        "oldId": 3,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 66,
+        "switchCompleteMs": null,
+        "ownsNewVideo": false,
+        "activeIds": []
+      },
+      {
+        "operation": "switch",
+        "round": 0,
+        "oldId": 4,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 69,
+        "switchCompleteMs": 172,
+        "ownsNewVideo": true,
+        "activeIds": [
+          5
+        ]
+      },
+      {
+        "operation": "switch",
+        "round": 1,
+        "oldId": 6,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 60,
+        "switchCompleteMs": 200,
+        "ownsNewVideo": true,
+        "activeIds": [
+          7
+        ]
+      },
+      {
+        "operation": "switch",
+        "round": 2,
+        "oldId": 8,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 66,
+        "switchCompleteMs": 183,
+        "ownsNewVideo": true,
+        "activeIds": [
+          9
+        ]
+      }
+    ],
+    "finalActiveIds": [],
+    "oldTimestampRuling": "Raw before switchCompleteMs is only the blocked observation time, not completion; derived summary labels it switchObservedMs and leaves completion null"
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minorRemaining": 0,
+    "latePauseErrorCoverageAdded": true
+  },
+  "formal": {
+    "buildNumber": 2017,
+    "target": "lib/main.dart",
+    "arm64": true,
+    "sha256": "9C737BFEC87B8709A8BB59C9358BBA05E1FEBD9075113B5DA9722D0D6EFC64A9",
+    "home": {
+      "items": 41,
+      "page": 1,
+      "loadingFirst": false,
+      "loadingPage": false,
+      "error": null,
+      "scroll": 0,
+      "site": "site91"
+    },
+    "userDataPreserved": true,
+    "attachedSessionsClosed": true,
+    "ownForwardsRemoved": [
+      11873,
+      3832,
+      6660
+    ],
+    "ownReverseRemoved": 8787,
+    "localFixtureServerStopped": true
+  },
+  "limits": [
+    "Injected pause response fault, not proof production commonly hangs",
+    "Dart tracked IDs/native dispose acknowledgement do not prove Java/GPU GC or long-term native memory improvement",
+    "Pending pause Future may retain Dart continuation/controller reference",
+    "Concurrent switch disposal barrier, scrub/Seek, native create/dispose latency, visible first frame and four-site acceptance remain"
+  ]
+}

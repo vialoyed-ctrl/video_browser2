@@ -1,0 +1,58 @@
+{
+  "baseline": "daae3c7",
+  "implementation": "0cfccd0",
+  "nativeTests": 107,
+  "flutterPassed": 380,
+  "flutterSkipped": 1,
+  "analysis": {
+    "errors": 0,
+    "warnings": 0,
+    "originalInfos": 7
+  },
+  "normalBuild": 2022,
+  "apkSha256": "B520D738147FD10D22691ED23A9ACD57138C1EC5FEAB9768D5181202C073CA9D",
+  "apkBytes": 92254318,
+  "home": {
+    "items": 41,
+    "page": 1,
+    "scroll": 0,
+    "platform": "site91",
+    "loading": false,
+    "error": null
+  },
+  "mp4Cache": {
+    "requests": 1,
+    "bytes": 2429896
+  },
+  "hlsCache": {
+    "before": 31,
+    "after": 31,
+    "added": 0,
+    "addedSegments": 0
+  },
+  "replacement": [
+    {
+      "run": "2026101306",
+      "status": 200,
+      "start": 0,
+      "end": 2429895,
+      "bytesSent": 32768,
+      "aborted": true,
+      "finished": false
+    },
+    {
+      "run": "2026101307",
+      "status": 200,
+      "start": 0,
+      "end": 2429895,
+      "bytesSent": 2429896,
+      "aborted": false,
+      "finished": true
+    }
+  ],
+  "limits": [
+    "No actual visible frame or FPS delta measured",
+    "Multi-engine ownership not supported or verified",
+    "Broader project still incomplete"
+  ]
+}

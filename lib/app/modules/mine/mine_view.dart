@@ -17,11 +17,14 @@ import '../../data/models/video_item.dart';
 import '../../modules/downloads/downloads_view.dart';
 import '../../routes/app_navigator.dart';
 import '../../services/hls_cache_proxy.dart';
+import '../../services/app_update_service.dart';
 import '../../services/preload_service.dart';
 import '../../services/task_repository.dart';
 import '../../services/user_service.dart';
 import '../../widgets/bili_video_card.dart';
 import '../../widgets/download_dir_migrator.dart';
+import '../../widgets/grid_layout_settings_tile.dart';
+import '../../widgets/adaptive_card_grid.dart';
 
 class MineView extends StatelessWidget {
   const MineView({super.key});
@@ -86,6 +89,9 @@ class MineView extends StatelessWidget {
               ],
             ),
           ),
+
+          const SizedBox(height: 4),
+          const _AppUpdateCard(),
 
           const SizedBox(height: 12),
 
@@ -211,6 +217,7 @@ class MineView extends StatelessWidget {
           const Divider(height: 1),
 
           // 5. 辅助快捷列表项
+          const GridLayoutSettingsTile(),
           ListTile(
             leading: const Icon(Icons.playlist_play_rounded),
             title: const Text('所有收藏夹管理'),
@@ -822,6 +829,101 @@ class MineView extends StatelessWidget {
   }
 }
 
+class _AppUpdateCard extends StatelessWidget {
+  const _AppUpdateCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final service = Get.find<AppUpdateService>();
+    final theme = Theme.of(context);
+
+    return Obx(() {
+      final update = service.availableUpdate.value;
+      final isBusy = service.checking.value || service.downloading.value;
+      return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ListTile(
+              leading: Icon(
+                update == null
+                    ? Icons.system_update_alt_outlined
+                    : Icons.new_releases_outlined,
+                color: theme.colorScheme.primary,
+              ),
+              title: Text(
+                update == null ? '应用更新' : '发现新版本 v${update.version}',
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              subtitle: Text(
+                '当前版本 v${service.currentVersion.value.isEmpty ? '…' : service.currentVersion.value}\n${service.status.value}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              isThreeLine: true,
+              trailing: IconButton(
+                tooltip: '手动检查更新',
+                onPressed: isBusy
+                    ? null
+                    : () => unawaited(
+                        service.checkForUpdate().catchError((Object _) {}),
+                      ),
+                icon: service.checking.value
+                    ? const SizedBox.square(
+                        dimension: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.refresh),
+              ),
+            ),
+            if (update != null) ...[
+              if (update.notes.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Text(
+                    update.notes,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: FilledButton.icon(
+                  onPressed: service.downloading.value
+                      ? null
+                      : service.downloadAndInstall,
+                  icon: service.downloading.value
+                      ? const SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.download_rounded),
+                  label: Text(
+                    service.downloading.value
+                        ? '正在下载…'
+                        : service.downloadedPath.value.isEmpty
+                        ? '下载并安装'
+                        : '继续安装',
+                  ),
+                ),
+              ),
+            ],
+            if (service.downloading.value)
+              LinearProgressIndicator(
+                value: service.downloadProgress.value > 0
+                    ? service.downloadProgress.value.clamp(0.0, 1.0).toDouble()
+                    : null,
+                minHeight: 3,
+              ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
 // ------------------------------------------------------------- 收藏夹详情页
 class FavoriteFolderDetailView extends StatelessWidget {
   const FavoriteFolderDetailView({super.key, required this.folderName});
@@ -841,11 +943,9 @@ class FavoriteFolderDetailView extends StatelessWidget {
         }
         PreloadService.instance.preloadList(list, isNewPage: true);
 
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+        return AdaptiveCardGrid(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           itemCount: list.length,
-          separatorBuilder: (_, _) =>
-              const Divider(height: 1, indent: 14, endIndent: 14),
           itemBuilder: (context, index) {
             final video = list[index];
             return Dismissible(
@@ -861,7 +961,7 @@ class FavoriteFolderDetailView extends StatelessWidget {
                 userSvc.removeVideoFromFolder(folderName, video.id);
                 AppToast.show('已从 $folderName 移出');
               },
-              child: BiliVideoCardH(
+              child: BiliVideoCardV(
                 video: video,
                 onTap: () => AppNavigator.toPlayer(video),
               ),
@@ -901,11 +1001,9 @@ class HistoryListView extends StatelessWidget {
           return const Center(child: Text('暂无观看历史'));
         }
 
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+        return AdaptiveCardGrid(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           itemCount: list.length,
-          separatorBuilder: (_, _) =>
-              const Divider(height: 1, indent: 14, endIndent: 14),
           itemBuilder: (context, index) {
             final item = list[index];
             final percent = (item.progressPercent * 100).toInt();
@@ -919,7 +1017,7 @@ class HistoryListView extends StatelessWidget {
                 child: const Icon(Icons.delete, color: Colors.white),
               ),
               onDismissed: (_) => userSvc.removeHistory(item.video.id),
-              child: BiliVideoCardH(
+              child: BiliVideoCardV(
                 video: item.video.copyWith(
                   viewsStr: percent > 0 ? '看到 $percent%' : '刚开始观看',
                 ),
@@ -962,11 +1060,9 @@ class WatchLaterListView extends StatelessWidget {
         }
         PreloadService.instance.preloadList(list, isNewPage: true);
 
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+        return AdaptiveCardGrid(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           itemCount: list.length,
-          separatorBuilder: (_, _) =>
-              const Divider(height: 1, indent: 14, endIndent: 14),
           itemBuilder: (context, index) {
             final video = list[index];
             return Dismissible(
@@ -979,7 +1075,7 @@ class WatchLaterListView extends StatelessWidget {
                 child: const Icon(Icons.delete, color: Colors.white),
               ),
               onDismissed: (_) => userSvc.removeFromWatchLater(video.id),
-              child: BiliVideoCardH(
+              child: BiliVideoCardV(
                 video: video,
                 onTap: () => AppNavigator.toPlayer(video),
               ),
@@ -1003,7 +1099,7 @@ class SubscriptionsListView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('我的订阅')),
       body: Obx(() {
-        final list = userSvc.subscriptions.toList();
+        final list = userSvc.latestSubscriptions;
         if (list.isEmpty) {
           return const Center(child: Text('暂无关注的 UP 主，在视频页点击【关注】即可订阅'));
         }

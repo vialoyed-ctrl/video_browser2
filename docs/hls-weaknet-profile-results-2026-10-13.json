@@ -1,0 +1,48 @@
+{
+  "results": [
+    {
+      "run": "20261013201",
+      "requests": 36,
+      "outage503": 6,
+      "target503": 3,
+      "seekAckToRestoreMs": 2607,
+      "restoredAtMs": 4762,
+      "recoveryToPositionOver45500Ms": 2449,
+      "finalPositionMs": 49905,
+      "created": 1,
+      "disposed": 1,
+      "activeAfterClose": 0
+    },
+    {
+      "run": "20261013202",
+      "requests": 35,
+      "outage503": 6,
+      "target503": 3,
+      "seekAckToRestoreMs": 2577,
+      "restoredAtMs": 4041,
+      "recoveryToPositionOver45500Ms": 2412,
+      "finalPositionMs": 49762,
+      "created": 2,
+      "disposed": 2,
+      "activeAfterClose": 0
+    },
+    {
+      "run": "20261013203",
+      "requests": 36,
+      "outage503": 7,
+      "target503": 3,
+      "seekAckToRestoreMs": 2586,
+      "restoredAtMs": 4018,
+      "recoveryToPositionOver45500Ms": 2467,
+      "finalPositionMs": 49761,
+      "created": 3,
+      "disposed": 3,
+      "activeAfterClose": 0
+    }
+  ],
+  "limitations": [
+    "No visible frame timing",
+    "No old/new optimization delta",
+    "Cumulative SDK RPC counts, not global native leak proof"
+  ]
+}

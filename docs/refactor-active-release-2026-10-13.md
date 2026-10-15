@@ -1,0 +1,13 @@
+# 活跃播放器释放等待边界（2026-10-13）
+
+基线ce6fe03，实现260153c；本批12日晚开始、13日归档。仅修改_disposeCurrentPlayer最后的pause等待：仍立即发出best-effort pause并捕获异步失败，dispose不等待pause回复；单次交接仍await旧dispose确认才创建新播放器。scrub/Seek等待、其它活跃控制器暂停、UI、解析和原生后端保持。
+
+有效RED真实PlayerController/VideoPlayerController正常切换1通过、挂起pause回复的退出/切换2失败。最初Size缺import、91新鲜度规则导致fixture未打开，是装置问题，修正后才形成有效RED。新增六契约：正常、挂起退出、挂起切换、立即pause失败、dispose确认顺序、释放后才到来的pause失败及事件订阅取消。最终19定向、349完整通过/1原跳过；分析0error/0warning/原7info。测试曾有无用markWatched override（91通过扩展直接no-op）和一条curly提示，已移除/修正后重新全量349通过。独立只读审查无Critical/Important；Minor晚到异常覆盖已补齐并复核，无剩余审查意见。
+
+同PMB110/API36实际AndroidVideoPlayer，中性Butterfly MP4经本地Range服务。只在真实native.pause已完成后挂起Dart回复，create/events/play/dispose均实际Android后端。旧退出三次、切换三次均超过1000ms仍未释放旧实例。新退出释放77/70/66ms；新切换旧释放69/60/66ms、新初始化/播放命令完成172/200/183ms，均只保留新所有权；每轮解除故障、等待native释放，最终tracked active为空。旧原始switchCompleteMs误名实际只是blocked observation时间，报告及派生摘要将其记switchObservedMs，旧completion为null，不能把旧1003–1006ms说成已完成切换。新完成时间确实await了switchTask。
+
+故障对照证明暂停回复不再拖住释放，不代表生产经常发生同样挂起、可见首帧/FPS或长期native内存改善。Androiddispose源码调用exoPlayer.release，确认的是平台释放RPC；Dart活动集合不能证明Java/GPU GC。永久挂起pause Future仍可能保留Dart continuation/controller引用。本批单次等待确认不证明全局并发切换串行化：已有置空controller后另一个释放调用可绕过进行中dispose的边界，下一批继续核对，另有scrub/Seek/native创建及dispose等待。
+
+正常lib/main.dart ARM64 Profile2017构建并保留数据安装，首页41条/第1页/loadingFirst与loadingPage false/error null/scroll0/Rootsite91。构建/归档/手机三APK SHA256一致：9C737BFEC87B8709A8BB59C9358BBA05E1FEBD9075113B5DA9722D0D6EFC64A9。自建attach与[11873, 3832, 6660]转发关闭，8787 reverse移除，local neutral server终止。未改变账号或写真实订阅/收藏数据；没有另行追加旧PH导航验收。
+
+可单独git revert260153c；原备份与此前所有批次保留。证据与回滚patch保存当前任务outputs/active-release。整个项目尚未完成，继续并发接管、控件/后台/可见首帧/Seek/弱网/native长期内存、剩余列表和四站点综合回归。

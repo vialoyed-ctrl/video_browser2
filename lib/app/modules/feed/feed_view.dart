@@ -9,7 +9,7 @@ import '../../core/app_theme.dart';
 
 import 'package:get/get.dart';
 
-import '../../core/responsive_utils.dart';
+import '../../widgets/video_grid_sliver.dart';
 import '../../data/models/video_item.dart';
 import '../../routes/app_navigator.dart';
 import '../../services/download_service.dart';
@@ -156,18 +156,6 @@ class FeedView extends StatelessWidget {
                   );
                 }
 
-                final screenWidth = MediaQuery.sizeOf(context).width;
-                final isWide = ResponsiveLayout.isWideScreen(context);
-                final availableWidth = isWide ? screenWidth - 73 : screenWidth;
-                final columnCount = ResponsiveLayout.gridColumnCount(
-                  availableWidth,
-                );
-                final columnWidth =
-                    (availableWidth - 12 - (columnCount - 1) * 6) / columnCount;
-                final childAspectRatio = ResponsiveLayout.cardAspectRatio(
-                  columnWidth,
-                );
-
                 return RefreshIndicator(
                   onRefresh: () => controller.loadData(reset: true),
                   child: PullToNextPage(
@@ -183,31 +171,17 @@ class FeedView extends StatelessWidget {
                       ),
                       slivers: [
                         // 动态视频智能自适应网格（2~5 列）
-                        SliverPadding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 6,
-                          ),
-                          sliver: SliverGrid(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: columnCount,
-                                  crossAxisSpacing: 6,
-                                  mainAxisSpacing: 6,
-                                  childAspectRatio: childAspectRatio,
-                                ),
-                            delegate: SliverChildBuilderDelegate((
-                              context,
-                              index,
-                            ) {
-                              final video = controller.displayVideos[index];
-                              return BiliVideoCardV(
-                                video: video,
-                                onTap: () => AppNavigator.toPlayer(video),
-                                onDownload: () => _enqueue(video),
-                              );
-                            }, childCount: controller.displayVideos.length),
-                          ),
+                        VideoGridSliver(
+                          items: controller.displayVideos.toList(),
+                          availableWidth: MediaQuery.sizeOf(context).width,
+                          padding: const EdgeInsets.all(6),
+                          itemBuilder: (context, video) {
+                            return BiliVideoCardV(
+                              video: video,
+                              onTap: () => AppNavigator.toPlayer(video),
+                              onDownload: () => _enqueue(video),
+                            );
+                          },
                         ),
 
                         // 底部分页控制器栏（上一页 / 第 X / Y 页 / 下一页）

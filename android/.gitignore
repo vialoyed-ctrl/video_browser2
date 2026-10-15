@@ -12,3 +12,8 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Keep the reviewed Gradle wrapper in the rollback baseline.
+!/gradlew
+!/gradlew.bat
+!/gradle/wrapper/gradle-wrapper.jar

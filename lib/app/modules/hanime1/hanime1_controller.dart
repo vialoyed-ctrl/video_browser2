@@ -12,6 +12,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import '../../core/app_logger.dart';
+import '../../core/paging/paged_list_state.dart';
 import '../../data/models/hanime1_models.dart';
 import '../../data/models/video_item.dart';
 import '../../data/sources/hanime1_source.dart';
@@ -42,32 +43,72 @@ class Hanime1Controller extends GetxController {
     '最新上傳',
   ];
   final RxInt currentRankTabIndex = 0.obs;
-  final RxList<VideoItem> rankingVideos = <VideoItem>[].obs;
-  final RxBool isLoadingRanking = false.obs;
-  final RxBool hasMoreRanking = true.obs;
-  final RxInt rankingPage = 1.obs;
-  final RxInt rankingTotalPages = 1.obs;
-  final RxnString rankingError = RxnString();
+  final rankingPaging = PagedListState<VideoItem>();
+  RxList<VideoItem> get rankingVideos => rankingPaging.items;
+  RxBool get isLoadingRanking => rankingPaging.loadingFirst;
+  RxBool get hasMoreRanking => rankingPaging.hasMore;
+  RxInt get rankingPage => rankingPaging.page;
+  RxInt get rankingTotalPages => rankingPaging.totalPages;
+  RxnString get rankingError => rankingPaging.error;
   int _rankPage = 1;
-  int _rankRequest = 0;
 
   // --- 3. 订阅内容 (Subscriptions Tab) 状态 ---
   final Rxn<Hanime1SubscriptionData> subData = Rxn<Hanime1SubscriptionData>();
-  final RxBool isLoadingSub = false.obs;
+  final subscriptionsPaging = PagedListState<VideoItem>(
+    initiallyHasMore: false,
+  );
+  RxBool get isLoadingSub => subscriptionsPaging.loadingFirst;
   final RxnString selectedCreator = RxnString();
-  final RxList<VideoItem> subVideos = <VideoItem>[].obs;
-  final RxBool hasMoreSub = false.obs;
-  final RxInt subscriptionsPage = 1.obs;
-  final RxInt subscriptionsTotalPages = 1.obs;
+  RxList<VideoItem> get subVideos => subscriptionsPaging.items;
+  RxBool get hasMoreSub => subscriptionsPaging.hasMore;
+  RxInt get subscriptionsPage => subscriptionsPaging.page;
+  RxInt get subscriptionsTotalPages => subscriptionsPaging.totalPages;
   final RxString subscriptionGenre = ''.obs;
   final RxString subscriptionSort = ''.obs;
   final RxString subscriptionDate = ''.obs;
   final RxString subscriptionDuration = ''.obs;
   final RxList<String> subscriptionTags = <String>[].obs;
   final RxBool subscriptionBroad = false.obs;
-  final RxnString subscriptionsError = RxnString();
+  RxnString get subscriptionsError => subscriptionsPaging.error;
   int _subPage = 1;
-  int _subRequest = 0;
+  Worker? _subscriptionAccountWorker;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (!Get.isRegistered<Hanime1AuthService>()) return;
+    final auth = Hanime1AuthService.to;
+    bool identityKnown() =>
+        auth.userId.value.isNotEmpty ||
+        auth.userEmail.value.isNotEmpty ||
+        auth.username.value.isNotEmpty;
+    var previousIdentityKnown = identityKnown();
+    _subscriptionAccountWorker = everAll(
+      [auth.isLoggedIn, auth.userId, auth.userEmail, auth.username],
+      (_) {
+        final currentIdentityKnown = identityKnown();
+        final knownAccount = previousIdentityKnown || currentIdentityKnown;
+        previousIdentityKnown = currentIdentityKnown;
+        // Revoke pending replies before notifying observers of the account reset.
+        subscriptionsPaging.invalidateRequests();
+        // Public results remain visible when only the login prompt changes.
+        if (!knownAccount) {
+          isLoadingSub.value = false;
+          return;
+        }
+        _subPage = 1;
+        subscriptionsPaging.recordSuccess(append: false);
+        subVideos.clear();
+        subData.value = null;
+        selectedCreator.value = null;
+        subscriptionsPage.value = 1;
+        subscriptionsTotalPages.value = 1;
+        hasMoreSub.value = false;
+        subscriptionsError.value = null;
+        isLoadingSub.value = false;
+      },
+    );
+  }
 
   // --- 4. 我的 Hanime1 (Profile Tab) 状态 ---
   //
@@ -109,10 +150,11 @@ class Hanime1Controller extends GetxController {
 
   @override
   void onClose() {
+    _subscriptionAccountWorker?.dispose();
     _homeRequest++;
     _profileRequest++;
-    _rankRequest++;
-    _subRequest++;
+    rankingPaging.invalidateRequests();
+    subscriptionsPaging.invalidateRequests();
     _userEpoch++;
     super.onClose();
   }
@@ -172,7 +214,7 @@ class Hanime1Controller extends GetxController {
   }) async {
     if (isClosed) return;
     final requestedPage = page ?? (isRefresh ? 1 : _rankPage);
-    final request = ++_rankRequest;
+    final request = rankingPaging.beginRequest();
     rankingError.value = null;
     isLoadingRanking.value = true;
     try {
@@ -180,7 +222,8 @@ class Hanime1Controller extends GetxController {
         sortName,
         page: requestedPage,
       );
-      if (isClosed || request != _rankRequest) return;
+      if (isClosed || !rankingPaging.isCurrent(request)) return;
+      rankingPaging.recordSuccess(append: append);
       if (append) {
         rankingVideos.addAll(pageData.items);
       } else {
@@ -195,10 +238,12 @@ class Hanime1Controller extends GetxController {
       rankingTotalPages.value = pageData.totalPages;
       hasMoreRanking.value = pageData.hasMore;
     } catch (_) {
-      if (isClosed || request != _rankRequest) return;
+      if (isClosed || !rankingPaging.isCurrent(request)) return;
       rankingError.value = '排行加载失败，请重试';
     } finally {
-      if (!isClosed && request == _rankRequest) isLoadingRanking.value = false;
+      if (!isClosed && rankingPaging.isCurrent(request)) {
+        isLoadingRanking.value = false;
+      }
     }
   }
 
@@ -221,7 +266,7 @@ class Hanime1Controller extends GetxController {
   }) async {
     if (isClosed) return;
     final requestedPage = page ?? (isRefresh ? 1 : _subPage);
-    final request = ++_subRequest;
+    final request = subscriptionsPaging.beginRequest();
     if (isRefresh) {
       selectedCreator.value = creatorQuery;
     }
@@ -239,8 +284,9 @@ class Hanime1Controller extends GetxController {
         tags: subscriptionTags.toList(growable: false),
         broad: subscriptionBroad.value,
       );
-      if (isClosed || request != _subRequest) return;
+      if (isClosed || !subscriptionsPaging.isCurrent(request)) return;
       subData.value = data;
+      subscriptionsPaging.recordSuccess(append: append);
       if (append) {
         subVideos.addAll(data.items);
       } else {
@@ -255,10 +301,12 @@ class Hanime1Controller extends GetxController {
       subscriptionsTotalPages.value = data.totalPages;
       hasMoreSub.value = data.hasMore;
     } catch (_) {
-      if (isClosed || request != _subRequest) return;
+      if (isClosed || !subscriptionsPaging.isCurrent(request)) return;
       subscriptionsError.value = '订阅加载失败，请重试';
     } finally {
-      if (!isClosed && request == _subRequest) isLoadingSub.value = false;
+      if (!isClosed && subscriptionsPaging.isCurrent(request)) {
+        isLoadingSub.value = false;
+      }
     }
   }
 

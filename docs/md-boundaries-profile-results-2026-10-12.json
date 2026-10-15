@@ -1,0 +1,1167 @@
+{
+  "baseline": "e09f780",
+  "before": {
+    "rows": [
+      {
+        "scenario": "empty",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "page": 3,
+              "items": 8,
+              "requestPage": 3,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "empty",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "page": 3,
+              "items": 8,
+              "requestPage": 3,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "empty",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "page": 3,
+              "items": 8,
+              "requestPage": 3,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 3,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "replace",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "replace",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "replace",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "rows": [
+      {
+        "scenario": "empty",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "page": 3,
+              "items": 8,
+              "requestPage": 3,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "empty",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "page": 3,
+              "items": 8,
+              "requestPage": 3,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "empty",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "empty",
+            "result": {
+              "page": 3,
+              "items": 8,
+              "requestPage": 3,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "replace",
+        "round": 0,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "replace",
+        "round": 1,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "scenario": "replace",
+        "round": 2,
+        "steps": [
+          {
+            "action": "mode",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 1,
+              "loading": false,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "start",
+            "result": {
+              "page": 1,
+              "items": 4,
+              "requestPage": 2,
+              "loading": true,
+              "error": null,
+              "mountedCards": 4,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "success",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 1,
+                  "active": false
+                },
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          },
+          {
+            "action": "replace",
+            "result": {
+              "page": 2,
+              "items": 8,
+              "requestPage": 2,
+              "loading": false,
+              "error": null,
+              "mountedCards": 8,
+              "footers": [
+                {
+                  "page": 2,
+                  "active": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "evidence_date": "2026-10-10",
+  "resume_date": "2026-10-12",
+  "tests": {
+    "ui": 10,
+    "full_pass": 288,
+    "existing_skip": 1,
+    "production_analysis_info": 7
+  },
+  "formal_profile": {
+    "build": 2013,
+    "built": true,
+    "installed_on_2026_10_10": true,
+    "final_device_acceptance": "Completed normal search/page2/route exit/home/hash on PLK110 2026-10-12",
+    "device": "PLK110",
+    "serial": "3B161G0043L00000",
+    "api": 37,
+    "resolution": [
+      1272,
+      2772
+    ],
+    "first_search": {
+      "class": "Site91MdSearchController",
+      "_items": {
+        "kind": "_GrowableList",
+        "length": 1
+      },
+      "page": {
+        "value": "1",
+        "kind": "_Smi"
+      },
+      "hasMore": {
+        "value": "false",
+        "kind": "bool"
+      },
+      "loading": {
+        "value": "false",
+        "kind": "bool"
+      },
+      "loadingMore": {
+        "value": "false",
+        "kind": "bool"
+      },
+      "error": {
+        "value": "null",
+        "kind": "Null"
+      },
+      "lastLoadWasAppend": {
+        "value": "false",
+        "kind": "bool"
+      },
+      "replacementGeneration": {
+        "value": "1",
+        "kind": "_Smi"
+      },
+      "_disposed": {
+        "value": "false",
+        "kind": "bool"
+      }
+    },
+    "page2": {
+      "class": "Site91MdSearchController",
+      "_items": {
+        "kind": "_GrowableList",
+        "length": 0
+      },
+      "page": {
+        "value": "2",
+        "kind": "_Smi"
+      },
+      "hasMore": {
+        "value": "false",
+        "kind": "bool"
+      },
+      "loading": {
+        "value": "false",
+        "kind": "bool"
+      },
+      "loadingMore": {
+        "value": "false",
+        "kind": "bool"
+      },
+      "error": {
+        "value": "null",
+        "kind": "Null"
+      },
+      "lastLoadWasAppend": {
+        "value": "false",
+        "kind": "bool"
+      },
+      "replacementGeneration": {
+        "value": "2",
+        "kind": "_Smi"
+      },
+      "_disposed": {
+        "value": "false",
+        "kind": "bool"
+      }
+    },
+    "closed": [
+      {
+        "class": "_Site91MdSearchViewState",
+        "_element": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "_retainedResults": {
+          "kind": "RetainedPageSliver",
+          "length": 8
+        }
+      },
+      {
+        "class": "Site91MdSearchController",
+        "_items": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "page": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "hasMore": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "loading": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "loadingMore": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "error": {
+          "value": "null",
+          "kind": "Null"
+        },
+        "lastLoadWasAppend": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "replacementGeneration": {
+          "value": "2",
+          "kind": "_Smi"
+        },
+        "_disposed": {
+          "value": "true",
+          "kind": "bool"
+        }
+      }
+    ],
+    "home": {
+      "items": {
+        "length": 41
+      },
+      "page": {
+        "value": "1"
+      },
+      "loadingFirst": {
+        "value": "false"
+      },
+      "loadingPage": {
+        "value": "false"
+      },
+      "hasMore": {
+        "value": "true"
+      },
+      "pageError": {
+        "value": "null"
+      }
+    },
+    "root": {
+      "class": "RootController",
+      "activePlatform": {
+        "value": "site91",
+        "kind": "_OneByteString",
+        "length": 6
+      }
+    },
+    "apk_hashes": [
+      {
+        "path": "E:\\projects\\video_browser2\\work\\handoff-validation\\md-boundaries\\formal-after.apk",
+        "sha256": "4fef9224c8fcdb2498265f7a2174ff22c5540374e056171def27a2ddc7d99715"
+      },
+      {
+        "path": "E:\\projects\\video_browser2\\work\\handoff-validation\\md-boundaries\\resume-device-base.apk",
+        "sha256": "4fef9224c8fcdb2498265f7a2174ff22c5540374e056171def27a2ddc7d99715"
+      }
+    ],
+    "network_correction": "First two failures occurred while device was offline; user enabled networking, repeated search succeeded. First online UI submission missed input focus and was not a source request; confirmed submission recorded separately."
+  },
+  "limits": [
+    "No FPS or native memory performance improvement claim.",
+    "Whole-directory analyzer scans vendored examples and temporary probes:275 issues. lib/test scope:7 existing info, no error/warning.",
+    "Old/new neutral baseline on PMB110; formal resume PLK110, no cross-device performance comparison.",
+    "Live source 2026 query returns1, numeric page2 returns0; hasMore false, no legitimate live append request."
+  ]
+}

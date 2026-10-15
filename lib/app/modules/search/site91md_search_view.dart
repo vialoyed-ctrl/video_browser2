@@ -1,9 +1,11 @@
 import '../../widgets/retained_page_sliver.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../core/responsive_utils.dart';
+import '../../widgets/video_grid_sliver.dart';
+import '../../data/models/video_item.dart';
 import '../../data/sources/video_source.dart';
 import '../../routes/app_navigator.dart';
 import '../../services/download_service.dart';
@@ -28,6 +30,11 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
   late final Site91MdSearchController controller;
   late final TextEditingController input;
   final scroll = ScrollController();
+  List<VideoItem> _resultItems = const [];
+  int? _resultPage;
+  int? _resultReplacementGeneration;
+  String? _resultKeyword;
+  Widget? _retainedResults;
   @override
   void initState() {
     super.initState();
@@ -88,84 +95,91 @@ class _Site91MdSearchViewState extends State<Site91MdSearchView> {
       ),
       body: AnimatedBuilder(
         animation: controller,
-        builder: (context, _) => CustomScrollView(
-          controller: scroll,
-          slivers: [
-            if (!controller.searched)
-              const SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: Text('输入关键词，搜索官网视频')),
-              )
-            else ...[
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    '搜索：${controller.keyword} · ${controller.firstPage == controller.page ? '第 ${controller.page} 页' : '第 ${controller.firstPage}–${controller.page} 页'} · ${controller.items.length} 条',
-                  ),
-                ),
-              ),
-              if (controller.loading)
-                const SliverToBoxAdapter(child: LinearProgressIndicator()),
-              if (controller.items.isEmpty &&
-                  !controller.loading &&
-                  controller.error == null)
+        builder: (context, _) {
+          if (!controller.searched) {
+            _retainedResults = null;
+            _resultItems = const [];
+          }
+          return CustomScrollView(
+            controller: scroll,
+            slivers: [
+              if (!controller.searched)
                 const SliverFillRemaining(
                   hasScrollBody: false,
-                  child: Center(child: Text('官网没有匹配的结果')),
-                ),
-              RetainedPageSliver(
-                key: ValueKey(controller.keyword),
-                items: List.of(controller.items),
-                page: controller.page,
-                footer: AppendPaginationFooter(
-                  page: controller.page,
-                  hasMore: controller.hasMore,
-                  loading: controller.loading || controller.loadingMore,
-                  error: controller.error,
-                  onJump: _page,
-                  onNext: controller.error != null
-                      ? controller.retry
-                      : controller.loadMore,
-                ),
-                gridBuilder: (pageItems) => SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  sliver: SliverLayoutBuilder(
-                    builder: (context, constraints) {
-                      final columns = ResponsiveLayout.gridColumnCount(
-                        constraints.crossAxisExtent,
-                      );
-                      final width =
-                          (constraints.crossAxisExtent - (columns - 1) * 6) /
-                          columns;
-                      return SliverGrid(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: columns,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 6,
-                          childAspectRatio: ResponsiveLayout.cardAspectRatio(
-                            width,
-                          ),
-                        ),
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                          final video = pageItems[index];
-                          return BiliVideoCardV(
-                            video: video,
-                            onTap: () => AppNavigator.toPlayer(video),
-                            onDownload: () {
-                              Get.find<DownloadService>().enqueue(video);
-                              AppToast.show('已加入下载队列');
-                            },
-                          );
-                        }, childCount: pageItems.length),
-                      );
-                    },
+                  child: Center(child: Text('输入关键词，搜索官网视频')),
+                )
+              else ...[
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      '搜索：${controller.keyword} · ${controller.firstPage == controller.page ? '第 ${controller.page} 页' : '第 ${controller.firstPage}–${controller.page} 页'} · ${controller.items.length} 条',
+                    ),
                   ),
                 ),
-              ),
+                if (controller.loading)
+                  const SliverToBoxAdapter(child: LinearProgressIndicator()),
+                if (controller.items.isEmpty &&
+                    !controller.loading &&
+                    controller.error == null)
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(child: Text('官网没有匹配的结果')),
+                  ),
+                _buildRetainedResults(),
+              ],
             ],
-          ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildRetainedResults() {
+    if (_retainedResults != null &&
+        _resultPage == controller.page &&
+        _resultReplacementGeneration == controller.replacementGeneration &&
+        _resultKeyword == controller.keyword &&
+        listEquals(_resultItems, controller.items)) {
+      return _retainedResults!;
+    }
+    _resultPage = controller.page;
+    _resultReplacementGeneration = controller.replacementGeneration;
+    _resultKeyword = controller.keyword;
+    _resultItems = List.of(controller.items);
+    return _retainedResults = RetainedPageSliver(
+      key: ValueKey(controller.keyword),
+      items: _resultItems,
+      page: controller.page,
+      preserveEmptyAppend: controller.lastLoadWasAppend,
+      replacementGeneration: controller.replacementGeneration,
+      footer: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => AppendPaginationFooter(
+          page: controller.page,
+          hasMore: controller.hasMore,
+          loading: controller.loading || controller.loadingMore,
+          error: controller.error,
+          onJump: _page,
+          onNext: controller.error != null
+              ? controller.retry
+              : controller.loadMore,
         ),
+      ),
+      gridBuilder: (pageItems) => VideoGridSliver(
+        items: pageItems,
+        availableWidth: MediaQuery.sizeOf(context).width,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemBuilder: (context, video) {
+          return BiliVideoCardV(
+            video: video,
+            onTap: () => AppNavigator.toPlayer(video),
+            onDownload: () {
+              Get.find<DownloadService>().enqueue(video);
+              AppToast.show('已加入下载队列');
+            },
+          );
+        },
       ),
     );
   }

@@ -1,0 +1,15 @@
+# 同一路由并发释放屏障（2026-10-13）
+
+基线755691a，实现1b06a8b。旧_disposeCurrentPlayer在native释放等待前置空当前controller，另一次switch把null误认为没有待释放实例，提前分配播放器。本批route-owned Future共享整个释放过程，finally按身份清除引用；原释放body不变，260153c最后pause非阻塞保留。
+
+初始有效RED7通过/1失败：native旧释放gate未完成时第二个实例已经创建；关闭取消原先通过。初版共享Future后，审查提醒reload等待后无generation检查、同步Rx重入窗口，新增三契约均实际失败（追加RED8通过/3失败）：关闭后reload allocate2、新switch超越reload allocate3、同步isSeeking监听重入绕过屏障allocate2。最终先发布Completer.future再同步启动清理，转接成功/异常，保留Rx更新时机；reload捕获generation并在await后核对。这些是同一所有权边界，不能限缩为只修正常switch。
+
+最终24定向、354完整通过/1原跳过，lib/test分析0error/0warning/原7info。测试另验证屏障完成后第四次切换仍释放上一实例，避免永久复用已完成Future。独立只读初审及复核，无Critical/Important/Minor；转接completeError已有主等待器，不引入孤立错误Future。
+
+同PMB110/API36/1440×3200，实际AndroidVideoPlayer、中性Butterfly MP4。gate在真实native.dispose调用之前，旧实例仍实际分配；其它create/events/play/pause及解除后的dispose均委托真实后端。三次rapid switch、三次switch后close，500ms阻塞观测旧每轮nativeIds含旧+新两个、额外allocation1；新每轮只有旧一个、额外allocation0。解除后新switch只打开最新target一个，close三轮不额外分配且active为空；每轮完整清理，终态tracked active为空。旧close activeAfterUnblock可能仍含正异步释放的新实例，后续cleanup确实收到其释放；不能谎称旧close已立即清空。
+
+这是受控迟滞下避免平台VideoPlayer重叠分配的证据，不是整体FPS/可见首帧/native长期内存提升；该路径计数不包括所有原生预载资源。只统一同一个PlayerController，不把跨路由全部所有权说成完成。native自身create/dispose挂起、scrub/Seek回复等待和真实首帧/长期内存仍待后续。reload与Rx重入修正有明确unit RED/GREEN；本批六个Android对照直接覆盖普通并发switch/close，不伪称所有入口都逐个真机注入。
+
+正常lib/main.dart ARM64 Profile2018构建/保留数据安装：首页41/第1页/loadingFirst/loadingPage false/error null/scroll0/Rootsite91；构建/归档/手机三APK SHA256：9016E568F5C1AD3380EA1D9575866D9FAE0BABF7C9EB4A54A652488859E5C6AC。attach及本批[5523, 4509, 1673]转发关闭，8787 reverse和local Range server关闭。原快照、账户和以前提交保留。
+
+可单独git revert1b06a8b，证据和可反向应用patch位于当前任务outputs/disposal-barrier。继续剩余播放器、原生内存/画面测量、其它列表及四站点可执行回归；整个项目尚未完成。

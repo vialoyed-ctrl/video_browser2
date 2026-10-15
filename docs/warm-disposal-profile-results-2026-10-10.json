@@ -1,0 +1,530 @@
+{
+  "baseline": "9915327",
+  "implementation": "baa1c94",
+  "before": {
+    "rows": [
+      {
+        "operation": "clear",
+        "round": 0,
+        "oldId": 1,
+        "releasedWithin1000ms": false,
+        "observedMs": 1000,
+        "activeIds": [
+          1
+        ],
+        "serviceOwnsNewItem": false
+      },
+      {
+        "operation": "clear",
+        "round": 1,
+        "oldId": 2,
+        "releasedWithin1000ms": false,
+        "observedMs": 1010,
+        "activeIds": [
+          2
+        ],
+        "serviceOwnsNewItem": false
+      },
+      {
+        "operation": "clear",
+        "round": 2,
+        "oldId": 3,
+        "releasedWithin1000ms": false,
+        "observedMs": 1009,
+        "activeIds": [
+          3
+        ],
+        "serviceOwnsNewItem": false
+      },
+      {
+        "operation": "replace",
+        "round": 0,
+        "oldId": 4,
+        "releasedWithin1000ms": false,
+        "observedMs": 1001,
+        "activeIds": [
+          4,
+          5
+        ],
+        "serviceOwnsNewItem": true
+      },
+      {
+        "operation": "replace",
+        "round": 1,
+        "oldId": 6,
+        "releasedWithin1000ms": false,
+        "observedMs": 1009,
+        "activeIds": [
+          6,
+          7
+        ],
+        "serviceOwnsNewItem": true
+      },
+      {
+        "operation": "replace",
+        "round": 2,
+        "oldId": 8,
+        "releasedWithin1000ms": false,
+        "observedMs": 1008,
+        "activeIds": [
+          8,
+          9
+        ],
+        "serviceOwnsNewItem": true
+      }
+    ],
+    "finalActiveIds": [],
+    "nativeBackend": "AndroidVideoPlayer",
+    "fault": "pause reply held after real native pause; create/events/dispose delegated to Android"
+  },
+  "after": {
+    "rows": [
+      {
+        "operation": "clear",
+        "round": 0,
+        "oldId": 1,
+        "releasedWithin1000ms": true,
+        "observedMs": 92,
+        "activeIds": [],
+        "serviceOwnsNewItem": false
+      },
+      {
+        "operation": "clear",
+        "round": 1,
+        "oldId": 2,
+        "releasedWithin1000ms": true,
+        "observedMs": 81,
+        "activeIds": [],
+        "serviceOwnsNewItem": false
+      },
+      {
+        "operation": "clear",
+        "round": 2,
+        "oldId": 3,
+        "releasedWithin1000ms": true,
+        "observedMs": 86,
+        "activeIds": [],
+        "serviceOwnsNewItem": false
+      },
+      {
+        "operation": "replace",
+        "round": 0,
+        "oldId": 4,
+        "releasedWithin1000ms": true,
+        "observedMs": 248,
+        "activeIds": [
+          5
+        ],
+        "serviceOwnsNewItem": true
+      },
+      {
+        "operation": "replace",
+        "round": 1,
+        "oldId": 6,
+        "releasedWithin1000ms": true,
+        "observedMs": 397,
+        "activeIds": [
+          7
+        ],
+        "serviceOwnsNewItem": true
+      },
+      {
+        "operation": "replace",
+        "round": 2,
+        "oldId": 8,
+        "releasedWithin1000ms": true,
+        "observedMs": 360,
+        "activeIds": [
+          9
+        ],
+        "serviceOwnsNewItem": true
+      }
+    ],
+    "finalActiveIds": [],
+    "nativeBackend": "AndroidVideoPlayer",
+    "fault": "pause reply held after real native pause; create/events/dispose delegated to Android"
+  },
+  "tests": {
+    "full_pass": 286,
+    "existing_skip": 1,
+    "targeted_pass": 12,
+    "red_pass": 10,
+    "red_fail": 2,
+    "analyzer_existing_info": 7,
+    "errors": 0,
+    "warnings": 0
+  },
+  "formal_build": 2012,
+  "apk_hashes": [
+    {
+      "Path": "E:\\projects\\video_browser2\\build\\app\\outputs\\flutter-apk\\app-profile.apk",
+      "Hash": "6D5832069736F31D7A5F0547FAC4BA2E423C106D08F5C8A078A8E0670F6291E8"
+    },
+    {
+      "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\warm-disposal\\formal-after.apk",
+      "Hash": "6D5832069736F31D7A5F0547FAC4BA2E423C106D08F5C8A078A8E0670F6291E8"
+    },
+    {
+      "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\warm-disposal\\device-base.apk",
+      "Hash": "6D5832069736F31D7A5F0547FAC4BA2E423C106D08F5C8A078A8E0670F6291E8"
+    }
+  ],
+  "home": [
+    {
+      "class": "HomeController",
+      "fields": [
+        {
+          "name": "paging",
+          "kind": "PagedListState",
+          "length": 12
+        },
+        {
+          "name": "scroll",
+          "kind": "ScrollController",
+          "length": 10
+        }
+      ],
+      "state": [
+        {
+          "name": "items",
+          "fields": [
+            {
+              "name": "subject",
+              "kind": "GetStream",
+              "length": 6
+            },
+            {
+              "name": "_value",
+              "kind": "_GrowableList",
+              "length": 41
+            }
+          ]
+        },
+        {
+          "name": "page",
+          "fields": [
+            {
+              "name": "subject",
+              "kind": "GetStream",
+              "length": 6
+            },
+            {
+              "name": "_subscriptions",
+              "kind": "_Map",
+              "length": 0
+            },
+            {
+              "name": "_value",
+              "value": "1",
+              "kind": "_Smi"
+            },
+            {
+              "name": "firstRebuild",
+              "value": "false",
+              "kind": "bool"
+            }
+          ]
+        },
+        {
+          "name": "loadingFirst",
+          "fields": [
+            {
+              "name": "subject",
+              "kind": "GetStream",
+              "length": 6
+            },
+            {
+              "name": "_subscriptions",
+              "kind": "_Map",
+              "length": 0
+            },
+            {
+              "name": "_value",
+              "value": "false",
+              "kind": "bool"
+            },
+            {
+              "name": "firstRebuild",
+              "value": "false",
+              "kind": "bool"
+            }
+          ]
+        },
+        {
+          "name": "loadingPage",
+          "fields": [
+            {
+              "name": "subject",
+              "kind": "GetStream",
+              "length": 6
+            },
+            {
+              "name": "_subscriptions",
+              "kind": "_Map",
+              "length": 0
+            },
+            {
+              "name": "_value",
+              "value": "false",
+              "kind": "bool"
+            },
+            {
+              "name": "firstRebuild",
+              "value": "false",
+              "kind": "bool"
+            }
+          ]
+        },
+        {
+          "name": "hasMore",
+          "fields": [
+            {
+              "name": "subject",
+              "kind": "GetStream",
+              "length": 6
+            },
+            {
+              "name": "_subscriptions",
+              "kind": "_Map",
+              "length": 0
+            },
+            {
+              "name": "_value",
+              "value": "true",
+              "kind": "bool"
+            },
+            {
+              "name": "firstRebuild",
+              "value": "false",
+              "kind": "bool"
+            }
+          ]
+        },
+        {
+          "name": "pageError",
+          "fields": [
+            {
+              "name": "subject",
+              "kind": "GetStream",
+              "length": 6
+            },
+            {
+              "name": "_subscriptions",
+              "kind": "_Map",
+              "length": 0
+            },
+            {
+              "name": "_value",
+              "value": "null",
+              "kind": "Null"
+            },
+            {
+              "name": "firstRebuild",
+              "value": "false",
+              "kind": "bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": "ScrollPositionWithSingleContext",
+      "fields": [
+        {
+          "name": "_maxScrollExtent",
+          "value": "202.0",
+          "kind": "_Double"
+        },
+        {
+          "name": "_pixels",
+          "value": "0.0",
+          "kind": "_Double"
+        },
+        {
+          "name": "_viewportDimension",
+          "value": "608.0",
+          "kind": "_Double"
+        }
+      ]
+    },
+    {
+      "class": "ScrollPositionWithSingleContext",
+      "fields": [
+        {
+          "name": "_maxScrollExtent",
+          "value": "3592.175",
+          "kind": "_Double"
+        },
+        {
+          "name": "_pixels",
+          "value": "0.0",
+          "kind": "_Double"
+        },
+        {
+          "name": "_viewportDimension",
+          "value": "608.0",
+          "kind": "_Double"
+        }
+      ]
+    },
+    {
+      "class": "ScrollPositionWithSingleContext",
+      "fields": [
+        {
+          "name": "_maxScrollExtent",
+          "value": "0.0",
+          "kind": "_Double"
+        },
+        {
+          "name": "_pixels",
+          "value": "0.0",
+          "kind": "_Double"
+        },
+        {
+          "name": "_viewportDimension",
+          "value": "144.0",
+          "kind": "_Double"
+        }
+      ]
+    },
+    {
+      "class": "ScrollPositionWithSingleContext",
+      "fields": [
+        {
+          "name": "_maxScrollExtent",
+          "value": "0.0",
+          "kind": "_Double"
+        },
+        {
+          "name": "_pixels",
+          "value": "0.0",
+          "kind": "_Double"
+        },
+        {
+          "name": "_viewportDimension",
+          "value": "360.0",
+          "kind": "_Double"
+        }
+      ]
+    }
+  ],
+  "root": [
+    {
+      "class": "PornHubController",
+      "currentTabIndex": {
+        "value": "0",
+        "kind": "_Smi"
+      },
+      "paths": []
+    },
+    {
+      "class": "Hanime1Controller",
+      "currentTabIndex": {
+        "value": "0",
+        "kind": "_Smi"
+      },
+      "homeData": {
+        "value": "null",
+        "kind": "Null"
+      },
+      "isLoadingHome": {
+        "value": "true",
+        "kind": "bool"
+      },
+      "homeError": {
+        "value": "null",
+        "kind": "Null"
+      },
+      "currentRankTabIndex": {
+        "value": "0",
+        "kind": "_Smi"
+      },
+      "rankingPaging": {
+        "items": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "page": {
+          "value": "1",
+          "kind": "_Smi"
+        },
+        "totalPages": {
+          "value": "1",
+          "kind": "_Smi"
+        },
+        "loadingFirst": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "loadingPage": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "hasMore": {
+          "value": "true",
+          "kind": "bool"
+        },
+        "error": {
+          "value": "null",
+          "kind": "Null"
+        }
+      },
+      "subscriptionsPaging": {
+        "items": {
+          "kind": "_GrowableList",
+          "length": 0
+        },
+        "page": {
+          "value": "1",
+          "kind": "_Smi"
+        },
+        "totalPages": {
+          "value": "1",
+          "kind": "_Smi"
+        },
+        "loadingFirst": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "loadingPage": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "hasMore": {
+          "value": "false",
+          "kind": "bool"
+        },
+        "error": {
+          "value": "null",
+          "kind": "Null"
+        }
+      }
+    },
+    {
+      "class": "RootController",
+      "activePlatform": {
+        "value": "site91",
+        "kind": "_OneByteString",
+        "length": 6
+      }
+    }
+  ],
+  "cleanup": {
+    "forwards_removed": [
+      5129,
+      3867,
+      4802,
+      14993
+    ],
+    "reverse_removed": 8787,
+    "server_stopped": true
+  },
+  "limits": [
+    "Fault injection holds Dart pause reply after actual native pause, not an observed production outage.",
+    "Clear measures disposal acknowledgement; replacement window also includes new initialization.",
+    "No FPS, visible first frame, Java/GPU reclamation or long-running native leak improvement claim.",
+    "Native create/dispose failures or nonresponses retain existing best-effort boundary.",
+    "First baseline probe cleanup used insufficient 100ms; excluded, corrected to 3s before valid baseline.",
+    "Formal player progress29/duration219 observed once; second snapshot controls hidden, no second advancement claim."
+  ]
+}

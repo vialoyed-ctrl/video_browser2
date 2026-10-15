@@ -1,0 +1,7 @@
+# 活跃播放器释放等待边界
+
+基线ce6fe03。现有_disposeCurrentPlayer先等待old.pause后dispose。真实PlayerController+VideoPlayerController，仅替换平台边界的RED：普通切换1过，暂停回复挂起时退出/切换2败。初始Size缺import、91新鲜度导致fixture未打开属于装置问题，修正后才形成有效RED。
+
+先实际Android中性Butterfly MP4、真实native.pause后挂起Dart回复，create/events/play/dispose委托真实后端，三次close三次switch前后对照。最小方案：仍立即发出best-effort pause且吞并其错误，但dispose不等待暂停回复，仍等待dispose确认后才开始新实例。保留scrub/Seek等待、其它控制器暂停和UI交互，不加任意超时，不改解析/原生播放器实现。
+
+不把本批当成全部生命周期或长期native内存解决；创建/Seek/native自身dispose迟滞另行验收。native释放确认不证明Java/GPU GC。正常main构建恢复、账号数据保留、旧提交和原快照保留。

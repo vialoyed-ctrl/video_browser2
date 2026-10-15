@@ -1,0 +1,137 @@
+{
+  "date": "2026-10-10",
+  "project": "E:\\projects\\video_browser2",
+  "base": "252fbe96fc16df83ebdced756065fb3250f24588",
+  "branch": "refactor/profile-ui-20261009",
+  "codeCommits": {
+    "state": "f0ae7e790814c183a6442ad710f5ce55a9a59246",
+    "view": "bd80de6d1e7ca7e50e4e2fb4a38f5ba28a7d279a"
+  },
+  "tests": {
+    "baselinePass": 177,
+    "finalPass": 203,
+    "existingSkip": 1,
+    "characterizationBefore": 17,
+    "stateTargetedAfter": 32,
+    "viewAfter": 8,
+    "goldenWidths": [
+      400,
+      900
+    ],
+    "analyzeErrors": 0,
+    "analyzeWarnings": 0,
+    "originalInfos": 7
+  },
+  "controlledProfile": {
+    "device": "PMB110",
+    "serial": "BUPR8HWKLZTCHAPN",
+    "android": "16/API36",
+    "mode": "Profile",
+    "abi": "arm64-v8a",
+    "items": 4,
+    "loadingToggles": 10,
+    "toggleDelayMs": 350,
+    "view": "actual PornHubVideoListTab",
+    "before": {
+      "cards": 40,
+      "grids": 10,
+      "observers": 10,
+      "timelineEvents": 24934
+    },
+    "after": {
+      "cards": 0,
+      "grids": 0,
+      "observers": 10,
+      "timelineEvents": 15418
+    },
+    "beforeApkSha256": "341D3C3559B0BBDE2B85BCD2F4128E0618AD369B98492A8F7ECB073C3AF1D712",
+    "afterApkSha256": "03F0A6721DB590088D8A44BE982332E1E373B2C503A54D401F8E1082C5DD1943",
+    "limits": "Neutral items have no remote covers/streams; exact rebuild counts only, no overall FPS or native memory improvement claim."
+  },
+  "formalAfterOnlyFrames": {
+    "homeScroll": {
+      "actions": 22,
+      "frames": 2598,
+      "buildP95Ms": 1.596,
+      "rasterP95Ms": 8.267,
+      "elapsedMs": 22729
+    },
+    "pornhubScroll": {
+      "actions": 17,
+      "frames": 2026,
+      "buildP95Ms": 1.445,
+      "rasterP95Ms": 7.578,
+      "elapsedMs": 17726
+    },
+    "hanimeRankingScroll": {
+      "actions": 9,
+      "frames": 1460,
+      "buildP95Ms": 1.89,
+      "rasterP95Ms": 9.1,
+      "elapsedMs": 12704
+    },
+    "hanimeSubscriptionsScroll": {
+      "actions": 13,
+      "frames": 1948,
+      "buildP95Ms": 1.745,
+      "rasterP95Ms": 9.83,
+      "elapsedMs": 17322
+    }
+  },
+  "liveAfterOnlyState": {
+    "pornhubRecommendation": {
+      "itemsBefore": 21,
+      "itemsAfter": 42,
+      "page": 2
+    },
+    "pornhubHot": {
+      "items": 31,
+      "page": 1
+    },
+    "pornhubMostViewed": {
+      "items": 28,
+      "page": 1
+    },
+    "hanimeRanking": {
+      "items": 118,
+      "page": 2,
+      "totalPages": 363
+    },
+    "hanimeSubscriptions": {
+      "itemsBefore": 60,
+      "itemsAfter": 120,
+      "page": 2,
+      "totalPages": 19
+    },
+    "loadingFlagsAtSnapshot": false,
+    "errorsAtSnapshot": null,
+    "limits": "Network content can change; these are post-refactor smoke observations, not exhaustive four-site or account validation."
+  },
+  "restoration": {
+    "target": "lib/main.dart",
+    "mode": "Profile",
+    "temporaryBuildNumber": 2004,
+    "pubspecUnchanged": true,
+    "appDataCleared": false,
+    "apkSha256": "45126F3DF6C86F319C9FD9677CEDDBE972E1EBE3FE5F50BB0DE90C1BBAEB3B8A",
+    "installedApkSha256": "45126F3DF6C86F319C9FD9677CEDDBE972E1EBE3FE5F50BB0DE90C1BBAEB3B8A",
+    "activePlatform": "site91",
+    "homeItems": 42,
+    "homePage": 1,
+    "loadingFlags": false,
+    "pageError": null,
+    "scrollPixels": 0,
+    "ownedPortsRemoved": [
+      8199,
+      8200,
+      8201
+    ]
+  },
+  "review": {
+    "type": "fresh read-only independent reviewer",
+    "introducedCritical": 0,
+    "introducedImportant": 0,
+    "minor": 0,
+    "inheritedRisk": "PornHub increments display page before append reply; existing RetainedPageSliver can reset page boundaries in the waiting frame. Not changed by this refactor. Synchronous append test does not exercise that frame; delay-response reproduction is next priority."
+  }
+}

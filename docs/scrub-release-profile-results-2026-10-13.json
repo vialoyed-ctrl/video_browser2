@@ -1,0 +1,755 @@
+{
+  "device": "PMB110 BUPR8HWKLZTCHAPN API36",
+  "baseline": "be356c5",
+  "probeSourceSha256": "42cd87f2874284f6bffb2e4ee62b3e2e3533adffb630f942bba5c8a18d8e85a5",
+  "groups": [
+    {
+      "fault": "pause",
+      "operation": "close",
+      "rounds": 3,
+      "oldReleasedBeforeUnblock": 0,
+      "newReleasedBeforeUnblock": 3,
+      "newReleaseObservedMs": [
+        64,
+        41,
+        39
+      ]
+    },
+    {
+      "fault": "pause",
+      "operation": "switch",
+      "rounds": 3,
+      "oldReleasedBeforeUnblock": 0,
+      "newReleasedBeforeUnblock": 3,
+      "newReleaseObservedMs": [
+        45,
+        43,
+        50
+      ]
+    },
+    {
+      "fault": "seek",
+      "operation": "close",
+      "rounds": 3,
+      "oldReleasedBeforeUnblock": 0,
+      "newReleasedBeforeUnblock": 3,
+      "newReleaseObservedMs": [
+        38,
+        49,
+        47
+      ]
+    },
+    {
+      "fault": "seek",
+      "operation": "switch",
+      "rounds": 3,
+      "oldReleasedBeforeUnblock": 0,
+      "newReleasedBeforeUnblock": 3,
+      "newReleaseObservedMs": [
+        38,
+        50,
+        51
+      ]
+    },
+    {
+      "fault": "enable",
+      "operation": "close",
+      "rounds": 3,
+      "oldReleasedBeforeUnblock": 0,
+      "newReleasedBeforeUnblock": 3,
+      "newReleaseObservedMs": [
+        43,
+        50,
+        41
+      ]
+    },
+    {
+      "fault": "enable",
+      "operation": "switch",
+      "rounds": 3,
+      "oldReleasedBeforeUnblock": 0,
+      "newReleasedBeforeUnblock": 3,
+      "newReleaseObservedMs": [
+        45,
+        47,
+        45
+      ]
+    },
+    {
+      "fault": "disable",
+      "operation": "close",
+      "rounds": 3,
+      "oldReleasedBeforeUnblock": 0,
+      "newReleasedBeforeUnblock": 3,
+      "newReleaseObservedMs": [
+        47,
+        56,
+        58
+      ]
+    },
+    {
+      "fault": "disable",
+      "operation": "switch",
+      "rounds": 3,
+      "oldReleasedBeforeUnblock": 0,
+      "newReleasedBeforeUnblock": 3,
+      "newReleaseObservedMs": [
+        44,
+        53,
+        52
+      ]
+    }
+  ],
+  "old": {
+    "rows": [
+      {
+        "fault": "pause",
+        "operation": "close",
+        "round": 0,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1000,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "close",
+        "round": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1010,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "close",
+        "round": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1006,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "switch",
+        "round": 0,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1002,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "switch",
+        "round": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1001,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "switch",
+        "round": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1009,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "close",
+        "round": 0,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1009,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "close",
+        "round": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1004,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "close",
+        "round": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1004,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "switch",
+        "round": 0,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1005,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "switch",
+        "round": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1010,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "switch",
+        "round": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1000,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "close",
+        "round": 0,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1002,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "close",
+        "round": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1007,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "close",
+        "round": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1003,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "switch",
+        "round": 0,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1004,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "switch",
+        "round": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1005,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "switch",
+        "round": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1003,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "close",
+        "round": 0,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1011,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "close",
+        "round": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1003,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "close",
+        "round": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1008,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "switch",
+        "round": 0,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1005,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "switch",
+        "round": 1,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1008,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "switch",
+        "round": 2,
+        "releasedWithin1000ms": false,
+        "releaseObservedMs": 1011,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      }
+    ],
+    "finalActiveCount": 0,
+    "nativeBackend": "Inherited AndroidVideoPlayer",
+    "fixture": "neutral local MP4",
+    "notVisibleFrameTiming": true
+  },
+  "new": {
+    "rows": [
+      {
+        "fault": "pause",
+        "operation": "close",
+        "round": 0,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 64,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "close",
+        "round": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 41,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "close",
+        "round": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 39,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "switch",
+        "round": 0,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 45,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "switch",
+        "round": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 43,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "pause",
+        "operation": "switch",
+        "round": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 50,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "close",
+        "round": 0,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 38,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "close",
+        "round": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 49,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "close",
+        "round": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 47,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "switch",
+        "round": 0,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 38,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "switch",
+        "round": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 50,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "seek",
+        "operation": "switch",
+        "round": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 51,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "close",
+        "round": 0,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 43,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "close",
+        "round": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 50,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "close",
+        "round": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 41,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "switch",
+        "round": 0,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 45,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "switch",
+        "round": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 47,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "enable",
+        "operation": "switch",
+        "round": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 45,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "close",
+        "round": 0,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 47,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "close",
+        "round": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 56,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "close",
+        "round": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 58,
+        "switchCompletedBeforeUnblock": false,
+        "activeCountBeforeUnblock": 0,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "switch",
+        "round": 0,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 44,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "switch",
+        "round": 1,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 53,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      },
+      {
+        "fault": "disable",
+        "operation": "switch",
+        "round": 2,
+        "releasedWithin1000ms": true,
+        "releaseObservedMs": 52,
+        "switchCompletedBeforeUnblock": true,
+        "activeCountBeforeUnblock": 1,
+        "replyStillHeld": true,
+        "controllerErrorBeforeClose": null,
+        "realNativeCommandAcknowledged": true
+      }
+    ],
+    "finalActiveCount": 0,
+    "nativeBackend": "Inherited AndroidVideoPlayer",
+    "fixture": "neutral local MP4",
+    "notVisibleFrameTiming": true
+  },
+  "notVisibleFrameTiming": true,
+  "notAllNativeLeaksProof": true,
+  "implementation": "be2acec",
+  "tests": {
+    "passed": 363,
+    "originalSkipped": 1,
+    "targeted": 20,
+    "newContracts": 9,
+    "analyzerErrors": 0,
+    "analyzerWarnings": 0,
+    "originalInfo": 7,
+    "analyzerExit": 1
+  },
+  "normalRestoration": {
+    "buildOutputSha256": "D9DFB5AFFE4DF96CC85D014B64478C4977120B5C25908CB0A3CC13066410F8CC",
+    "buildNumber": 2019,
+    "apkSha256": "D9DFB5AFFE4DF96CC85D014B64478C4977120B5C25908CB0A3CC13066410F8CC",
+    "deviceApkSha256": "D9DFB5AFFE4DF96CC85D014B64478C4977120B5C25908CB0A3CC13066410F8CC",
+    "homeVerified": true,
+    "home": {
+      "items": 41,
+      "page": 1,
+      "loadingFirst": false,
+      "loadingPage": false,
+      "error": null,
+      "scrollPx": 0,
+      "platform": "site91"
+    },
+    "cleanupVerified": true,
+    "cleanup": {
+      "rawLocalHeaps": 0,
+      "remoteHeapDirectoryAbsent": true,
+      "forwardEmpty": true,
+      "reverseEmpty": true,
+      "local8787NotListening": true,
+      "ownedForwardsRemoved": [
+        7792,
+        14162,
+        10251,
+        1445,
+        2084
+      ],
+      "probeAttachExited": true,
+      "normalAttachExited": true,
+      "serverSession83497Exited": true
+    },
+    "normalApkReusedUnchanged": false
+  },
+  "waiters": {
+    "activeControllerScopes": [
+      {
+        "scopeClass": "_ScrubReleaseSignal",
+        "setClass": "_Set",
+        "cancelled": "false",
+        "pendingWaiters": 0,
+        "setCounters": {}
+      }
+    ],
+    "claims": "Only live Dart waiter membership; no PSS/global native leak claim"
+  }
+}

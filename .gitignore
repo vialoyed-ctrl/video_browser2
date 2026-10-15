@@ -76,6 +76,9 @@ app.*.map.json
 /temp_dart.dart
 .flutter_tool_state
 
+# Local visual capture (not an application asset)
+/docs/frame-scrub-demo.png
+
 # iOS generated media libraries
 /ios/MediaRemux/Vendor/
 /ios/Pods/

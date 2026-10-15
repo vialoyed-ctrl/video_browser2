@@ -1,7 +1,14 @@
 import '../../../widgets/retained_page_sliver.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
+
+import '../../../widgets/adaptive_sliver_layout.dart';
+
 import 'package:flutter/material.dart';
+
+import '../../../widgets/grid_layout_scope.dart';
+
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +16,7 @@ import '../../../data/models/pornhub_models.dart';
 import '../../../data/models/video_item.dart';
 import '../../../data/sources/pornhub_source.dart';
 import '../../../data/sources/video_source.dart';
+import '../pornhub_search_controller.dart';
 import '../widgets/pornhub_actions.dart';
 import '../widgets/pornhub_video_grid.dart';
 import '../widgets/pornhub_playlist_card.dart';
@@ -19,10 +27,12 @@ class PornHubSearchPage extends StatefulWidget {
   const PornHubSearchPage({
     super.key,
     this.initialKeyword = '',
+    this.initialKind = 'videos',
     this.initialPath,
     this.title,
   });
   final String initialKeyword;
+  final String initialKind;
   final String? initialPath, title;
   @override
   State<PornHubSearchPage> createState() => _PornHubSearchPageState();
@@ -31,21 +41,21 @@ class PornHubSearchPage extends StatefulWidget {
 class _PornHubSearchPageState extends State<PornHubSearchPage> {
   late final _input = TextEditingController(text: widget.initialKeyword);
   final _scroll = ScrollController();
-  final _videos = <VideoItem>[];
-  final _creators = <PornHubSubscription>[];
-  final _playlists = <PornHubPlaylist>[];
-  final _filters = <String, String>{};
-  List<PornHubFilterGroup> _groups = [];
-  List<PornHubLinkItem> _suggestions = [];
-  String _kind = 'videos', _creatorScope = 'members', _keyword = '', _path = '';
-  bool _loading = false, _hasMore = false, _started = false;
-  String? _error;
-  int _page = 1, _request = 0;
-  int? _total;
-  PornHubSource get _source => SourceRegistry.byId('pornhub') as PornHubSource;
+  late final _controller = PornHubSearchController(
+    SourceRegistry.byId('pornhub') as PornHubSource,
+    initialKeyword: widget.initialKeyword,
+    initialPath: widget.initialPath,
+    initialKind: widget.initialKind,
+  );
+  List<Object> _resultSnapshot = const [];
+  String? _resultKind;
+  int? _resultPage;
+  int? _resultReplacementGeneration;
+  Widget? _cachedResults;
   @override
   void initState() {
     super.initState();
+    _controller.addListener(_onDataChanged);
     _scroll.addListener(() {
       if (_scroll.hasClients &&
           _scroll.position.userScrollDirection == ScrollDirection.idle) {
@@ -53,77 +63,39 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
       }
       if (_scroll.hasClients &&
           _scroll.position.extentAfter < 500 &&
-          !_loading &&
-          _hasMore &&
-          _error == null) {
+          !_controller.loading &&
+          _controller.hasMore &&
+          _controller.error == null) {
         _load(reset: false);
       }
     });
-    if (widget.initialPath != null || widget.initialKeyword.isNotEmpty) {
-      _keyword = widget.initialKeyword;
-      _path = widget.initialPath ?? _makePath();
-      _filters.addAll(Uri.tryParse(_path)?.queryParameters ?? {});
-      _filters.remove('search');
-      _filters.remove('page');
-      _load(reset: true);
-    }
+    _controller.start();
   }
 
   @override
   void dispose() {
-    _request++;
+    _controller.removeListener(_onDataChanged);
+    _controller.dispose();
     _input.dispose();
     _scroll.dispose();
     super.dispose();
   }
 
-  String _makePath() {
-    final parameters = Map<String, String>.from(_filters)..remove('page');
-    String path;
-    switch (_kind) {
-      case 'clips':
-        path = '/clips';
-        parameters['search'] = _keyword;
-      case 'creators':
-        path = _creatorScope == 'members'
-            ? '/user/search'
-            : '/pornstars/search';
-        parameters[_creatorScope == 'members' ? 'username' : 'search'] =
-            _keyword;
-        if (_creatorScope == 'members') parameters['gender'] = '0';
-      case 'playlists':
-        path = '/playlists';
-        parameters.putIfAbsent('o', () => 'mr');
-      default:
-        path = '/video/search';
-        parameters['search'] = _keyword;
-    }
-    parameters.removeWhere((_, value) => value.isEmpty);
-    return Uri(
-      path: path,
-      queryParameters: parameters.isEmpty ? null : parameters,
-    ).toString();
-  }
-
   void _submit() {
     FocusScope.of(context).unfocus();
-    _keyword = _input.text.trim();
-    if (_keyword.isEmpty &&
-        widget.initialPath == null &&
-        _kind != 'playlists') {
-      return;
-    }
-    _path = _makePath();
-    _load(reset: true, clear: true);
+    final willLoad =
+        _input.text.trim().isNotEmpty ||
+        widget.initialPath != null ||
+        _controller.kind == 'playlists';
+    final request = _controller.submit(_input.text);
+    if (willLoad && _scroll.hasClients) _scroll.jumpTo(0);
+    // The controller handles network errors and request invalidation.
+    request.ignore();
   }
 
   void _selectKind(String kind) {
-    if (kind == _kind) return;
-    setState(() {
-      _kind = kind;
-      _filters.clear();
-      _groups = [];
-    });
+    if (kind == _controller.kind) return;
+    _controller.selectKind(kind);
     _submit();
   }
 
@@ -131,57 +103,18 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
     required bool reset,
     bool clear = false,
     int? targetPage,
-  }) async {
-    if (!reset && (_loading || !_hasMore)) return;
-    final request = ++_request, page = reset ? (targetPage ?? 1) : _page;
-    final path = _path, kind = _kind;
-    setState(() {
-      _loading = true;
-      _error = null;
-      _started = true;
-      if (clear) {
-        _videos.clear();
-        _creators.clear();
-        _playlists.clear();
-        _suggestions = [];
-        _total = null;
-      }
-    });
+  }) {
+    final request = _controller.load(
+      reset: reset,
+      clear: clear,
+      targetPage: targetPage,
+    );
     if (clear && _scroll.hasClients) _scroll.jumpTo(0);
-    try {
-      final result = await _source.fetchBrowse(path, page: page, kind: kind);
-      if (!mounted || request != _request) return;
-      setState(() {
-        if (reset) {
-          _videos.clear();
-          _creators.clear();
-          _playlists.clear();
-        }
-        final ids = _videos.map((v) => v.id).toSet();
-        _videos.addAll(result.videos.where((v) => ids.add(v.id)));
-        final paths = _creators.map((c) => c.path).toSet();
-        _creators.addAll(result.creators.where((c) => paths.add(c.path)));
-        final playlistIds = _playlists.map((p) => p.id).toSet();
-        _playlists.addAll(result.playlists.where((p) => playlistIds.add(p.id)));
-        _groups = result.filters;
-        _suggestions = result.suggestions;
-        _total = result.total;
-        _hasMore = result.hasMore;
-        _page = page + 1;
-        _loading = false;
-      });
-    } catch (_) {
-      if (mounted && request == _request) {
-        setState(() {
-          _loading = false;
-          _error = PornHubSource.requestFailureMessage;
-        });
-      }
-    }
+    return request;
   }
 
   Future<void> _showFilters() async {
-    final draft = Map<String, String>.from(_filters);
+    final draft = Map<String, String>.from(_controller.filters);
     RangeValues range = RangeValues(
       double.tryParse(draft['min_duration'] ?? '') ?? 0,
       double.tryParse(draft['max_duration'] ?? '') ?? 40,
@@ -195,7 +128,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
         )
         .where((c) => c.path.isNotEmpty)
         .toList();
-    final groups = _groups
+    final groups = _controller.groups
         .where(
           (g) => !['c', 'filter_category', 'exclude_category'].contains(g.key),
         )
@@ -259,7 +192,8 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                         ),
                         const SizedBox(height: 16),
                       ],
-                      if (_kind == 'videos' || _kind == 'clips') ...[
+                      if (_controller.kind == 'videos' ||
+                          _controller.kind == 'clips') ...[
                         Text(
                           '时长：${range.start.round()}–${range.end == 40 ? '40+' : range.end.round()} 分钟',
                         ),
@@ -352,28 +286,25 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
     } else {
       draft.remove('max_duration');
     }
-    _filters
-      ..clear()
-      ..addAll(draft);
-    final existing = Uri.tryParse(_path);
-    _path = widget.initialPath != null && _keyword.isEmpty && existing != null
-        ? existing
-              .replace(queryParameters: draft.isEmpty ? null : draft)
-              .toString()
-        : _makePath();
+    _controller.applyFilters(draft);
     _load(reset: true, clear: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final visiblePlaylists = _keyword.isEmpty
-        ? _playlists
-        : _playlists
+    final visiblePlaylists = _controller.keyword.isEmpty
+        ? _controller.playlists
+        : _controller.playlists
               .where(
-                (p) => p.title.toLowerCase().contains(_keyword.toLowerCase()),
+                (p) => p.title.toLowerCase().contains(
+                  _controller.keyword.toLowerCase(),
+                ),
               )
               .toList();
-    final count = _videos.length + _creators.length + visiblePlaylists.length;
+    final count =
+        _controller.videos.length +
+        _controller.creators.length +
+        visiblePlaylists.length;
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -413,7 +344,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                         child: Text(
                           entry.value,
                           style: TextStyle(
-                            fontWeight: _kind == entry.key
+                            fontWeight: _controller.kind == entry.key
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                           ),
@@ -423,16 +354,15 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                 ],
               ),
             ),
-          if (_kind == 'creators')
+          if (_controller.kind == 'creators')
             SegmentedButton<String>(
               segments: const [
                 ButtonSegment(value: 'members', label: Text('会员 / 用户')),
                 ButtonSegment(value: 'pornstars', label: Text('明星')),
               ],
-              selected: {_creatorScope},
+              selected: {_controller.creatorScope},
               onSelectionChanged: (value) {
-                _creatorScope = value.first;
-                _filters.clear();
+                _controller.selectCreatorScope(value.first);
                 _submit();
               },
             ),
@@ -442,40 +372,37 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    _kind == 'playlists'
+                    _controller.kind == 'playlists'
                         ? '官网片单 · 筛选已获取片单'
-                        : _total == null
+                        : _controller.total == null
                         ? '已加载 $count 条'
-                        : '官网共 $_total 条 · 已加载 $count 条',
+                        : '官网共 ${_controller.total} 条 · 已加载 $count 条',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
               ),
               TextButton.icon(
-                onPressed: _started ? _showFilters : null,
+                onPressed: _controller.started ? _showFilters : null,
                 icon: const Icon(Icons.tune, size: 18),
                 label: const Text('筛选'),
               ),
             ],
           ),
-          if (_suggestions.isNotEmpty)
+          if (_controller.suggestions.isNotEmpty)
             SizedBox(
               height: 40,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                itemCount: _suggestions.length,
+                itemCount: _controller.suggestions.length,
                 separatorBuilder: (_, _) => const SizedBox(width: 6),
                 itemBuilder: (context, index) {
-                  final suggestion = _suggestions[index];
+                  final suggestion = _controller.suggestions[index];
                   return ActionChip(
                     label: Text(suggestion.name),
                     onPressed: () {
-                      _path = suggestion.path;
-                      _keyword =
-                          Uri.parse(_path).queryParameters['search'] ??
-                          suggestion.name;
-                      _input.text = _keyword;
+                      _controller.selectSuggestion(suggestion);
+                      _input.text = _controller.keyword;
                       _load(reset: true, clear: true);
                     },
                   );
@@ -484,7 +411,7 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
             ),
           const Divider(height: 1),
           Expanded(
-            child: !_started
+            child: !_controller.started
                 ? const Center(child: Text('输入关键词开始搜索'))
                 : RefreshIndicator(
                     onRefresh: () => _load(reset: true),
@@ -494,109 +421,147 @@ class _PornHubSearchPageState extends State<PornHubSearchPage> {
                         parent: BouncingScrollPhysics(),
                       ),
                       slivers: [
-                        if (_loading && count == 0)
+                        if (_controller.loading && count == 0)
                           const SliverFillRemaining(
                             child: Center(child: CircularProgressIndicator()),
                           )
-                        else if (_error != null && count == 0)
+                        else if (_controller.error != null && count == 0)
                           SliverFillRemaining(
                             child: PornHubErrorBlock(
-                              message: _error!,
+                              message: _controller.error!,
                               onRetry: () => _load(reset: true),
                             ),
                           )
                         else ...[
-                          if (_kind == 'videos' || _kind == 'clips')
-                            RetainedPageSliver(
-                              items: List.of(_videos),
-                              page: (_page - 1).clamp(1, 2147483647),
-                              footer: PornHubListFooter(
-                                currentPage: (_page - 1).clamp(1, 2147483647),
-                                onJump: (page) =>
-                                    _load(reset: true, targetPage: page),
-                                isLoadingMore: _loading,
-                                hasMore: _hasMore,
-                                errorText: _error,
-                                isEmpty: count == 0,
-                                emptyHint: _kind == 'playlists'
-                                    ? '已获取片单没有匹配项，可继续加载下一页'
-                                    : '没有找到匹配结果',
-                                onLoadMore: () => _load(reset: false),
-                              ),
-                              gridBuilder: (pageItems) => SliverPornHubGrid(
-                                videos: pageItems,
-                                onDownload: enqueuePornHubDownload,
-                              ),
-                            ),
-                          if (_kind == 'creators')
-                            SliverList.builder(
-                              itemCount: _creators.length,
-                              itemBuilder: (_, index) {
-                                final creator = _creators[index];
-                                return ListTile(
-                                  leading: _cover(creator.avatarUrl),
-                                  title: Text(creator.name),
-                                  trailing: const Icon(Icons.chevron_right),
-                                  onTap: () => Get.to<void>(
-                                    () => PornHubCreatorPage(
-                                      name: creator.name,
-                                      path: creator.path,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          if (_kind == 'playlists')
-                            SliverPadding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 8,
-                              ),
-                              sliver: SliverGrid.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 1.15,
-                                      crossAxisSpacing: 8,
-                                      mainAxisSpacing: 8,
-                                    ),
-                                itemCount: visiblePlaylists.length,
-                                itemBuilder: (_, index) {
-                                  final playlist = visiblePlaylists[index];
-                                  return PornHubPlaylistCard(
-                                    playlist: playlist,
-                                    onTap: () => Get.to<void>(
-                                      () => PornHubBrowsePage(
-                                        title: playlist.title,
-                                        path: playlist.url,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          if (_kind != 'videos' && _kind != 'clips')
-                            SliverToBoxAdapter(
-                              child: PornHubListFooter(
-                                currentPage: (_page - 1).clamp(1, 2147483647),
-                                onJump: (page) =>
-                                    _load(reset: true, targetPage: page),
-                                isLoadingMore: _loading,
-                                hasMore: _hasMore,
-                                errorText: _error,
-                                isEmpty: count == 0,
-                                emptyHint: _kind == 'playlists'
-                                    ? '已获取片单没有匹配项，可继续加载下一页'
-                                    : '没有找到匹配结果',
-                                onLoadMore: () => _load(reset: false),
-                              ),
-                            ),
+                          _buildResults(visiblePlaylists),
+                          if (_controller.kind != 'videos' &&
+                              _controller.kind != 'clips')
+                            SliverToBoxAdapter(child: _footer),
                         ],
                       ],
                     ),
                   ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _onDataChanged() {
+    setState(() {
+      if (_controller.videos.isEmpty &&
+          _controller.creators.isEmpty &&
+          _controller.playlists.isEmpty) {
+        _cachedResults = null;
+        _resultSnapshot = const [];
+      }
+    });
+  }
+
+  int get _resultCount =>
+      _controller.videos.length +
+      _controller.creators.length +
+      (_controller.keyword.isEmpty
+          ? _controller.playlists.length
+          : _controller.playlists
+                .where(
+                  (p) => p.title.toLowerCase().contains(
+                    _controller.keyword.toLowerCase(),
+                  ),
+                )
+                .length);
+
+  late final Widget _footer = AnimatedBuilder(
+    animation: _controller,
+    builder: (context, _) => PornHubListFooter(
+      currentPage: (_controller.nextPage - 1).clamp(1, 2147483647),
+      onJump: (page) => _load(reset: true, targetPage: page),
+      isLoadingMore: _controller.loading,
+      hasMore: _controller.hasMore,
+      errorText: _controller.error,
+      isEmpty: _resultCount == 0,
+      emptyHint: _controller.kind == 'playlists'
+          ? '已获取片单没有匹配项，可继续加载下一页'
+          : '没有找到匹配结果',
+      onLoadMore: () => _load(reset: false),
+    ),
+  );
+
+  Widget _buildResults(List<PornHubPlaylist> visiblePlaylists) {
+    final currentItems = _controller.kind == 'creators'
+        ? _controller.creators
+        : _controller.kind == 'playlists'
+        ? visiblePlaylists
+        : _controller.videos;
+    if (_cachedResults != null &&
+        _resultKind == _controller.kind &&
+        _resultPage == _controller.nextPage &&
+        _resultReplacementGeneration == _controller.replacementGeneration &&
+        listEquals(_resultSnapshot, currentItems)) {
+      return _cachedResults!;
+    }
+    _resultKind = _controller.kind;
+    _resultPage = _controller.nextPage;
+    _resultReplacementGeneration = _controller.replacementGeneration;
+    _resultSnapshot = List<Object>.of(currentItems);
+    if (_controller.kind == 'videos' || _controller.kind == 'clips') {
+      return _cachedResults = RetainedPageSliver(
+        items: _resultSnapshot.cast<VideoItem>(),
+        page: (_controller.nextPage - 1).clamp(1, 2147483647),
+        preserveEmptyAppend: _controller.lastLoadWasAppend,
+        replacementGeneration: _controller.replacementGeneration,
+        footer: _footer,
+        gridBuilder: (pageItems) => SliverPornHubGrid(
+          videos: pageItems,
+          onDownload: enqueuePornHubDownload,
+        ),
+      );
+    }
+    if (_controller.kind == 'creators') {
+      final creators = _resultSnapshot.cast<PornHubSubscription>();
+      return _cachedResults = SliverList.builder(
+        itemCount: _resultSnapshot.length,
+        itemBuilder: (_, index) {
+          final creator = creators[index];
+          return ListTile(
+            leading: _cover(creator.avatarUrl),
+            title: Text(creator.name),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Get.to<void>(
+              () => PornHubCreatorPage(name: creator.name, path: creator.path),
+            ),
+          );
+        },
+      );
+    }
+    final playlists = _resultSnapshot.cast<PornHubPlaylist>();
+    return _cachedResults = adaptiveSliverLayout(
+      (context, constraints) => SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        sliver: SliverGrid.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: GridLayoutScope.columnsOf(
+              context,
+              constraints.crossAxisExtent,
+            ),
+            childAspectRatio: 1.15,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: _resultSnapshot.length,
+          itemBuilder: (_, index) {
+            final playlist = playlists[index];
+            return PornHubPlaylistCard(
+              playlist: playlist,
+              onTap: () => Get.to<void>(
+                () => PornHubBrowsePage(
+                  title: playlist.title,
+                  path: playlist.url,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

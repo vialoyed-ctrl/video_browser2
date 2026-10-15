@@ -30,6 +30,7 @@ class _Hanime1RankingTabState extends State<Hanime1RankingTab> {
   @override
   Widget build(BuildContext context) {
     final ctrl = Hanime1Controller.to;
+    final retainedResults = _buildRetainedResults(ctrl);
 
     return Column(
       children: [
@@ -140,34 +141,7 @@ class _Hanime1RankingTabState extends State<Hanime1RankingTab> {
                   ),
                   slivers: [
                     const SliverToBoxAdapter(child: SizedBox(height: 12)),
-                    RetainedPageSliver(
-                      key: ValueKey(ctrl.currentRankTabIndex.value),
-                      items: List.of(
-                        ctrl.rankingVideos.toList(growable: false),
-                      ),
-                      page: ctrl.rankingPage.value,
-                      footer: Hanime1Pagination(
-                        currentPage: ctrl.rankingPage.value,
-                        onNext: ctrl.loadMoreRanking,
-                        hasNext: ctrl.hasMoreRanking.value,
-                        error: ctrl.rankingError.value,
-                        totalPages: ctrl.rankingTotalPages.value,
-                        isLoading: ctrl.isLoadingRanking.value,
-                        onPageChanged: (page) => ctrl.loadRanking(
-                          ctrl.rankingTabs[ctrl.currentRankTabIndex.value],
-                          page: page,
-                        ),
-                      ),
-                      gridBuilder: (pageItems) => Hanime1VideoGridSliver(
-                        items: pageItems,
-                        padding: const EdgeInsets.fromLTRB(
-                          Hanime1CardH.horizontalPadding,
-                          0,
-                          Hanime1CardH.horizontalPadding,
-                          24,
-                        ),
-                      ),
-                    ),
+                    retainedResults,
                   ],
                 ),
               ),
@@ -175,6 +149,42 @@ class _Hanime1RankingTabState extends State<Hanime1RankingTab> {
           }),
         ),
       ],
+    );
+  }
+
+  Widget _buildRetainedResults(Hanime1Controller ctrl) {
+    final footer = Obx(
+      () => Hanime1Pagination(
+        currentPage: ctrl.rankingPage.value,
+        onNext: ctrl.loadMoreRanking,
+        hasNext: ctrl.hasMoreRanking.value,
+        error: ctrl.rankingError.value,
+        totalPages: ctrl.rankingTotalPages.value,
+        isLoading: ctrl.isLoadingRanking.value,
+        onPageChanged: (page) => ctrl.loadRanking(
+          ctrl.rankingTabs[ctrl.currentRankTabIndex.value],
+          page: page,
+        ),
+      ),
+    );
+    return Obx(
+      () => RetainedPageSliver(
+        key: ValueKey(ctrl.currentRankTabIndex.value),
+        items: List.of(ctrl.rankingVideos.toList(growable: false)),
+        page: ctrl.rankingPage.value,
+        preserveEmptyAppend: ctrl.rankingPaging.lastLoadWasAppend,
+        replacementGeneration: ctrl.rankingPaging.replacementGeneration.value,
+        footer: footer,
+        gridBuilder: (pageItems) => Hanime1VideoGridSliver(
+          items: pageItems,
+          padding: const EdgeInsets.fromLTRB(
+            Hanime1CardH.horizontalPadding,
+            0,
+            Hanime1CardH.horizontalPadding,
+            24,
+          ),
+        ),
+      ),
     );
   }
 }

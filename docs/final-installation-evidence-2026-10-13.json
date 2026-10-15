@@ -1,0 +1,23 @@
+{
+  "versionCode": 2025,
+  "bytes": 24489727,
+  "sha256": "B2A5427B864124FBE9400B87C4FA80F6EB5F8C2A83ADFA90DC91728A4BAE3845",
+  "apk": "C:\\Users\\ss\\Documents\\Codex\\2026-10-09\\flutter-chatgpt-conversation-6ac87eab-e870-83e9-2\\outputs\\final-delivery\\video-browser-arm64-release-2025.apk",
+  "device": "PMB110",
+  "abi": "arm64-v8a",
+  "apkHashesMatch": true,
+  "foreground": true,
+  "processAlive": true,
+  "appUiNodes": 60,
+  "fixedNavigationLabels": {
+    "搜索": true,
+    "设置": false,
+    "91Porn": false,
+    "Hanime": false,
+    "PornHub": false,
+    "91MD": false,
+    "首页": false,
+    "重试": false
+  },
+  "userDataCleared": false
+}

@@ -1,0 +1,1971 @@
+{
+  "baselineCommit": "c3e86ae6196b7c224a1ebcafc08548125b6aef57",
+  "implementationCommits": [
+    "bd2850d006f053d9daec0a33892f383ee66ce886",
+    "883821ddf1db13631b95328baa555f4421668232"
+  ],
+  "device": {
+    "model": "PMB110",
+    "androidApi": 36,
+    "abi": "arm64-v8a",
+    "resolution": [
+      1440,
+      3200
+    ],
+    "refreshHz": 120
+  },
+  "method": "Same physical device, actual SearchView/SearchController, fixed four neutral items, held append request for one second, three rounds per layout. Count widget timeline B/X events during pending window only; do not double-count grid wrapper plus render sliver.",
+  "probeEngineSha256": "8ff2f86d1ac342962699180de16fa66e59f4302392f6af4bc6196b6055c28398",
+  "rounds": [
+    {
+      "mode": "91",
+      "rounds": [
+        {
+          "before": {
+            "BiliVideoCardV": 4,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 1,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 1,
+            "SliverList": 0,
+            "Obx": 5
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 4
+          },
+          "beforeWaiting": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            10166,
+            9393
+          ]
+        },
+        {
+          "before": {
+            "BiliVideoCardV": 4,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 1,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 1,
+            "SliverList": 0,
+            "Obx": 5
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 4
+          },
+          "beforeWaiting": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            10399,
+            9456
+          ]
+        },
+        {
+          "before": {
+            "BiliVideoCardV": 4,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 1,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 1,
+            "SliverList": 0,
+            "Obx": 5
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 4
+          },
+          "beforeWaiting": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "91",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 4,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            10213,
+            9532
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "horizontal",
+      "rounds": [
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 4,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 1,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 1,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9451,
+            8979
+          ]
+        },
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 4,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 1,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 1,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9613,
+            9121
+          ]
+        },
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 4,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 1,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 1,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "horizontal",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9613,
+            9174
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "poster",
+      "rounds": [
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 4,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 1,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 1,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9560,
+            9250
+          ]
+        },
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 4,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 1,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 1,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9482,
+            9214
+          ]
+        },
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 4,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 1,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 1,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "poster",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9503,
+            9204
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "studio",
+      "rounds": [
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 1,
+            "SliverGrid": 1,
+            "SliverList": 0,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9212,
+            9135
+          ]
+        },
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 1,
+            "SliverGrid": 1,
+            "SliverList": 0,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9367,
+            9002
+          ]
+        },
+        {
+          "before": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 1,
+            "SliverGrid": 1,
+            "SliverList": 0,
+            "Obx": 3
+          },
+          "after": {
+            "BiliVideoCardV": 0,
+            "Hanime1CardH": 0,
+            "Hanime1PosterCard": 0,
+            "VideoGridSliver": 0,
+            "Hanime1VideoGridSliver": 0,
+            "Hanime1PosterGridSliver": 0,
+            "_Hanime1StudioGridSliver": 0,
+            "SliverGrid": 0,
+            "SliverList": 0,
+            "Obx": 2
+          },
+          "beforeWaiting": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterWaiting": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": true,
+            "error": null,
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "beforeFailure": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "afterFailure": {
+            "mode": "studio",
+            "page": 1,
+            "requestPage": 2,
+            "items": 4,
+            "loading": false,
+            "error": "加载第 2 页失败，请重试",
+            "mountedBiliCards": 0,
+            "footers": [
+              {
+                "page": 1,
+                "active": true
+              }
+            ]
+          },
+          "traceEventCounts": [
+            9429,
+            9031
+          ]
+        }
+      ]
+    }
+  ],
+  "success91": {
+    "before": {
+      "waiting": {
+        "mode": "91",
+        "page": 1,
+        "requestPage": 2,
+        "items": 4,
+        "loading": true,
+        "error": null,
+        "mountedBiliCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "success": {
+        "mode": "91",
+        "page": 2,
+        "requestPage": 2,
+        "items": 8,
+        "loading": false,
+        "error": null,
+        "mountedBiliCards": 5,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    },
+    "after": {
+      "waiting": {
+        "mode": "91",
+        "page": 1,
+        "requestPage": 2,
+        "items": 4,
+        "loading": true,
+        "error": null,
+        "mountedBiliCards": 4,
+        "footers": [
+          {
+            "page": 1,
+            "active": true
+          }
+        ]
+      },
+      "success": {
+        "mode": "91",
+        "page": 2,
+        "requestPage": 2,
+        "items": 8,
+        "loading": false,
+        "error": null,
+        "mountedBiliCards": 5,
+        "footers": [
+          {
+            "page": 1,
+            "active": false
+          },
+          {
+            "page": 2,
+            "active": true
+          }
+        ]
+      }
+    }
+  },
+  "countedVideoCardBuilds": {
+    "before": 36,
+    "after": 0
+  },
+  "renderGridOrListBuilds": {
+    "before": 12,
+    "after": 0
+  },
+  "pixelComparison": {
+    "crop": [
+      0,
+      160,
+      1440,
+      3088
+    ],
+    "excludes": "Android status clock and navigation bar only",
+    "layouts": [
+      {
+        "mode": "91",
+        "changedBox": null
+      },
+      {
+        "mode": "horizontal",
+        "changedBox": null
+      },
+      {
+        "mode": "poster",
+        "changedBox": null
+      },
+      {
+        "mode": "studio",
+        "changedBox": null
+      }
+    ]
+  },
+  "tests": {
+    "beforePassed": 213,
+    "afterPassed": 226,
+    "existingSkipped": 1,
+    "added": 13,
+    "analyzeErrors": 0,
+    "analyzeWarnings": 0,
+    "existingInfo": 7
+  },
+  "formal91": {
+    "searched": [
+      {
+        "class": "SearchController",
+        "keyword": {
+          "value": "2026",
+          "kind": "_OneByteString",
+          "length": 4
+        },
+        "searchType": {
+          "kind": "SearchType",
+          "length": 3
+        },
+        "category": {
+          "value": "",
+          "kind": "_OneByteString",
+          "length": 0
+        },
+        "paging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 24
+          },
+          "page": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "3",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "hasSearched": {
+          "value": "true",
+          "kind": "bool"
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "site91",
+          "kind": "_OneByteString",
+          "length": 6
+        }
+      }
+    ],
+    "appended": [
+      {
+        "class": "SearchController",
+        "keyword": {
+          "value": "2026",
+          "kind": "_OneByteString",
+          "length": 4
+        },
+        "searchType": {
+          "kind": "SearchType",
+          "length": 3
+        },
+        "category": {
+          "value": "",
+          "kind": "_OneByteString",
+          "length": 0
+        },
+        "paging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 68
+          },
+          "page": {
+            "value": "3",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "3",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "hasSearched": {
+          "value": "true",
+          "kind": "bool"
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "site91",
+          "kind": "_OneByteString",
+          "length": 6
+        }
+      }
+    ],
+    "retainedAfterAppend": {
+      "states": [
+        {
+          "path": "2026:SearchType.videoName",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "24"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "48"
+                },
+                {
+                  "name": "page",
+                  "value": "2"
+                }
+              ]
+            },
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "68"
+                },
+                {
+                  "name": "page",
+                  "value": "3"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        },
+        {
+          "path": "site91:ChannelType.home:null",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "41"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        }
+      ],
+      "footers": [
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "2",
+          "active": "false"
+        },
+        {
+          "page": "1",
+          "active": "false"
+        },
+        {
+          "page": "3",
+          "active": "true"
+        }
+      ]
+    },
+    "jumpTo1": [
+      {
+        "class": "SearchController",
+        "keyword": {
+          "value": "2026",
+          "kind": "_OneByteString",
+          "length": 4
+        },
+        "searchType": {
+          "kind": "SearchType",
+          "length": 3
+        },
+        "category": {
+          "value": "",
+          "kind": "_OneByteString",
+          "length": 0
+        },
+        "paging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 24
+          },
+          "page": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "3",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "hasSearched": {
+          "value": "true",
+          "kind": "bool"
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "site91",
+          "kind": "_OneByteString",
+          "length": 6
+        }
+      }
+    ],
+    "retainedAfterJump": {
+      "states": [
+        {
+          "path": "2026:SearchType.videoName",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "24"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        },
+        {
+          "path": "site91:ChannelType.home:null",
+          "sections": [
+            {
+              "kind": "Record",
+              "fields": [
+                {
+                  "name": "end",
+                  "value": "41"
+                },
+                {
+                  "name": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          ],
+          "replacementGeneration": "null"
+        }
+      ],
+      "footers": [
+        {
+          "page": "1",
+          "active": "true"
+        },
+        {
+          "page": "1",
+          "active": "true"
+        }
+      ]
+    },
+    "appendFrames": {
+      "percentileMethod": "nearest rank: ceil(0.95 * n)",
+      "actions": 11,
+      "elapsedMs": 14911,
+      "frameCount": 1693,
+      "buildP95Us": 1864,
+      "rasterP95Us": 8030,
+      "buildMaxUs": 16291,
+      "rasterMaxUs": 45471,
+      "rasterOver16667Us": 2,
+      "afterGcDartHeapBytes": 31326784,
+      "limitations": "After-only frame-event sample; no FPS improvement, network-speed or native-memory/leak conclusion. Formal timeline may approach its ring limit and is not used for build-count comparison."
+    },
+    "restoredHome": [
+      {
+        "class": "HomeController",
+        "fields": [
+          {
+            "name": "paging",
+            "kind": "PagedListState",
+            "length": 10
+          },
+          {
+            "name": "scroll",
+            "kind": "ScrollController",
+            "length": 10
+          }
+        ],
+        "state": [
+          {
+            "name": "items",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_value",
+                "kind": "_GrowableList",
+                "length": 41
+              }
+            ]
+          },
+          {
+            "name": "page",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "1",
+                "kind": "_Smi"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "loadingFirst",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "false",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "loadingPage",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "false",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "hasMore",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "true",
+                "kind": "bool"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          },
+          {
+            "name": "pageError",
+            "fields": [
+              {
+                "name": "subject",
+                "kind": "GetStream",
+                "length": 6
+              },
+              {
+                "name": "_subscriptions",
+                "kind": "_Map",
+                "length": 0
+              },
+              {
+                "name": "_value",
+                "value": "null",
+                "kind": "Null"
+              },
+              {
+                "name": "firstRebuild",
+                "value": "false",
+                "kind": "bool"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "202.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "608.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "3620.7749999999996",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "608.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "144.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "360.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "136.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "2236.5",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "800.0",
+            "kind": "_Double"
+          }
+        ]
+      },
+      {
+        "class": "ScrollPositionWithSingleContext",
+        "fields": [
+          {
+            "name": "_maxScrollExtent",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_pixels",
+            "value": "0.0",
+            "kind": "_Double"
+          },
+          {
+            "name": "_viewportDimension",
+            "value": "144.0",
+            "kind": "_Double"
+          }
+        ]
+      }
+    ],
+    "restoredRoot": [
+      {
+        "class": "SearchController",
+        "keyword": {
+          "value": "2026",
+          "kind": "_OneByteString",
+          "length": 4
+        },
+        "searchType": {
+          "kind": "SearchType",
+          "length": 3
+        },
+        "category": {
+          "value": "",
+          "kind": "_OneByteString",
+          "length": 0
+        },
+        "paging": {
+          "items": {
+            "kind": "_GrowableList",
+            "length": 24
+          },
+          "page": {
+            "value": "1",
+            "kind": "_Smi"
+          },
+          "totalPages": {
+            "value": "3",
+            "kind": "_Smi"
+          },
+          "loadingFirst": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "loadingPage": {
+            "value": "false",
+            "kind": "bool"
+          },
+          "hasMore": {
+            "value": "true",
+            "kind": "bool"
+          },
+          "error": {
+            "value": "null",
+            "kind": "Null"
+          }
+        },
+        "hasSearched": {
+          "value": "true",
+          "kind": "bool"
+        }
+      },
+      {
+        "class": "RootController",
+        "activePlatform": {
+          "value": "site91",
+          "kind": "_OneByteString",
+          "length": 6
+        }
+      }
+    ]
+  },
+  "apk": {
+    "buildNumber": 2006,
+    "entryPoint": "lib/main.dart",
+    "profile": true,
+    "hashes": [
+      {
+        "Path": "E:\\projects\\video_browser2\\build\\app\\outputs\\flutter-apk\\app-profile.apk",
+        "Hash": "F7B750E77DAD08676583E631FBB025C9550E0A57E9900A2FD5C67A1F0C9D0CD8"
+      },
+      {
+        "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\search-ui\\formal-after.apk",
+        "Hash": "F7B750E77DAD08676583E631FBB025C9550E0A57E9900A2FD5C67A1F0C9D0CD8"
+      },
+      {
+        "Path": "E:\\projects\\video_browser2\\work\\handoff-validation\\search-ui\\installed-final.apk",
+        "Hash": "F7B750E77DAD08676583E631FBB025C9550E0A57E9900A2FD5C67A1F0C9D0CD8"
+      }
+    ],
+    "pubspecUnchanged": true,
+    "installPreservedData": true
+  },
+  "cleanup": {
+    "attachDetached": true,
+    "removedForwardPorts": [
+      8205,
+      8206,
+      8207
+    ],
+    "remainingForwardListEmpty": true
+  },
+  "limitations": [
+    "Hanime controlled fixture confirms the actual three layouts; this batch does not claim live Hanime network search or all account workflows verified.",
+    "Build-count change is local to retained result grids; outer search UI can still rebuild.",
+    "No measured change in player first frame, seek, overall FPS, long-run Dart/native memory, HTTP latency, parser behavior or four-site complete equivalence.",
+    "Studio cards are inline widgets; only its grid/sliver builds are counted, not an invented card-class count."
+  ]
+}

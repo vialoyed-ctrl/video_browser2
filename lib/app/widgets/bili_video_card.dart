@@ -17,14 +17,22 @@ import 'app_toast.dart';
 /// 点击 UP 主名称：直接进入搜索页检索该作者的作品。
 ///
 /// 匿名与聚合占位作者（`匿名` / `官方精选`）没有可检索的主页，直接忽略。
-void _searchAuthor(String author) {
+void _searchAuthor(
+  String author, {
+  VideoItem? video,
+  VoidCallback? onAuthorTap,
+}) {
   if (author.isEmpty ||
       author == '匿名' ||
       author == '官方精选' ||
       author == '91麻豆') {
     return;
   }
-  AppNavigator.toAuthor(author);
+  if (onAuthorTap != null) {
+    onAuthorTap();
+    return;
+  }
+  AppNavigator.toAuthor(author, video: video);
 }
 
 /// 哔哩哔哩移动端风格 - 竖向视频卡片（用于双列网格瀑布流）
@@ -52,11 +60,13 @@ class BiliVideoCardV extends StatelessWidget {
     required this.video,
     this.onTap,
     this.onDownload,
+    this.onAuthorTap,
   });
 
   final VideoItem video;
   final VoidCallback? onTap;
   final VoidCallback? onDownload;
+  final VoidCallback? onAuthorTap;
 
   @override
   Widget build(BuildContext context) {
@@ -223,75 +233,96 @@ class BiliVideoCardV extends StatelessWidget {
                       ),
                     ),
                     // 底栏：UP主 / 作者 ID + 发布时间 + 快捷下载（紧贴底部，无多余空行）
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(4),
-                            onTap: () => _searchAuthor(video.author),
-                            onLongPress: () =>
-                                _showAuthorSheet(context, video.author),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 3,
-                                    vertical: 0.5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: theme.colorScheme.primary
-                                          .withValues(alpha: 0.7),
-                                      width: 0.8,
+                    LayoutBuilder(
+                      builder: (context, constraints) => Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(4),
+                              onTap: () => _searchAuthor(
+                                video.author,
+                                video: video,
+                                onAuthorTap: onAuthorTap,
+                              ),
+                              onLongPress: () => _showAuthorSheet(
+                                context,
+                                video.author,
+                                video: video,
+                                onAuthorTap: onAuthorTap,
+                              ),
+                              child: LayoutBuilder(
+                                builder: (context, constraints) => Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (constraints.maxWidth >= 45) ...[
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 3,
+                                          vertical: 0.5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: theme.colorScheme.primary
+                                                .withValues(alpha: 0.7),
+                                            width: 0.8,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            3,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'UP',
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.colorScheme.primary,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                    ],
+                                    Expanded(
+                                      child: Text(
+                                        video.publishedAt != null &&
+                                                video.publishedAt!.isNotEmpty
+                                            ? '${video.author} · ${video.publishedAt}'
+                                            : video.author,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: theme
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                        ),
+                                      ),
                                     ),
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                  child: Text(
-                                    'UP',
-                                    style: TextStyle(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
+                                  ],
                                 ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    video.publishedAt != null &&
-                                            video.publishedAt!.isNotEmpty
-                                        ? '${video.author} · ${video.publishedAt}'
-                                        : video.author,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                        if (onDownload != null)
-                          InkWell(
-                            onTap: onDownload,
-                            borderRadius: BorderRadius.circular(16),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                                vertical: 2,
-                              ),
-                              child: Icon(
-                                Icons.download_for_offline_outlined,
-                                size: 22,
-                                color: theme.colorScheme.onSurfaceVariant,
+                          if (onDownload != null)
+                            InkWell(
+                              onTap: onDownload,
+                              borderRadius: BorderRadius.circular(16),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 2,
+                                ),
+                                child: Icon(
+                                  Icons.download_for_offline_outlined,
+                                  size: (constraints.maxWidth - 8).clamp(
+                                    0.0,
+                                    22.0,
+                                  ),
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -332,7 +363,12 @@ class BiliVideoCardV extends StatelessWidget {
     );
   }
 
-  static void _showAuthorSheet(BuildContext context, String author) {
+  static void _showAuthorSheet(
+    BuildContext context,
+    String author, {
+    VideoItem? video,
+    VoidCallback? onAuthorTap,
+  }) {
     if (author.isEmpty ||
         author == '匿名' ||
         author == '官方精选' ||
@@ -433,7 +469,7 @@ class BiliVideoCardV extends StatelessWidget {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 14),
                 onTap: () {
                   Navigator.of(ctx).pop();
-                  AppNavigator.toAuthor(author);
+                  _searchAuthor(author, video: video, onAuthorTap: onAuthorTap);
                 },
               ),
             ],
@@ -536,7 +572,8 @@ class BiliVideoCardH extends StatelessWidget {
                       Expanded(
                         child: InkWell(
                           borderRadius: BorderRadius.circular(4),
-                          onTap: () => _searchAuthor(video.author),
+                          onTap: () =>
+                              _searchAuthor(video.author, video: video),
                           child: Text(
                             video.author,
                             maxLines: 1,

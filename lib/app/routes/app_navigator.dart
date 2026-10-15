@@ -7,6 +7,8 @@ import '../modules/player/player_view.dart';
 import '../modules/hanime1/views/hanime1_playlist_view.dart';
 import '../modules/search/search_controller.dart' as app_search;
 import '../modules/search/search_view.dart';
+import '../modules/pornhub/views/pornhub_creator_page.dart';
+import '../modules/pornhub/views/pornhub_search_page.dart';
 import '../modules/search/site91md_search_view.dart';
 import '../services/player_service.dart';
 import 'app_routes.dart';
@@ -41,7 +43,13 @@ abstract class AppNavigator {
   }
 
   /// 打开作者专栏作品列表：自动创建独立的 SearchController 实例，避免多层压栈时污染全局搜索状态
-  static Future<T?>? toAuthor<T>(String author) {
+  static Future<T?>? toAuthor<T>(String author, {VideoItem? video}) {
+    final host =
+        Uri.tryParse(video?.detailUrl ?? video?.id ?? '')?.host.toLowerCase() ??
+        '';
+    if (host == 'pornhub.com' || host.endsWith('.pornhub.com')) {
+      return toPornHubAuthor<T>(author, path: video?.authorUrl);
+    }
     AppLogger.i('Navigator', '👤 toAuthor (直接搜索该 UP 主 ID) 压栈导航: $author');
     final controller = app_search.SearchController(Get.find<VideoSource>());
     controller.input.text = author;
@@ -57,6 +65,43 @@ abstract class AppNavigator {
       transition: Transition.fadeIn,
       duration: const Duration(milliseconds: 180),
     );
+  }
+
+  /// Keep author navigation inside PornHub; never derive a slug from a name.
+  static Future<T?>? toPornHubAuthor<T>(String author, {String? path}) {
+    final creatorPath = _pornHubCreatorPath(path);
+    final name = author.trim();
+    if (creatorPath == null && name.isEmpty) return null;
+    return Get.to<T>(
+      () => creatorPath != null
+          ? PornHubCreatorPage(name: name, path: creatorPath)
+          : PornHubSearchPage(initialKeyword: name, initialKind: 'creators'),
+      preventDuplicates: false,
+      transition: Transition.fadeIn,
+      duration: const Duration(milliseconds: 180),
+    );
+  }
+
+  static String? _pornHubCreatorPath(String? value) {
+    final uri = Uri.tryParse(value?.trim() ?? '');
+    if (uri == null ||
+        (uri.scheme.isNotEmpty &&
+            uri.scheme != 'http' &&
+            uri.scheme != 'https')) {
+      return null;
+    }
+    final host = uri.host.toLowerCase();
+    if (uri.hasAuthority &&
+        host != 'pornhub.com' &&
+        !host.endsWith('.pornhub.com')) {
+      return null;
+    }
+    final match = RegExp(r'^/(?:model|pornstar|channels|users)/([^/]+)')
+        .firstMatch(uri.path);
+    if (match == null || match.group(1) == '.' || match.group(1) == '..') {
+      return null;
+    }
+    return match.group(0);
   }
 
   /// 打开搜索页（可传入预填关键词或 Hanime1 分类）

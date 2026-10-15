@@ -1,0 +1,434 @@
+[
+  {
+    "kind": "shared",
+    "width": 240,
+    "selectedColumns": 0,
+    "expectedColumns": 2,
+    "firstRowCards": 2,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 240,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 240,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 240,
+    "selectedColumns": 0,
+    "expectedColumns": 2,
+    "firstRowCards": 2,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 240,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 240,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 240,
+    "selectedColumns": 0,
+    "expectedColumns": 2,
+    "firstRowCards": 2,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 240,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 240,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 240,
+    "selectedColumns": 0,
+    "expectedColumns": 2,
+    "firstRowCards": 2,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 240,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 240,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 400,
+    "selectedColumns": 0,
+    "expectedColumns": 2,
+    "firstRowCards": 2,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 400,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 400,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 400,
+    "selectedColumns": 0,
+    "expectedColumns": 2,
+    "firstRowCards": 2,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 400,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 400,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 400,
+    "selectedColumns": 0,
+    "expectedColumns": 2,
+    "firstRowCards": 2,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 400,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 400,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 400,
+    "selectedColumns": 0,
+    "expectedColumns": 2,
+    "firstRowCards": 2,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 400,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 400,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 900,
+    "selectedColumns": 0,
+    "expectedColumns": 4,
+    "firstRowCards": 4,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 900,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 900,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 900,
+    "selectedColumns": 0,
+    "expectedColumns": 4,
+    "firstRowCards": 4,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 900,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 900,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 900,
+    "selectedColumns": 0,
+    "expectedColumns": 4,
+    "firstRowCards": 4,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 900,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 900,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 900,
+    "selectedColumns": 0,
+    "expectedColumns": 4,
+    "firstRowCards": 4,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 900,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 900,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 1200,
+    "selectedColumns": 0,
+    "expectedColumns": 5,
+    "firstRowCards": 5,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 1200,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "shared",
+    "width": 1200,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 1200,
+    "selectedColumns": 0,
+    "expectedColumns": 5,
+    "firstRowCards": 5,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 1200,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "hanime",
+    "width": 1200,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 1200,
+    "selectedColumns": 0,
+    "expectedColumns": 5,
+    "firstRowCards": 5,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 1200,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "poster",
+    "width": 1200,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 1200,
+    "selectedColumns": 0,
+    "expectedColumns": 5,
+    "firstRowCards": 5,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 1200,
+    "selectedColumns": 3,
+    "expectedColumns": 3,
+    "firstRowCards": 3,
+    "renderErrors": [],
+    "status": "ok"
+  },
+  {
+    "kind": "pornhub",
+    "width": 1200,
+    "selectedColumns": 6,
+    "expectedColumns": 6,
+    "firstRowCards": 6,
+    "renderErrors": [],
+    "status": "ok"
+  }
+]

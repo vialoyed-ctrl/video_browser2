@@ -67,6 +67,10 @@ class UserService extends GetxService {
   /// 关注/订阅的 UP 主集合
   final RxSet<String> subscriptions = <String>{}.obs;
 
+  /// Storage remains in insertion order, including legacy profiles.
+  List<String> get latestSubscriptions =>
+      subscriptions.toList().reversed.toList(growable: false);
+
   File? _storageFile;
 
   Future<UserService> init() async {
