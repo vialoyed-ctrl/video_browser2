@@ -1,10 +1,10 @@
 {
-  "tag_name": "v2.0.4",
-  "body": "修复GitHub API限流或连接失败时无法检测更新，新增公开版本文件备用查询。保留统一卡片布局、订阅置顶及播放/下载优化。",
+  "tag_name": "v2.0.5",
+  "body": "91Porny 自动选择一个可用地址：优先复用当前或最近成功地址，取消大范围扫描，限制串行探测；修复超时取消和迟到结果覆盖手动选择的问题。",
   "assets": [
     {
       "name": "playback-warehouse-arm64.apk",
-      "browser_download_url": "https://github.com/vialoyed-ctrl/video_browser2/releases/download/v2.0.4/playback-warehouse-arm64.apk"
+      "browser_download_url": "https://github.com/vialoyed-ctrl/video_browser2/releases/download/v2.0.5/playback-warehouse-arm64.apk"
     }
   ]
 }

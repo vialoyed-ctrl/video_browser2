@@ -1,18 +1,21 @@
 /// 内容域名选择对话框。
 ///
-/// 设计取向：域名由**用户显式选择**，不做「谁探测通过就用谁」的自动选优 ——
-/// 探测结果取决于当时的网络环境，在用户手机上并不可靠。
-///
-/// 本对话框把「测试」与「采用」彻底分开：
-///   - 点单项的「测试」= 纯探测，不改变当前生效域名（[Site91Source.probeDomain]）
+/// 设计取向：**默认自动**，手动只作为兜底。
+///   - 打开对话框即自动检测：优先复用当前地址，失败才尝试少量发布页 → 取直连清单 →
+///     逐个探测，**命中一个就停**，然后自动加入列表、选中、保存并关闭。
+///   - 「测试」仍然只是纯探测，不改变当前生效域名（[Site91Source.probeDomain]）。
 ///   - 底部主按钮在输入新域名时显示「添加并使用」，否则显示「保存并使用」；
 ///     两种操作都会采用并持久化（[Site91Source.saveDomainConfiguration]）。
+///
+/// 自动检测期间若用户已经开始手动操作（输入框有内容 / 点过测试 / 选过条目），
+/// 则不再自动采用，只把检测结果摆进列表，把决定权交回用户。
 ///
 /// 本文件只服务 91 源（91porny），恢复为原先写死 [Site91Source] 的形态。
 /// 91麻豆 有独立的 `site91md_domain_picker.dart`，两者互不影响。
 library;
 
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
 import '../core/app_theme.dart';
 
@@ -64,6 +67,22 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
   final Map<String, _ProbeState> _probe = <String, _ProbeState>{};
   final TextEditingController _customCtrl = TextEditingController();
 
+  /// 自动检测是否在进行中。
+  bool _autoDetecting = false;
+  CancelToken? _discoveryCancel;
+
+  /// 自动检测当前阶段：`publish` 找发布页 / `direct` 探直连。
+  String _autoStage = 'publish';
+
+  /// 当前阶段已探测的数量，用于给用户一个「还在动」的反馈。
+  int _autoTested = 0;
+
+  /// 自动检测是否已经跑完且没找到可用域名。
+  bool _autoFailed = false;
+
+  /// 用户是否已经手动干预过。为 true 时自动检测不再抢方向盘。
+  bool _userTouched = false;
+
   @override
   void initState() {
     super.initState();
@@ -75,13 +94,86 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
         : (widget.source.domainCandidates.isNotEmpty
               ? widget.source.domainCandidates.first
               : '');
-    _loadCustomDomains();
+    // 先把手动清单读完，再开始自动检测 —— 否则两边的 setState 会互相覆盖。
+    _loadCustomDomains().then((_) {
+      if (mounted) _autoDetect();
+    });
   }
 
   @override
   void dispose() {
+    _discoveryCancel?.cancel('Domain dialog closed');
     _customCtrl.dispose();
     super.dispose();
+  }
+
+  /// 自动检测并采用一个可用域名。**找到一个就停**（由数据层保证）。
+  Future<void> _autoDetect() async {
+    if (_autoDetecting) return;
+    setState(() {
+      _autoDetecting = true;
+      _autoStage = 'publish';
+      _autoTested = 0;
+      _autoFailed = false;
+    });
+
+    final cancel = CancelToken();
+    _discoveryCancel = cancel;
+    DomainDiscoveryResult result;
+    try {
+      result = await widget.source.discoverWorkingDomain(
+        cancelToken: cancel,
+        onProgress: (stage, tested) {
+          if (!mounted) return;
+          setState(() {
+            _autoStage = stage;
+            _autoTested = tested;
+          });
+        },
+      );
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _autoDetecting = false;
+        _autoFailed = true;
+      });
+      return;
+    } finally {
+      cancel.cancel('Dialog discovery finished');
+      if (identical(_discoveryCancel, cancel)) _discoveryCancel = null;
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _autoDetecting = false;
+      _autoFailed = !result.found;
+    });
+    if (!result.found) return;
+
+    final domain = widget.source.normalizeDomainInput(result.domain!);
+    if (domain.isEmpty) return;
+
+    final customDomains = List<String>.of(_customDomains);
+    if (!widget.source.domainCandidates.contains(domain) &&
+        !customDomains.contains(domain)) {
+      customDomains.add(domain);
+    }
+    setState(() {
+      _customDomains = customDomains;
+      if (!_userTouched && !_saving) _selected = domain;
+    });
+
+    // 用户已经在手动操作，就不自动保存 —— 把结果摆在列表里让他自己定。
+    if (_userTouched || _saving) return;
+
+    setState(() => _saving = true);
+    await widget.source.saveDomainConfiguration(
+      domain,
+      customDomains: customDomains,
+    );
+    if (!mounted) return;
+    AppToast.show('已自动检测并启用 ${domain.replaceFirst(RegExp(r'^https?://'), '')}');
+    Navigator.of(context).pop(true);
   }
 
   Future<void> _loadCustomDomains() async {
@@ -98,6 +190,7 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
   }
 
   Future<void> _test(String domain) async {
+    _userTouched = true;
     setState(() => _probe[domain] = _ProbeState.testing);
     final ok = await widget.source.probeDomain(domain);
     if (!mounted) return;
@@ -105,6 +198,7 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
   }
 
   Future<void> _removeCustomDomain(String domain) async {
+    _userTouched = true;
     final shouldRemove = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -149,6 +243,7 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
       }
     }
     if (selected.isEmpty) return;
+    _userTouched = true;
     setState(() => _saving = true);
     await widget.source.saveDomainConfiguration(
       selected,
@@ -175,17 +270,19 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
             children: [
               Text(
                 widget.force
-                    ? '首次使用需要先选择一个内容域名。这类站点域名会经常更换，'
-                          '选一个当前可用的即可 —— 不确定就点右侧「测试」。选择结果会被记住。'
-                    : '内容域名会经常更换。可删除自定义域名，或输入新域名；'
-                          '使用下方按钮添加并使用，或保存当前选择。',
+                    ? '首次使用会自动从地址发布页检测一个可用域名。检测不到时，'
+                          '手动输入或点右侧「测试」选一个即可。选择结果会被记住。'
+                    : '内容域名会经常更换。打开时已自动检测；也可删除自定义域名，'
+                          '或输入新域名后添加并使用。',
                 style: TextStyle(
                   fontSize: 12.5,
                   color: theme.hintColor,
                   height: 1.45,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
+              _autoStatusRow(theme),
+              const SizedBox(height: 2),
               for (final domain in widget.source.domainCandidates)
                 _tile(domain, theme, isCustom: false),
               if (_loadingCustomDomains)
@@ -216,6 +313,7 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
+                onChanged: (_) => _userTouched = true,
                 onSubmitted: (_) => _save(),
               ),
             ],
@@ -253,11 +351,45 @@ class _DomainPickerDialogState extends State<_DomainPickerDialog> {
     );
   }
 
+  Widget _autoStatusRow(ThemeData theme) {
+    if (!_autoDetecting && !_autoFailed) return const SizedBox.shrink();
+    final label = _autoDetecting
+        ? (_autoStage == 'direct'
+              ? '正在探测直连域名…（已试 $_autoTested 个）'
+              : '正在查找地址发布页…（已试 $_autoTested 个）')
+        : '自动检测未找到可用域名，请手动输入或点「测试」';
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          if (_autoDetecting)
+            const SizedBox(
+              width: 12,
+              height: 12,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          else
+            Icon(Icons.info_outline, size: 14, color: theme.hintColor),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 11.5, color: theme.hintColor),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _tile(String domain, ThemeData theme, {required bool isCustom}) {
     final selected = domain == _selected;
     final state = _probe[domain] ?? _ProbeState.unknown;
     return InkWell(
-      onTap: () => setState(() => _selected = domain),
+      onTap: () => setState(() {
+        _selected = domain;
+        _userTouched = true;
+      }),
       borderRadius: BorderRadius.circular(8),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 4),

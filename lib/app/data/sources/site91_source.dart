@@ -28,6 +28,37 @@ import '../../services/background_decode_transformer.dart';
 import '../models/video_item.dart';
 import 'video_source.dart';
 
+/// 域名自动检测的结果。
+///
+/// 只描述「这一轮检测发生了什么」，不做任何副作用 —— 采用哪个域名由调用方
+/// 决定（对话框会自动采用，请求链只借用结果）。
+class DomainDiscoveryResult {
+  const DomainDiscoveryResult({
+    this.domain,
+    this.publishHost,
+    this.testedPublishHosts = 0,
+    this.testedDirectLinks = 0,
+    this.timedOut = false,
+  });
+
+  /// 找到的可用直连域名，形如 `https://www.91tanhua343.sbs`；null 表示没找到。
+  final String? domain;
+
+  /// 给出直连清单的发布页，形如 `https://dizhi360.com`。
+  final String? publishHost;
+
+  /// 本轮实际探测过的发布页数量。
+  final int testedPublishHosts;
+
+  /// 本轮实际探测过的直连域名数量。
+  final int testedDirectLinks;
+
+  /// 是否因为超出时间预算而提前收工。
+  final bool timedOut;
+
+  bool get found => domain != null && domain!.isNotEmpty;
+}
+
 class Site91Source implements VideoSource {
   /// [baseUrl] 留空表示「尚未选择域名」——由用户在选择对话框里显式指定
   /// （见 [setBaseUrl] / [restoreSelectedDomain]）。刻意不预设候选域名：
@@ -157,6 +188,38 @@ class Site91Source implements VideoSource {
   Future<void> flushCacheNow() async {
     _diskFlushTimer?.cancel();
     await _flushDiskCache();
+  }
+
+  /// 清空 91 源的全部页面缓存与详情缓存（内存 + 磁盘）。
+  ///
+  /// 换域名后必须清的理由：[_request] 在自动切换域名后，把**新域名**取回的
+  /// HTML 存回**旧域名**的 key，于是缓存里可能留着「key 是旧域名、内容是旧域名
+  /// 页面里的旧 host 绝对链接」。这些条目不会再被复用（新请求的 key 变了），
+  /// 却会占住 40 条磁盘配额；更要紧的是解析出来的视频地址仍指向已失效的 host，
+  /// 点开必然失败 —— 用户看到的正是「换了域名还是打不开」。
+  Future<void> clearHtmlCache() async {
+    final memoryEntries = _htmlCache.length;
+    _htmlCache.clear();
+    _detailCache.clear();
+    _detailCacheTime.clear();
+    _detailRequests.clear();
+    _detailEnrichmentJobs.clear();
+    _pendingDiskWrites.clear();
+    _diskFlushTimer?.cancel();
+    _diskFlushTimer = null;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs
+          .getKeys()
+          .where((k) => k.startsWith(_diskCacheKeyPrefix))
+          .toList();
+      for (final key in keys) {
+        await prefs.remove(key);
+      }
+      AppLogger.i('Site91', '缓存已清空：内存 $memoryEntries 条，磁盘 ${keys.length} 条');
+    } catch (e) {
+      AppLogger.w('Site91', '清除磁盘缓存失败: $e');
+    }
   }
 
   String _diskKeyFor(String url) =>
@@ -478,10 +541,19 @@ class Site91Source implements VideoSource {
   /// [exclude] 是「本次请求已经试过」的域名集合，由 [_request] 沿递归链透传。
   /// 这一层过滤是**终止性保证**：没有它，A 失败切到 B、B 又失败切回 A，
   /// 两个域名会来回乒乓，递归永不收敛。
+  ///
+  /// 内置域名只剩 `www.91porny.com` 一个，它一旦失效这条链就再也找不到候选 ——
+  /// 所以这里接上发布页发现（[discoverWorkingDomain]），让自动切换重新有意义。
+  /// 发现过程不经过 [_request]，不会与调用方形成递归。
   Future<String?> _findReachableDomain(Set<String> exclude) async {
     for (final domain in defaultDomains) {
       if (exclude.contains(domain)) continue;
       if (await probeDomain(domain)) return domain;
+    }
+    final discovered = await discoverWorkingDomain(exclude: exclude);
+    if (discovered.found) {
+      AppLogger.i('Site91', '发布页发现可用域名: ${discovered.domain}');
+      return discovered.domain;
     }
     return null;
   }
@@ -505,6 +577,437 @@ class Site91Source implements VideoSource {
           RegExp(r'''class=["'][^"']*(?:video-elem|colVideoList)[^"']*["']''')
               .hasMatch(data)) ||
       RegExp(r'''<video\b[^>]*\b(?:src|data-src)\s*=''').hasMatch(data);
+
+  // ---------------------------------------------------------------------------
+  // 发布页发现（域名自动检测）
+  //
+  // 背景：91 的镜像域名是**整批轮换**的，用户手上的域名一旦失效，App 里就只剩
+  // 手输这一条路。而地址发布页（dizhiNNN.com）是官方给出的唯一权威入口：
+  //
+  //   发布页 HTML（空壳，正文只有 <div id="main">）
+  //     → 引入 res.kingslord.com/dizhi/publish.js
+  //       → 脚本字符串表里是明文的 50 个 91tanhuaNNN.sbs（301~350）
+  //         → https://www.<host> 逐个探测 → 命中即停
+  //
+  // 实测（2026-10-18）：dizhi360.com 可达；50 个直连里 42 个返回 200，
+  // <title> 全部为「九色|91PORNY|…」，8 个不可达 —— 命中率约 84%。
+  //
+  // 设计约束：**找到一个就停**。把剩下的候选探完只是白烧流量与时间，所以这里
+  // 用 [_firstMatch] 做「有限并发 + 命中即停止派发」。
+  // ---------------------------------------------------------------------------
+
+  /// 只使用少量已知发布页，不扫描整个域名号段。
+  static const List<String> _seedPublishHosts = <String>[
+    'https://dizhi968.com',
+    'https://dizhi969.com',
+    'https://dizhi360.com',
+  ];
+
+  /// 上次成功的发布页 / 直连域名。下次检测直接优先尝试，省掉整轮扫描。
+  static const String _prefsKeyPublishHost = 'site91_last_publish_host';
+  static const String _prefsKeyDirectHost = 'site91_last_direct_host';
+
+  /// 单次探测超时。发布页与直连域名要么秒开要么秒挂，4 秒足够。
+  static const Duration _discoveryProbeTimeout = Duration(seconds: 4);
+
+  /// 发布页探测超时。发布页只是一个 1.5KB 的静态壳，2.5 秒还没响应就是死的。
+  /// 少量入口依次尝试，单个入口不可用时尽快降级。
+  static const Duration _publishProbeTimeout = Duration(milliseconds: 2500);
+
+  /// 每次只探测一个地址；候选也有数量上限，避免抢占正常浏览网络。
+  static const int _discoveryConcurrency = 1;
+  static const int _maxDirectCandidates = 8;
+  static const Duration _discoveryBudget = Duration(seconds: 15);
+  static const Duration _publishScanBudget = Duration(seconds: 8);
+
+  /// 自动检测一个当前可用的内容域名，**找到一个就停**。
+  ///
+  /// 先复用当前/最近可用域名；失败才尝试少量发布页及最多八个直连候选。
+  /// 一次只发一个探测，命中即返回，整轮受 [_discoveryBudget] 约束。
+  ///
+  /// [exclude] 是「本次请求已经试过」的域名，用于自动切换时避免原地打转。
+  /// [onProgress] 供 UI 显示进度，stage 取 `publish` 或 `direct`。
+  Future<DomainDiscoveryResult> discoverWorkingDomain({
+    Set<String> exclude = const <String>{},
+    void Function(String stage, int tested)? onProgress,
+    CancelToken? cancelToken,
+  }) async {
+    final deadline = DateTime.now().add(_discoveryBudget);
+    final session = CancelToken();
+    cancelToken?.whenCancel.then(
+      (_) => session.cancel('Caller canceled discovery'),
+    );
+    if (cancelToken?.isCancelled ?? false) session.cancel();
+    var testedPublish = 0;
+    var testedDirect = 0;
+    var timedOut = false;
+
+    Future<T?> phase<T>(
+      DateTime until,
+      Future<T?> Function(CancelToken token) action,
+    ) async {
+      final remaining = until.difference(DateTime.now());
+      if (session.isCancelled || remaining <= Duration.zero) {
+        timedOut = !session.isCancelled;
+        return null;
+      }
+      final token = CancelToken();
+      final canceled = session.whenCancel.then<T?>((_) {
+        token.cancel('Discovery stopped');
+        return null;
+      });
+      try {
+        return await Future.any<T?>([action(token), canceled]).timeout(
+          remaining,
+          onTimeout: () {
+            timedOut = true;
+            return null;
+          },
+        );
+      } finally {
+        token.cancel('Discovery phase finished');
+      }
+    }
+
+    try {
+      // Most visits need only one request to the already selected/last working host.
+      final recent = <String>{
+        if (_baseUrl.isNotEmpty) _baseUrl,
+        ?await _loadRememberedHost(_prefsKeyDirectHost),
+      };
+      final cached = await phase<String>(
+        DateTime.now().add(_discoveryProbeTimeout),
+        (token) => _firstMatch<String>(
+          recent.where((host) => !exclude.contains(host)).toList(),
+          test: (host) async {
+            testedDirect++;
+            onProgress?.call('direct', testedDirect);
+            return _probeDirectLink(host, _discoveryProbeTimeout, token);
+          },
+          concurrency: 1,
+          deadline: deadline,
+          cancelToken: token,
+        ),
+      );
+      if (cached != null && !session.isCancelled) {
+        await _rememberHost(_prefsKeyDirectHost, cached);
+        return DomainDiscoveryResult(
+          domain: cached,
+          testedDirectLinks: testedDirect,
+        );
+      }
+      // A quick-path timeout is not an overall timeout; bounded fallback follows.
+      timedOut = false;
+      final publishDeadline = DateTime.now().add(_publishScanBudget);
+      final publishers = <String, List<String>>{};
+      final hit = await phase<String>(publishDeadline, (token) async {
+        final hosts = await _publishHostCandidates();
+        Future<bool> usable(String host) async {
+          if (token.isCancelled) return false;
+          testedPublish++;
+          onProgress?.call('publish', testedPublish);
+          final html = await _fetchPublishPage(host, token);
+          if (html == null || token.isCancelled) return false;
+          final links = await _extractDirectLinks(host, html, token);
+          if (links.isEmpty || token.isCancelled) return false;
+          publishers[host] = links;
+          return true;
+        }
+
+        for (final host in hosts) {
+          if (token.isCancelled) return null;
+          if (await usable(host)) return host;
+        }
+        return null;
+      });
+      if (hit == null || session.isCancelled) {
+        return DomainDiscoveryResult(
+          testedPublishHosts: testedPublish,
+          testedDirectLinks: testedDirect,
+          timedOut: timedOut,
+        );
+      }
+      final links = publishers[hit]!;
+      await _rememberHost(_prefsKeyPublishHost, hit);
+      final found = await phase<String>(
+        deadline,
+        (token) => _firstMatch<String>(
+          links
+              .where(
+                (link) => !exclude.contains(link) && !recent.contains(link),
+              )
+              .take(_maxDirectCandidates)
+              .toList(),
+          test: (link) async {
+            if (token.isCancelled) return false;
+            testedDirect++;
+            onProgress?.call('direct', testedDirect);
+            return _probeDirectLink(link, _discoveryProbeTimeout, token);
+          },
+          concurrency: _discoveryConcurrency,
+          deadline: deadline,
+          cancelToken: token,
+        ),
+      );
+      // The selected value comes from the settled race, never from mutable
+      // variables that another in-flight completion can overwrite.
+      if (found != null && !session.isCancelled) {
+        await _rememberHost(_prefsKeyDirectHost, found);
+      }
+      return DomainDiscoveryResult(
+        domain: session.isCancelled ? null : found,
+        publishHost: hit,
+        testedPublishHosts: testedPublish,
+        testedDirectLinks: testedDirect,
+        timedOut: timedOut,
+      );
+    } finally {
+      session.cancel('Discovery completed');
+    }
+  }
+
+  /// A single winner owns the result. Deadline/cancellation also stop dispatch.
+  Future<T?> _firstMatch<T>(
+    List<T> items, {
+    required Future<bool> Function(T item) test,
+    required int concurrency,
+    required DateTime deadline,
+    required CancelToken cancelToken,
+  }) {
+    if (items.isEmpty || cancelToken.isCancelled) {
+      return Future<T?>.value(null);
+    }
+    final result = Completer<T?>();
+    var cursor = 0;
+    var active = 0;
+    Timer? timer;
+    void settle(T? value) {
+      if (result.isCompleted) return;
+      timer?.cancel();
+      result.complete(value);
+    }
+
+    void pump() {
+      while (!result.isCompleted &&
+          !cancelToken.isCancelled &&
+          active < concurrency &&
+          cursor < items.length) {
+        if (!DateTime.now().isBefore(deadline)) break;
+        final item = items[cursor++];
+        active++;
+        Future<bool>.sync(() => test(item))
+            .catchError((Object _) => false)
+            .then((ok) {
+              active--;
+              if (result.isCompleted) return;
+              if (ok) {
+                settle(item);
+              } else {
+                pump();
+              }
+            });
+      }
+      if (!result.isCompleted && (cancelToken.isCancelled || active == 0)) {
+        settle(null);
+      }
+    }
+
+    timer = Timer(deadline.difference(DateTime.now()), () => settle(null));
+    cancelToken.whenCancel.then((_) => settle(null));
+    pump();
+    return result.future;
+  }
+
+  /// 发布页候选：上次成功 + 三个固定入口，最多四个，依次尝试。
+  Future<List<String>> _publishHostCandidates() async {
+    final hosts = <String>[];
+    void add(String host) {
+      if (host.isEmpty || hosts.contains(host)) return;
+      hosts.add(host);
+    }
+
+    final remembered = await _loadRememberedHost(_prefsKeyPublishHost);
+    if (remembered != null) add(remembered);
+    for (final seed in _seedPublishHosts) {
+      add(seed);
+    }
+    return hosts;
+  }
+
+  /// 拉取发布页；返回 null 表示这个发布页不可用。
+  ///
+  /// 判据刻意宽松：发布页正文是 JS 空壳，直连清单在外链脚本里，只要拿到壳
+  /// （或壳里的脚本地址）就算成功，下一步再去取脚本。
+  Future<String?> _fetchPublishPage(
+    String host,
+    CancelToken cancelToken,
+  ) async {
+    try {
+      final res = await _dio.get<String>(
+        host,
+        cancelToken: cancelToken,
+        options: Options(
+          responseType: ResponseType.plain,
+          receiveTimeout: _publishProbeTimeout,
+          sendTimeout: _publishProbeTimeout,
+        ),
+      );
+      if (res.statusCode != 200) return null;
+      final html = res.data ?? '';
+      if (html.isEmpty) return null;
+      if (!html.contains('publish.js') && !html.contains('id="main"')) {
+        return null;
+      }
+      return html;
+    } catch (e) {
+      AppLogger.d('Site91', '发布页不可用: $host ($e)');
+      return null;
+    }
+  }
+
+  /// 从发布页 + 它的地址脚本里抽出全部直连候选。
+  ///
+  /// 顺序：上次成功的直连排最前，其余按编号倒序（编号越大越新，实测存活率
+  /// 也越高）。**刻意不复制页面那套「按时段轮换 10 条」的算法** —— 它依赖
+  /// publish.js 里被混淆过的字符串表下标，混淆方式一改就失效。
+  /// 这里只提取候选，调用方限制实际探测数量。
+  Future<List<String>> _extractDirectLinks(
+    String publishHost,
+    String html,
+    CancelToken cancelToken,
+  ) async {
+    final hosts = <String>{};
+
+    void collect(String text) {
+      for (final m in RegExp(r'91tanhua(\d+)\.sbs').allMatches(text)) {
+        hosts.add(m.group(0)!);
+      }
+    }
+
+    collect(html);
+
+    final scriptUrl = _publishScriptUrl(publishHost, html);
+    if (scriptUrl != null) {
+      try {
+        final res = await _dio.get<String>(
+          scriptUrl,
+          cancelToken: cancelToken,
+          options: Options(
+            responseType: ResponseType.plain,
+            receiveTimeout: _discoveryProbeTimeout,
+            sendTimeout: _discoveryProbeTimeout,
+          ),
+        );
+        if (res.statusCode == 200) collect(res.data ?? '');
+      } catch (e) {
+        AppLogger.w('Site91', '获取地址脚本失败: $scriptUrl ($e)');
+      }
+    }
+
+    if (hosts.isEmpty) return const <String>[];
+
+    final ordered = hosts.toList()
+      ..sort((a, b) => _tanhuaIndex(b).compareTo(_tanhuaIndex(a)));
+
+    final links = <String>[];
+    final remembered = await _loadRememberedHost(_prefsKeyDirectHost);
+    if (remembered != null) {
+      final bare = _hostOf(remembered).replaceFirst(RegExp(r'^www\.'), '');
+      if (hosts.contains(bare)) links.add(remembered);
+    }
+    for (final host in ordered) {
+      final link = 'https://www.$host';
+      if (!links.contains(link)) links.add(link);
+    }
+    return links;
+  }
+
+  static int _tanhuaIndex(String host) {
+    final m = RegExp(r'91tanhua(\d+)\.sbs').firstMatch(host);
+    return int.tryParse(m?.group(1) ?? '') ?? 0;
+  }
+
+  /// 从发布页 HTML 里取地址脚本的绝对地址。
+  static String? _publishScriptUrl(String publishHost, String html) {
+    final m = RegExp(
+      r'''<script[^>]+src=["']([^"']*publish\.js[^"']*)["']''',
+      caseSensitive: false,
+    ).firstMatch(html);
+    final src = m?.group(1);
+    if (src == null || src.isEmpty) return null;
+    if (src.startsWith('http://') || src.startsWith('https://')) return src;
+    if (src.startsWith('//')) return 'https:$src';
+    return Uri.parse(publishHost).resolve(src).toString();
+  }
+
+  /// 探测一个直连域名：不仅要 200，还必须是**真的 91 站点**。
+  ///
+  /// 比 [probeDomain] 多一道内容校验是必要的：域名停靠页、运营商劫持页、
+  /// 过期拍卖页都可能返回 200。把它们当可用域名自动采用，用户看到的是
+  /// 「App 打不开内容」—— 比「没检测到」更糟。
+  Future<bool> _probeDirectLink(
+    String url,
+    Duration timeout,
+    CancelToken cancelToken,
+  ) async {
+    try {
+      final res = await _dio.get<String>(
+        url,
+        cancelToken: cancelToken,
+        options: Options(
+          responseType: ResponseType.plain,
+          receiveTimeout: timeout,
+          sendTimeout: timeout,
+        ),
+      );
+      if (res.statusCode != 200) return false;
+      final html = res.data ?? '';
+      if (html.length < 2000) return false;
+      if (_looksLikeChallenge(html)) return false;
+      return _looksLikeNinetyOneSite(html);
+    } catch (e) {
+      AppLogger.d('Site91', '直连探测失败: $url ($e)');
+      return false;
+    }
+  }
+
+  /// 页面是否属于 91/九色 这套 CMS。
+  ///
+  /// 三个特征任取其一：首页列表容器、站点标题、视频详情链接形态。
+  /// 实测 50 个直连里所有可用的都同时命中前两个。
+  static bool _looksLikeNinetyOneSite(String html) {
+    if (html.contains('video-elem') || html.contains('colVideoList')) {
+      return true;
+    }
+    final title =
+        RegExp(r'<title>([^<]{0,200})</title>').firstMatch(html)?.group(1) ??
+        '';
+    if (title.contains('九色') || title.toLowerCase().contains('91porny')) {
+      return true;
+    }
+    return _videoLinkPattern.hasMatch(html) && html.contains('/video/view');
+  }
+
+  Future<String?> _loadRememberedHost(String key) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final value = prefs.getString(key);
+      if (value == null) return null;
+      final normalized = normalizeDomain(value);
+      return normalized.isEmpty ? null : normalized;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _rememberHost(String key, String host) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(key, host);
+    } catch (e) {
+      AppLogger.d('Site91', '记住域名失败: $e');
+    }
+  }
 
   /// 自定义域名持久化键（用户手输的域名，App 重启后仍然生效）。
   static const String _prefsKeyDomain = 'site91_custom_base_url';
@@ -531,6 +1034,12 @@ class Site91Source implements VideoSource {
   /// 以及在**自动**切换时提示用户。回调异常不能影响请求链路，故整体兜住。
   void _notifyDomainChanged(String previous, {required bool automatic}) {
     if (_baseUrl.isEmpty || _baseUrl == previous) return;
+    // 只有「真的从一个域名换到另一个域名」才清缓存。
+    // 启动时 previous 为空（首次恢复上次保存的域名），此时缓存还没载入，
+    // 清它只会白白丢掉冷启动的预热，属于纯损失。
+    if (previous.isNotEmpty) {
+      unawaited(clearHtmlCache());
+    }
     try {
       onDomainChanged?.call(previous, _baseUrl, automatic);
     } catch (e) {
